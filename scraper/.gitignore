@@ -1,0 +1,31 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# env files real contact email lives here .env.example is committed instead
+.env
+
+# Tool caches
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# jupyter notebook http cache (requests-cache)
+*.sqlite
+
+# Scrapy runtime artifacts
+.scrapy/
+crawls/
+*.log
+
+# Scraped data and URL lists
+data/
+*.parquet

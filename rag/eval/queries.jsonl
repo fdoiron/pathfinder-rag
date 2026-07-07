@@ -1,0 +1,2 @@
+{"query": "what is a rogue", "expected_urls": ["example.ca"]}
+{"query": "what is a dragon", "expected_urls": ["example.ca", "example2.ca"]}

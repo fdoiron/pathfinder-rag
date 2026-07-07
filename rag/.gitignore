@@ -1,0 +1,27 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+.env
+
+# Credentials
+gcp-service-account-file.json
+*service-account*.json
+*credentials*.json
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+logs/
+cache/
+
+# Data corpus, embeddings
+data/
+*.parquet

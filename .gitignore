@@ -1,0 +1,10 @@
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# logs anywhere in the repo
+*.log
+
+# local scratch notes
+notes.md
