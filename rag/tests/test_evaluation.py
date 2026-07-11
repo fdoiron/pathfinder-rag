@@ -20,7 +20,15 @@ from rag.models import Article, CorpusManifest, SearchResult
 
 def make_result(url: str, title: str = 't', score: float = 0.9) -> SearchResult:
     return SearchResult(
-        article=Article(title=title, url=url, body='body'),
+        article=Article(
+            doc_id='doc',
+            url=url,
+            title=title,
+            category='bestiary',
+            breadcrumb=[],
+            body_md='body',
+            n_chars=4,
+        ),
         score=score,
     )
 
@@ -41,7 +49,7 @@ def make_manifest() -> CorpusManifest:
         source_file='data/support_content.md',
         source_sha256='abc123',
         n_articles=10,
-        text_columns=['title', 'body'],
+        text_columns=['title', 'body_md'],
         embedding_model='text-embedding-004',
         embedding_dim=768,
         task_type='RETRIEVAL_DOCUMENT',

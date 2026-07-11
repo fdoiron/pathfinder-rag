@@ -26,7 +26,7 @@ def _make_manifest(model: str = 'gemini-embedding-001', dim: int = 2) -> CorpusM
         source_file='fake.parquet',
         source_sha256='abc123',
         n_articles=3,
-        text_columns=['title', 'body'],
+        text_columns=['title', 'body_md'],
         embedding_model=model,
         embedding_dim=dim,
         task_type='RETRIEVAL_DOCUMENT',
@@ -37,13 +37,17 @@ def _make_manifest(model: str = 'gemini-embedding-001', dim: int = 2) -> CorpusM
 def _make_corpus_df() -> pd.DataFrame:
     return pd.DataFrame(
         {
+            'doc_id': ['alpha', 'beta', 'gamma'],
             'title': ['Alpha', 'Beta', 'Gamma'],
             'url': [
                 'https://example.com/alpha',
                 'https://example.com/beta',
                 'https://example.com/gamma',
             ],
-            'body': ['Body alpha', 'Body beta', 'Body gamma'],
+            'category': ['bestiary', 'bestiary', 'bestiary'],
+            'breadcrumb': [[], [], []],
+            'body_md': ['Body alpha', 'Body beta', 'Body gamma'],
+            'n_chars': [10, 9, 10],
             'embedding': [
                 np.array([1.0, 0.0], dtype=np.float32),
                 np.array([0.0, 1.0], dtype=np.float32),
