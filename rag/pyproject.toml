@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "google-genai>=2.10.0",
     "httpx>=0.28.1",
+    "lxml>=6.1.1",
     "numpy>=2.5.0",
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",
@@ -23,6 +24,7 @@ package = true
 
 [dependency-groups]
 dev = [
+    "lxml-stubs>=0.5.1",
     "mypy>=2.1.0",
     "pandas-stubs>=3.0.3.260530",
     "poethepoet>=0.30.0",
