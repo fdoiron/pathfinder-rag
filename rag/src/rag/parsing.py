@@ -1,10 +1,14 @@
+import logging
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
 
 import lxml.html
+from pydantic import HttpUrl
 
 from rag.models import Article
+
+logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------
 # HTML parsing tag registry
@@ -102,7 +106,7 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
     for child in element:
         child_markdown = _element_to_markdown(child)
 
-        spec = TAGS.get(child.tag)
+        spec = TAGS.get(child.tag) if isinstance(child.tag, str) else None
         if spec is not None and spec.is_block and has_content:
             parts[-1] = parts[-1].rstrip()
             parts.append('\n\n' + child_markdown.lstrip())
@@ -116,14 +120,70 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
     return assembled + _normalize_whitespace(element.tail)
 
 
+BASE_URL = 'https://www.d20pfsrd.com'
+_HASH_SUFFIX_RE = re.compile(r'__[0-9a-f]{10}$')
+
+
+def _slug_to_url(slug: str) -> HttpUrl:
+    if slug.endswith('.html'):
+        slug = slug[: -len('.html')]
+
+    if slug == 'index':
+        return HttpUrl(BASE_URL + '/')
+
+    if _HASH_SUFFIX_RE.search(slug):
+        raise ValueError(f'Slug {slug!r} was truncated and hashed by url_to_filename')
+
+    path = slug.replace('__', '/')
+    return HttpUrl(f'{BASE_URL}/{path}')
+
+
 # ---------------------------------------------------------------
-# parse_corpus
+# parse_page
 # ---------------------------------------------------------------
 
 
-def parse_corpus(raw_text: str, min_body_length: int = 40) -> list[Article]:
-    """Parse the scraped markdown corpus into article dicts. TODO: implement."""
-    raise NotImplementedError('parse_corpus not yet implemented')
+def parse_page(html: str, slug: str) -> Article:
+    try:
+        root = lxml.html.fromstring(html)
+    except Exception as e:
+        raise ValueError(f'Failed to parse HTML for slug {slug!r}: {e}') from e
+
+    content = root.get_element_by_id('article-content')
+
+    # Save page breadcrumbs for metadata as list[str]
+    breadcrumbs_div = content.find_class('breadcrumbs')[0]
+    breadcrumb = [a.text_content().strip() for a in breadcrumbs_div.iter('a')]
+
+    # Remove unneeded in tree: breadcrumbs, OGL section 15, TOC, Shopify/product etc. drop_tree keeps .tail
+    for classes in ('breadcrumbs', 'section15', 'toc_light_blue', 'product-right'):
+        for element in content.find_class(classes):
+            element.drop_tree()
+    # remove scripts
+    for element in list(content.iter('script')):
+        if element.getparent() is not None:
+            element.drop_tree()
+
+    title = ''
+    for child in content:
+        if child.tag == 'h1':
+            title = child.text_content().strip()
+            break
+
+    category = slug.split('__')[0]
+
+    body = _element_to_markdown(content)
+    n_chars = len(body)
+
+    return Article(
+        doc_id=slug,
+        url=_slug_to_url(slug),
+        title=title,
+        category=category,
+        breadcrumb=breadcrumb,
+        body_md=body,
+        n_chars=n_chars,
+    )
 
 
 # ---------------------------------------------------------------
@@ -136,8 +196,18 @@ def render_div(element: lxml.html.HtmlElement, content: str) -> str:
     return content
 
 
+# special cases f or p.title,  p.divider in bestiary
 @register('p', is_block=True)
 def render_p(element: lxml.html.HtmlElement, content: str) -> str:
+    classes = element.get('class', '').split()
+    if 'title' in classes:
+        return '## ' + content
+    if 'divider' in classes:
+        return '### ' + content
+    # catch CSS third heading in CSS <p style="font-weight: bold;border-bottom: solid thin">Opportunities and Allies</p
+    style = _WHITESPACE_RE.sub('', element.get('style', '').lower())
+    if 'font-weight:bold' in style and 'border-bottom' in style:
+        return '##### ' + content
     return content
 
 
@@ -222,6 +292,13 @@ def render_ol(element: lxml.html.HtmlElement, content: str) -> str:
     return '\n'.join(lines)
 
 
+def _colspan(cell: lxml.html.HtmlElement) -> int:
+    try:
+        return max(1, int(cell.get('colspan') or 1))
+    except ValueError:
+        return 1
+
+
 @register('table', is_block=True)
 def render_table(element: lxml.html.HtmlElement, content: str) -> str:
     rows = []
@@ -236,10 +313,19 @@ def render_table(element: lxml.html.HtmlElement, content: str) -> str:
                     cells.append((own_text + ' ' + flattened).strip() if own_text else flattened)
                 else:
                     cells.append(' '.join(_element_to_markdown(cell).split()))
+                # pad so header and body rows agree on column count
+                cells.extend([''] * (_colspan(cell) - 1))
         rows.append('| ' + ' | '.join(cells) + ' |')
 
         if len(rows) == 1 and any(child.tag == 'th' for child in tr):
             sep = ['---'] * len(cells)
             rows.append('| ' + ' | '.join(sep) + ' |')
 
-    return '\n'.join(rows)
+    table_md = '\n'.join(rows)
+
+    caption = element.find('caption')
+    if caption is not None:
+        caption_text = _normalize_whitespace(caption.text_content()).strip()
+        if caption_text:
+            return '**' + caption_text + '**\n\n' + table_md
+    return table_md

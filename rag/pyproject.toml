@@ -24,12 +24,12 @@ package = true
 
 [dependency-groups]
 dev = [
-    "lxml-stubs>=0.5.1",
     "mypy>=2.1.0",
     "pandas-stubs>=3.0.3.260530",
     "poethepoet>=0.30.0",
     "pytest>=9.1.1",
     "ruff>=0.15.20",
+    "types-lxml>=2026.2.16",
 ]
 
 [tool.hatch.build.targets.wheel]

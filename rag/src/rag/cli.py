@@ -11,7 +11,8 @@ from rag.embedding import VertexEmbedder
 from rag.evaluation import evaluate_query, load_queries, summarize_results, write_run
 from rag.genai_client import make_genai_client
 from rag.models import CorpusManifest
-from rag.parsing import parse_corpus
+
+# from rag.parsing import parse_corpus
 from rag.retrieval import ManifestMismatchError, Retriever, load_retriever
 
 app = typer.Typer()
@@ -30,31 +31,31 @@ def _build_retriever(embedding_file: Path | None) -> Retriever:
         raise typer.Exit(1) from e
 
 
-@app.command()
-def build_corpus(
-    input_file: Annotated[
-        Path,
-        typer.Argument(
-            help='Path to the input markdown file',  # TODO update once HTML from scraper is done
-            exists=True,
-            readable=True,
-        ),
-    ],
-    output_file: Annotated[
-        Path,
-        typer.Option(help='Path to the output parquet file', writable=True),
-    ] = Path('data/corpus.parquet'),
-):
-    """
-    Build a corpus from a markdown file and save it as a parquet file.
-    """
-    settings = get_settings()
-    logging.info(f'Reading markdown file from {input_file}')
-    articles = parse_corpus(input_file.read_text(encoding='utf-8'), min_body_length=settings.min_body_length)
-    df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(output_file, index=False)
-    typer.echo(f'wrote {len(articles)} articles to {output_file}')
+# @app.command()
+# def build_corpus(
+#     input_file: Annotated[
+#         Path,
+#         typer.Argument(
+#             help='Path to the input markdown file',  # TODO update once HTML from scraper is done
+#             exists=True,
+#             readable=True,
+#         ),
+#     ],
+#     output_file: Annotated[
+#         Path,
+#         typer.Option(help='Path to the output parquet file', writable=True),
+#     ] = Path('data/corpus.parquet'),
+# ):
+#     """
+#     Build a corpus from a markdown file and save it as a parquet file.
+#     """
+#     settings = get_settings()
+#     logging.info(f'Reading markdown file from {input_file}')
+#     articles = parse_corpus(input_file.read_text(encoding='utf-8'), min_body_length=settings.min_body_length)
+#     df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
+#     output_file.parent.mkdir(parents=True, exist_ok=True)
+#     df.to_parquet(output_file, index=False)
+#     typer.echo(f'wrote {len(articles)} articles to {output_file}')
 
 
 @app.command()
