@@ -128,6 +128,87 @@ def test_element_to_markdown_comment_is_skipped_but_tail_kept():
     assert 'End' in result
 
 
+# nested lists / tables. bug fixes
+
+
+def test_element_to_markdown_ordered_list_separates_from_prior_text():
+    html = '<div><p>Intro</p><ol><li>One</li></ol></div>'
+    assert _element_to_markdown(html_fragment(html)) == 'Intro\n\n1. One'
+
+
+def test_element_to_markdown_bold_survives_in_list_item():
+    html = '<div><ul><li>Deal <b>2d6</b> fire</li></ul></div>'
+    assert _element_to_markdown(html_fragment(html)) == '- Deal **2d6** fire'
+
+
+def test_element_to_markdown_br_survives_in_list_item():
+    html = '<div><ul><li>a<br/>b</li></ul></div>'
+    assert _element_to_markdown(html_fragment(html)) == '- a\nb'
+
+
+def test_element_to_markdown_nested_list_indents_one_level():
+    html = '<div><ul><li>Parent<ul><li>Child</li></ul></li></ul></div>'
+    assert _element_to_markdown(html_fragment(html)) == '- Parent\n  - Child'
+
+
+def test_element_to_markdown_nested_ordered_list_indents_to_marker_width():
+    html = '<div><ol><li>Parent<ol><li>Child</li></ol></li></ol></div>'
+    assert _element_to_markdown(html_fragment(html)) == '1. Parent\n   1. Child'
+
+
+def test_element_to_markdown_li_starting_with_nested_list_no_double_marker():
+    html = '<div><ul><li><ul><li>a</li></ul></li></ul></div>'
+    assert _element_to_markdown(html_fragment(html)) == '- a'
+
+
+def test_element_to_markdown_comment_in_list_is_skipped_not_bulleted():
+    html = '<div><ul><!-- nav --><li>real</li></ul></div>'
+    result = _element_to_markdown(html_fragment(html))
+    assert result == '- real'
+
+
+def test_element_to_markdown_comment_in_ordered_list_keeps_numbering_honest():
+    html = '<div><ol><!-- nav --><li>One</li><li>Two</li></ol></div>'
+    assert _element_to_markdown(html_fragment(html)) == '1. One\n2. Two'
+
+
+def test_element_to_markdown_table_without_th_gets_no_header_separator():
+    html = '<table><tr><td>5</td><td>10</td></tr><tr><td>15</td><td>20</td></tr></table>'
+    assert _element_to_markdown(html_fragment(html)) == '| 5 | 10 |\n| 15 | 20 |'
+
+
+def test_element_to_markdown_table_with_tbody_renders():
+    html = '<table><tbody><tr><th>H1</th><th>H2</th></tr><tr><td>a</td><td>b</td></tr></tbody></table>'
+    assert _element_to_markdown(html_fragment(html)) == '| H1 | H2 |\n| --- | --- |\n| a | b |'
+
+
+def test_element_to_markdown_nested_table_does_not_leak_rows():
+    html = '<table><tr><td>outer<table><tr><td>label</td><td>inner</td></tr></table></td></tr></table>'
+    result = _element_to_markdown(html_fragment(html))
+    assert result == '| outer label: inner |'
+
+
+def test_element_to_markdown_nested_table_cell_keeps_own_leading_text():
+    html = (
+        '<table><tr><td>Notes: '
+        '<table><tr><th>K</th><th>V</th></tr><tr><td>Racial</td><td>+6</td></tr></table>'
+        '</td></tr></table>'
+    )
+    result = _element_to_markdown(html_fragment(html))
+    assert 'Notes:' in result
+    assert 'Racial: +6' in result
+
+
+def test_element_to_markdown_bold_survives_in_table_cell():
+    html = '<table><tr><td>DC <b>15</b></td></tr></table>'
+    assert _element_to_markdown(html_fragment(html)) == '| DC **15** |'
+
+
+def test_element_to_markdown_br_in_table_cell_does_not_break_row():
+    html = '<table><tr><td>a<br/>b</td></tr></table>'
+    assert _element_to_markdown(html_fragment(html)) == '| a b |'
+
+
 def test_element_to_markdown_div_after_table_stays_separated():
     html = '<div><table><tr><td>a</td></tr></table><div>caption</div></div>'
     result = _element_to_markdown(html_fragment(html))
