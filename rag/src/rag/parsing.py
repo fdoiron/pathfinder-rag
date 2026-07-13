@@ -350,9 +350,9 @@ def render_ol(element: lxml.html.HtmlElement, content: str) -> str:
     return '\n'.join(lines)
 
 
-def _colspan(cell: lxml.html.HtmlElement) -> int:
+def _span(cell: lxml.html.HtmlElement, attr: str) -> int:
     try:
-        return max(1, int(cell.get('colspan') or 1))
+        return max(1, int(cell.get(attr) or 1))
     except ValueError:
         return 1
 
@@ -380,19 +380,40 @@ def render_table(element: lxml.html.HtmlElement, content: str) -> str:
     if element.find('.//table') is not None:
         return content
 
-    rows = []
+    # pad colspan and rowspan with empty cells so every row is the same as the header's column count.
+    # pending maps column index -> rows still covered by a rowspan cell above
+    cell_rows: list[list[str]] = []
+    first_row_has_th = False
+    pending: dict[int, int] = {}
     for tr in _direct_rows(element):
-        cells = []
+        cells: list[str] = []
         for cell in tr:
             if cell.tag in ('th', 'td'):
-                cells.append(' '.join(_element_to_markdown(cell).split()))
-                # pad so header and body rows agree on column count
-                cells.extend([''] * (_colspan(cell) - 1))
-        rows.append('| ' + ' | '.join(cells) + ' |')
+                while pending.get(len(cells), 0) > 0:
+                    pending[len(cells)] -= 1
+                    cells.append('')
+                rendered = ' '.join(_element_to_markdown(cell).split())
+                rowspan = _span(cell, 'rowspan')
+                for i in range(_span(cell, 'colspan')):
+                    if rowspan > 1:
+                        pending[len(cells)] = rowspan - 1
+                    cells.append(rendered if i == 0 else '')
+        while pending.get(len(cells), 0) > 0:
+            pending[len(cells)] -= 1
+            cells.append('')
+        if not cell_rows:
+            first_row_has_th = any(child.tag == 'th' for child in tr)
+        cell_rows.append(cells)
 
-        if len(rows) == 1 and any(child.tag == 'th' for child in tr):
-            sep = ['---'] * len(cells)
-            rows.append('| ' + ' | '.join(sep) + ' |')
+    # page miscount colspans : rogue-unchained golden declares 39 over 38 leafcolumns
+    # Ragged rows happen even after span padding. Normalize every row to the widest row
+    width = max((len(cells) for cells in cell_rows), default=0)
+    rows = []
+    for cells in cell_rows:
+        padded = cells + [''] * (width - len(cells))
+        rows.append('| ' + ' | '.join(padded) + ' |')
+        if len(rows) == 1 and first_row_has_th:
+            rows.append('| ' + ' | '.join(['---'] * width) + ' |')
 
     table_md = '\n'.join(rows)
 
