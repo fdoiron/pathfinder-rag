@@ -729,6 +729,7 @@ More difficult to design, and often harder to adjudicate, is the moral dilemma. 
 
 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Lawful |  |  | Neutral |  |  | Chaotic |  |  |
 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
 | Good |  |  | Neutral |  |  | Evil |  |  |
 

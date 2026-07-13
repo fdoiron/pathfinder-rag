@@ -44,7 +44,9 @@ _WHITESPACE_RE = re.compile(r'\s+')
 def _normalize_whitespace(text: str | None) -> str:
     if text is None:
         return ''
-    return _WHITESPACE_RE.sub(' ', text)
+    # sanitize literal '<' int text
+    # ex: '<a protean>' mistaken for an HTML tag
+    return _WHITESPACE_RE.sub(' ', text).replace('<', '\\<')
 
 
 def _render_li(li: lxml.html.HtmlElement, marker: str) -> str:
@@ -64,24 +66,18 @@ def _render_li(li: lxml.html.HtmlElement, marker: str) -> str:
 
 
 def _direct_rows(table: lxml.html.HtmlElement):
-    """Yield the table's own <tr> rows. Not rows from any table nested inside a cell."""
+    """Yield table's own <tr> rows.
+    Not rows from any table nested inside a cell
+
+    Bugfix on HTML malformed in source:
+    Recurses thead/tbody/tfoot because malformed source HTML (unclosed tbody)
+    makes lxml nested row groups inside each other during error recovery
+    """
     for child in table:
         if child.tag == 'tr':
             yield child
         elif child.tag in ('thead', 'tbody', 'tfoot'):
-            for tr in child:
-                if tr.tag == 'tr':
-                    yield tr
-
-
-def _flatten_nested_table(table: lxml.html.HtmlElement) -> str:
-    """Markdown cannot do nested tables. Render nested table as inline 'label: value; label: value' text."""
-    pairs = []
-    for tr in _direct_rows(table):
-        cells = [_normalize_whitespace(cell.text_content()).strip() for cell in tr if cell.tag in ('th', 'td')]
-        if len(cells) >= 2:
-            pairs.append(f'{cells[0]}: {cells[1]}')
-    return '; '.join(pairs)
+            yield from _direct_rows(child)
 
 
 def _wrap(element: lxml.html.HtmlElement, content: str) -> str:
@@ -142,6 +138,48 @@ def _slug_to_url(slug: str) -> HttpUrl:
 # parse_page
 # ---------------------------------------------------------------
 
+_HEADING_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
+
+
+def _retag_pseudo_headings(content: lxml.html.HtmlElement) -> None:
+    """tranforms heading markup into h* tags before conversion
+
+    - info-box titles (editor notes, content-sidebar) -> h5
+    - p.divider  -> one level below the nearest preceding heading because the same divider sits under
+    p.title (##) in bestiary but under h4 in class pages
+    """
+    for note_header in content.find_class('ed-note-header'):
+        note_header.tag = 'h5'
+    for sidebar_class in ('content-sidebar', 'info-sidebar', 'faq', 'widefaq'):
+        for sidebar in content.find_class(sidebar_class):
+            first = next(iter(sidebar), None)
+            # box title usually a bare <div> but occasionally is <p> depending on page author
+            if first is not None and first.tag in ('div', 'p'):
+                first.tag = 'h5'
+
+    level = 1
+    divider_level: int | None = None
+    for el in content.iter():
+        if not isinstance(el.tag, str):
+            continue
+        if el.tag in _HEADING_TAGS:
+            heading_level = int(el.tag[1])
+            # headings deeper than the divider rank are under a divider
+            # (ex: h4 ability names inside SPECIAL ABILITIES)
+            if divider_level is None or heading_level < divider_level:
+                level = heading_level
+                divider_level = None
+        elif el.tag == 'p':
+            classes = (el.get('class') or '').split()
+            if 'title' in classes:
+                if divider_level is None or divider_level > 2:
+                    level = 2
+                    divider_level = None
+            elif 'divider' in classes:
+                if divider_level is None:
+                    divider_level = min(level + 1, 6)
+                el.tag = f'h{divider_level}'
+
 
 def parse_page(html: str, slug: str) -> Article:
     try:
@@ -155,8 +193,26 @@ def parse_page(html: str, slug: str) -> Article:
     breadcrumbs_div = content.find_class('breadcrumbs')[0]
     breadcrumb = [a.text_content().strip() for a in breadcrumbs_div.iter('a')]
 
-    # Remove unneeded in tree: breadcrumbs, OGL section 15, TOC, Shopify/product etc. drop_tree keeps .tail
-    for classes in ('breadcrumbs', 'section15', 'toc_light_blue', 'product-right'):
+    # Remove unneeded in tree, drop_tree keeps .tail.
+    # breadcrumbs (metadata, saved), section15 (OGL), toc_light_blue/goog-toc (TOCs),
+    # product-right (Shopify), ogn-childpages (Subpages nav), custom-content (,out of scope),
+    # sites-comment-docos-wrapper (Google Sites comments) and malformed pages
+    junk_classes = (
+        'breadcrumbs',
+        'section15',
+        'toc_light_blue',
+        'goog-toc',
+        'product-right',
+        'ogn-childpages',
+        'custom-content',
+        'sites-comment-docos-wrapper',
+        'right-sidebar',
+        'sidebar-bottom',
+        'footer-nav',
+        'container-fluid',
+        'ogn-npa-container',
+    )
+    for classes in junk_classes:
         for element in content.find_class(classes):
             element.drop_tree()
     # remove scripts
@@ -169,6 +225,8 @@ def parse_page(html: str, slug: str) -> Article:
         if child.tag == 'h1':
             title = child.text_content().strip()
             break
+
+    _retag_pseudo_headings(content)
 
     category = slug.split('__')[0]
 
@@ -204,7 +262,7 @@ def render_p(element: lxml.html.HtmlElement, content: str) -> str:
         return '## ' + content
     if 'divider' in classes:
         return '### ' + content
-    # catch CSS third heading in CSS <p style="font-weight: bold;border-bottom: solid thin">Opportunities and Allies</p
+    # catches CSS third heading in CSS <p style="font-weight: bold;border-bottom: solid thin">Opportunities and Allies</
     style = _WHITESPACE_RE.sub('', element.get('style', '').lower())
     if 'font-weight:bold' in style and 'border-bottom' in style:
         return '##### ' + content
@@ -299,20 +357,35 @@ def _colspan(cell: lxml.html.HtmlElement) -> int:
         return 1
 
 
+# layout containers, not data: cells render as flowing blocks (see render_table)
+@register('tr', is_block=True)
+def render_tr(element: lxml.html.HtmlElement, content: str) -> str:
+    return content
+
+
+@register('td', is_block=True)
+def render_td(element: lxml.html.HtmlElement, content: str) -> str:
+    return content
+
+
+@register('th', is_block=True)
+def render_th(element: lxml.html.HtmlElement, content: str) -> str:
+    return content
+
+
 @register('table', is_block=True)
 def render_table(element: lxml.html.HtmlElement, content: str) -> str:
+    # table containing another table is layout wrapper (site-wide, nested tables only ahppen as borderless containers
+    # around real data tables): render cells as normal block flow instead of a pipe table
+    if element.find('.//table') is not None:
+        return content
+
     rows = []
     for tr in _direct_rows(element):
         cells = []
         for cell in tr:
             if cell.tag in ('th', 'td'):
-                nested_table = cell.find('table')
-                if nested_table is not None:
-                    own_text = _normalize_whitespace(cell.text).strip()
-                    flattened = _flatten_nested_table(nested_table)
-                    cells.append((own_text + ' ' + flattened).strip() if own_text else flattened)
-                else:
-                    cells.append(' '.join(_element_to_markdown(cell).split()))
+                cells.append(' '.join(_element_to_markdown(cell).split()))
                 # pad so header and body rows agree on column count
                 cells.extend([''] * (_colspan(cell) - 1))
         rows.append('| ' + ' | '.join(cells) + ' |')

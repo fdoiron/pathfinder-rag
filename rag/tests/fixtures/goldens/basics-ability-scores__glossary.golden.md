@@ -36,7 +36,7 @@ Alignment represents a creature’s basic moral and ethical attitude. Alignment 
 
 **Note**: There is no “official” definition of ally in the core rules but you can generally use the standard definition of “a person (or creature in terms of this game) that is not an enemy or who is on the same side (working towards the same ends).”
 
-Editor’s Note
+##### Editor’s Note
 
 Do you count as your own ally?
 
@@ -64,7 +64,7 @@ Bonuses are numerical values that are added to checks and statistical scores. Mo
 
 The important aspect of bonus types is that two bonuses of the same type don’t generally stack. With the exception of dodge bonuses, **most** circumstance bonuses, and racial bonuses, only the better bonus of a given type works. Bonuses without a type always stack, **unless they are from the same source**.
 
-Editor’s Note
+##### Editor’s Note
 
 The “can affect” part of the table is for purposes of creating more balanced spells with the spell creation system.
 
@@ -163,7 +163,7 @@ When you make an attack roll and get a natural 20 (the d20 shows 20), you hit re
 
 Damage is determined by rolling the dice listed with the weapon. Melee weapons deal their listed damage + Strength modifier. Ranged weapons usually do only their listed damage. Some weapons gain additional bonuses from magic or other effects. Spells do their listed damage.
 
-Editor’s Note
+##### Editor’s Note
 
 The following information was compiled from multiple places for ease of reference. The text below is only meant as an aid to understanding various aspects of the different damage types. If you see or believe you see an error, please let us know by reporting it using the Report a Problem link in the left menu sidebar.
 
@@ -318,7 +318,7 @@ An attack with a projectile weapon, such as a bow and arrow. A basic ranged atta
 
 #### Rest
 
-Editor’s Note
+##### Editor’s Note
 
 Characters who do not get a full night’s sleep may suffer the effects of fatigue. If a PC does not get at least 6 hours of sleep, she must make a DC 15 Fortitude save or be fatigued and take a –1 penalty on all other checks and saving throws against sleep effects. A second night without sleep requires another DC 15 Fortitude save. A failed save results in the character becoming exhausted and the penalties increasing to –2. A third failed save on the next night increases the penalties to –3.
 
@@ -497,7 +497,7 @@ Spells can perform a wide variety of tasks, from harming enemies to bringing the
 
 #### Spell-Like Abilities (Sp)
 
-Editor’s Note
+##### Editor’s Note
 
 Can I use a metamagic feat to alter a spell-like ability?
 

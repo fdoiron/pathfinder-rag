@@ -59,7 +59,7 @@ With sufficient ranks in Stealth, you earn the following.
 
 **20 Ranks**: If you attack after successfully using Stealth, your target is denied its Dexterity bonus against all attacks that you make before the beginning of your next turn.
 
-FYI: Stealth and Detection in a Forest
+##### FYI: Stealth and Detection in a Forest
 
 In a sparse forest, the maximum distance at which a Perception check for detecting the nearby presence of others can succeed is 3d6 × 10 feet. In a medium forest, this distance is 2d8 × 10 feet, and in a dense forest it is 2d6 × 10 feet.
 

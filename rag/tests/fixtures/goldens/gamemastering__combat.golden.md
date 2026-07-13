@@ -319,7 +319,7 @@ When you deal damage with a weapon in your off hand, you add only 1/2 your Stren
 
 When you deal damage with a weapon that you are wielding two-handed, you add 1-1/2 times your Strength bonus (Strength penalties are not multiplied). You don’t get this higher Strength bonus, however, when using a light weapons with two hands.
 
-FAQ
+##### FAQ
 
 What kind of action is it to remove your hand from a two-handed weapon or re-grab it with both hands?
 
@@ -439,7 +439,7 @@ A natural 1 (the d20 comes up 1) on a saving throw is always a failure (and may 
 
 During one turn, there are a wide variety of actions that your character can perform, from swinging a sword to casting a spell.
 
-FAQ
+##### FAQ
 
 Can you pick up or manipulate an object in a square within your reach? Does this provoke an AoO? Does it provoke even if the foe can reach the object, but not your space?
 
@@ -701,7 +701,7 @@ You can choose to fight defensively when attacking. If you do so, you take a –
 
 #### Critical Hits
 
-FAQ
+##### FAQ
 
 Is there a difference between “scoring a critical hit” and “confirming a critical hit“?
 
@@ -795,7 +795,7 @@ Many spells have a range of touch. To use these spells, you cast the spell and t
 
 *Ranged Touch Spells in Combat*: Some spells allow you to make a ranged touch attack as part of the casting of the spell. These attacks are made as part of the spell and do not require a separate action. Ranged touch attacks provoke an attack of opportunity, even if the spell that causes the attacks was cast defensively. Unless otherwise noted, ranged touch attacks cannot be held until a later turn (*see FAQ below for more information*.)
 
-FAQ
+##### FAQ
 
 When you cast a spell that allows you to make a ranged touch attack (such as *scorching ray*), and an enemy is within reach, do you provoke two attacks of opportunity?
 
@@ -893,13 +893,13 @@ A full-round action requires an entire round to complete. Thus, it can’t be co
 
 #### Full Attack
 
-FAQ
+##### FAQ
 
 Replacing Attacks with Combat Maneuvers
 
 Any combination of a creature’s attacks during a melee full attack can be replaced by a trip, disarm, or sunder maneuver (any maneuver that says “in place of a melee attack”). When doing this, the calculation for the creature’s Combat Maneuver Bonus uses the base attack bonus of the attack that was exchanged for a combat maneuver. For example, a creature with a BAB of +6/+1 who performs a trip with her second attack uses +1 as her BAB for the CMB of the trip.
 
-FAQ
+##### FAQ
 
 Can I make multiple sunder attempts in one round as part of a full-attack action? The sunder text says that I can make sunder attempts in place of melee attacks in an attack action, which is not technically a full-attack action.
 
@@ -1148,7 +1148,7 @@ Temporary ability damage returns at the rate of 1 point per night of rest (8 hou
 
 ### Temporary Hit Points*
 
-FAQ
+##### FAQ
 
 Do temporary hit point from the same source stack?
 
@@ -1560,7 +1560,7 @@ You can also use this standard action to help a friend in other ways, such as wh
 
 ### Charge
 
-FAQ
+##### FAQ
 
 Can Vital Strike be used on a charge?
 
@@ -1670,7 +1670,7 @@ This condition lasts for 1 round. For every 5 by which your attack exceeds your 
 
 #### Disarm
 
-FAQ
+##### FAQ
 
 Is the disarm special weapon feature required to even attempt to disarm a foe?
 
@@ -1698,22 +1698,7 @@ An enemy being moved by a drag does not provoke an attack of opportunity because
 
 #### Grapple
 
-d20pfsrd.com Custom Content
-
-Grappling Got You All Tangled Up?
-
-How about some new grapple flowcharts! Click the images below for larger versions. If you see something you believe to be incorrect please let us know!
-
-Chart 1
-Chart 2
-
-Flowcharts created by Tom Flock.
-
-What does being tied up mean?
-
-A creature that is **tied up** is “bound” which means it has the Helpless condition. A helpless target is treated as having a Dex of 0 (–5 modifier). Melee attacks against a helpless target get a +4 bonus (equivalent to attacking a prone target). Ranged attacks get no special bonus against helpless targets. Rogues can sneak attack helpless targets. **Note: while this interpretation seems logical – it is not official. Check with your GM.**
-
-FAQ
+##### FAQ
 
 Grappling Contradictions?
 
@@ -1789,7 +1774,7 @@ If your attack is successful, you deal damage to the item normally. Damage that 
 
 #### Trip
 
-FAQ
+##### FAQ
 
 If you want to make a trip combat maneuver, do you have to use a weapon with the *trip* special feature?
 
@@ -1859,25 +1844,9 @@ You can instead target a specific grid intersection. Treat this as a ranged atta
 
 If you miss the target (whether aiming at a creature or a grid intersection), roll 1d8. This determines the misdirection of the throw, with 1 falling short (off-target in a straight line toward the thrower), and 2 through 8 rotating around the target creature or grid intersection in a clockwise direction. Then, count a number of squares in the indicated direction equal to the range increment of the throw. After you determine where the weapon landed, it deals splash damage to all creatures in that square and in all adjacent squares.
 
-d20pfsrd.com Custom Content
-
-Make a ranged attack against an unoccupied grid intersection (**AC** 5 plus range penalties.)
-
-**Hit**: Creatures in all adjacent squares are dealt splash damage. No creatures take direct hit damage.
-
-**Miss**: First, roll 1d8 to determine the misdirection of the throw.
-
-**1** – Falls short (straight line towards the thrower.)
-
-**2 through 8** – Count around the target creature or grid intersection in a clockwise direction.
-
-Then, count a number of squares in the indicated direction equal to the number of range increments thrown. The thrown object lands that number of spaces away from the target.
-
-Finally, the item deals splash damage (if any) to all creatures in the square it lands in and in all adjacent squares.
-
 ### Two-Weapon Fighting
 
-FAQ
+##### FAQ
 
 If you use Two-Weapon Fighting on your turn to attack with two weapons, do you also take that penalty on attacks of opportunity made before the start of your next turn?
 

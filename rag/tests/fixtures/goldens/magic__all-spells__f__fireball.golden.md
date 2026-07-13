@@ -2,19 +2,19 @@
 
 **School** evocation [fire]; **Level** bloodrager 3, magus 3, sorcerer/wizard 3; **Domain** fire 3; **Elemental School** fire 3; **Bloodline** efreeti 3; **Mystery** flame 3
 
-### CASTING
+## CASTING
 
 **Casting Time** 1 standard action
 **Components** V, S, M (a ball of bat guano and sulfur)
 
-### EFFECT
+## EFFECT
 
 **Range** long (400 ft. + 40 ft./level)
 **Area** 20-ft.-radius spread
 **Duration** instantaneous
 **Saving Throw** Reflex half; **Spell Resistance** yes
 
-### DESCRIPTION
+## DESCRIPTION
 
 A *fireball* spell generates a searing explosion of flame that detonates with a low roar and deals 1d6 points of fire damage per caster level (maximum 10d6) to every creature within the area. Unattended objects also take this damage. The explosion creates almost no pressure.
 

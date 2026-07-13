@@ -121,13 +121,6 @@ The following favored class options are available to all characters of this race
 
 The following racial archetypes and bloodline are available to kobolds:
 
-**Subpages**
-
-- Bushwacker (Gunslinger; Kobold)
-- Dragon Herald (Bard; Kobold)
-- Snare Setter (Rogue; Kobold)
-- Swarm Fighter (Fighter; Kobold)
-
 ### Racial Feats
 
 The following feats are available to a kobold character who meets the prerequisites.

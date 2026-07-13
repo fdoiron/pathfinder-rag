@@ -4,7 +4,7 @@
 
 #### Third Party Sorcerer/Wizard Spells
 
-Spells Filter
+##### Spells Filter
 
 Sorcerer/Wizard Spell List Filter.
 

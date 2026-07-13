@@ -182,21 +182,20 @@ def test_element_to_markdown_table_with_tbody_renders():
     assert _element_to_markdown(html_fragment(html)) == '| H1 | H2 |\n| --- | --- |\n| a | b |'
 
 
-def test_element_to_markdown_nested_table_does_not_leak_rows():
+def test_element_to_markdown_layout_table_renders_cells_as_blocks():
     html = '<table><tr><td>outer<table><tr><td>label</td><td>inner</td></tr></table></td></tr></table>'
     result = _element_to_markdown(html_fragment(html))
-    assert result == '| outer label: inner |'
+    assert result == 'outer\n\n| label | inner |'
 
 
-def test_element_to_markdown_nested_table_cell_keeps_own_leading_text():
+def test_element_to_markdown_layout_table_keeps_cell_leading_text():
     html = (
         '<table><tr><td>Notes: '
         '<table><tr><th>K</th><th>V</th></tr><tr><td>Racial</td><td>+6</td></tr></table>'
         '</td></tr></table>'
     )
     result = _element_to_markdown(html_fragment(html))
-    assert 'Notes:' in result
-    assert 'Racial: +6' in result
+    assert result == 'Notes:\n\n| K | V |\n| --- | --- |\n| Racial | +6 |'
 
 
 def test_element_to_markdown_bold_survives_in_table_cell():

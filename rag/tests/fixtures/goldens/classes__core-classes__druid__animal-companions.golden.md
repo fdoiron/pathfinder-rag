@@ -37,7 +37,7 @@ The character’s druid level. The druid’s class levels stack with levels of a
 
 This is the total number of eight-sided (d8) Hit Dice the animal companion possesses, each of which gains a Constitution modifier, as normal.
 
-FYI: Hit Points and Animal Companions
+##### FYI: Hit Points and Animal Companions
 
 The following information is from the Pathfinder Society Organized Play FAQ section. We thought it might be helpful information for a player or GM in adjudicating common problems or questions. Usage is up to the GM of your game.
 
@@ -123,64 +123,9 @@ Animal Companions only have specific magic item slots available to them. Their m
 
 Consult your GM if the following animal companion archetypes are allowed:
 
-**Subpages**
-
-- Aberrant (Companion Archetype)
-- Ambusher (Companion Archetype)
-- Animal Companion Archetypes by Other Publishers
-- Apex Species (Companion Archetype)
-- Augmented (Companion Archetype)
-- Auspice (Companion Archetype)
-- Bodyguard (Companion Archetype)
-- Bully (Companion Archetype)
-- Charger (Companion Archetype)
-- Daredevil (Companion Archetype)
-- Deathtouched (Companion Archetype)
-- Draconic (Companion Archetype)
-- Elemental Companion (Companion Archetype)
-- Feytouched (Companion Archetype)
-- Precocious (Companion Archetype)
-- Racer (Companion Archetype)
-- Totem Guide (Companion Archetype)
-- Tracker (Companion Archetype)
-- Undead Companion (Companion Archetype)
-- Unexpected Intellectual (Companion Archetype)
-- Verdant (Companion Archetype)
-- Wrecker (Companion Archetype)
-
 ### Feats for Animal Companions
 
 Consult your GM if the following feats are allowed:
-
-**Subpages**
-
-- Changeling Familiar (Animal Companion Feat)
-- Curious Companion (Animal Companion Feat)
-- Devotion against the Unnatural (Animal Companion Feat)
-- Disruptive Companion (Animal Companion Feat; Combat)
-- Favored Animal Focus (Animal Companion Feat)
-- Feral Grace (Animal Companion Feat; Combat)
-- Ferocious Beast (Animal Companion Feat; Combat)
-- Ferocious Feint (Animal Companion Feat; Combat)
-- Forceful Charge (Animal Companion Feat)
-- Friendly Face (Animal Companion Feat)
-- Greater Tenacious Hunter (Animal Companion Feat)
-- Hefty Brute (Animal Companion Feat)
-- Improved Forceful Charge (Animal Companion Feat)
-- Improved Intercept Blow (Animal Companion Feat; Combat)
-- Intercept Blow (Animal Companion Feat; Combat)
-- Jumper (Animal Companion Feat)
-- Lithe Attacker (Animal Companion Feat)
-- Master of Your Kind (Animal Companion Feat)
-- Narrow Frame (Animal Companion Feat)
-- Reflexive Interception (Animal Companion Feat; Combat)
-- Shapeless Familiar (Animal Companion Feat)
-- Share Feature (Animal Companion Feat)
-- Stable Gallop (Animal Companion Feat)
-- Sure-Footed (Animal Companion Feat)
-- Tenacious Hunter (Animal Companion Feat)
-- Valiant Steed (Animal Companion Feat)
-- Well-Trained (Animal Companion Feat)
 
 **Table: Animal Choices**
 
@@ -317,11 +262,11 @@ Each animal companion has different starting sizes, speed, attacks, ability scor
 
 #### Allosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium, **Speed** 40 ft.; **AC** +4 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 14, **Dex** 16, **Con** 10, **Int** 2, **Wis** 15, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** grab, pounce.
 
@@ -329,11 +274,11 @@ Each animal companion has different starting sizes, speed, attacks, ability scor
 
 Source
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** slam (1d6), tail slap (1d6); **Ability Scores Str** 11, **Dex** 18, **Con** 9, **Int** 2, **Wis** 13, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** slam (1d8), tail slap (1d8); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** trample.
 
@@ -343,21 +288,21 @@ Source
 
 The anglerfish is a fish that uses a bioluminescent lure at the tip of a stalk protruding from its head to attract prey.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** swim 40 ft.; **AC** +1 natural armor; **Attack** bite (1d8 plus grab); **Ability Scores** **Str** 13, **Dex** 15, **Con** 12, **Int** 1, **Wis** 12, **Cha** 2; **Special Qualities** aquatic, grab (Medium), low-light vision, lure (sheds light as per a candle), scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (2d6 plus grab); **Ability Scores** **Str** +2, **Dex** –2, **Con** +4; **Special Qualities** grab (Large), swallow whole (Medium).
 
 #### Ankylosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +9 natural armor; **Attack** tail (1d6); **Ability Scores** **Str** 10, **Dex** 14, **Con** 9, **Int** 2, **Wis** 12, **Cha** 8; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tail (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** stun.
 
@@ -367,21 +312,21 @@ The ankylosaurus’s tail can deliver a powerful, stunning blow. A creature stru
 
 #### Antelope
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 60 ft.; **AC** +1 natural armor; **Attack** gore (1d4); **Ability Scores** **Str** 10, **Dex** 17, **Con** 14; **Int** 2; **Wis** 13; **Cha** 5; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2, **Con** +2.
 
 #### Ape
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft.; **AC** +1 natural armor; **Attack** bite (1d4), 2 claws (1d4); **Ability Scores** **Str** 13, **Dex** 17, **Con** 10, **Int** 2, **Wis** 12, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d6), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -391,21 +336,21 @@ The ankylosaurus’s tail can deliver a powerful, stunning blow. A creature stru
 
 This primeval toothed bird has bright plumage, but it is a relatively poor flyer.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., fly 40 ft. (poor); **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 8, **Dex** 15, **Con** 12, **Int** 2, **Wis** 13, **Cha** 7; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2, **Con** +2.
 
 #### Archelon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 15 ft., swim 50 ft.; **AC** +10 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 8, **Dex** 10, **Con** 9, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, hold breath, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -415,31 +360,31 @@ This primeval toothed bird has bright plumage, but it is a relatively poor flyer
 
 The armorfish is a primeval aquatic creature that has exceptionally thick armored scales along its head and back.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** swim 30 ft.; **AC** +6 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 13, **Dex** 13, **Con** 15, **Int** 1, **Wis** 8, **Cha** 2; **Special Qualities** aquatic, low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +2, **Dex** –2, **Con** +4.
 
 #### Arsinoitherium
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +4 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 14, **Dex** 12, **Con** 15, **Int** 2, **Wis** 13, **Cha** 3; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** gore (2d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (gore, 2d8), trample.
 
 #### Aurochs
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor, **Attack** gore (1d6); **Ability Scores** **Str** 14, **Dex** 12, **Con** 12, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** stampede, trample.
 
@@ -449,11 +394,11 @@ A stampede occurs if three or more creatures with stampede make a trample attack
 
 #### Axe Beak
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **Attack** bite (1d6 + 1-1/2 **Str**); **Ability Scores** **Str** 10, **Dex** 17, **Con** 12, **Int** 2, **Wis** 11, **Cha** 10; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 + 1-1/2 **Str**); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** sudden charge.
 
@@ -463,61 +408,61 @@ When making a charge attack, an axe beak makes a single bite attack. If successf
 
 #### Baboon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Small; **Speed**: 30 ft.; **Attack** bite (1d4); **Ability Scores**: **Str** 12, **Dex** 15, **Con** 12, **Int** 2, **Wis** 12, **Cha** 5; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
 #### Badger
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., burrow 10 ft., climb 10 ft.; **AC** +2 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** **Str** 10, **Dex** 17, **Con** 15, **Int** 2, **Wis** 12, **Cha** 10; **Special Attacks** rage (as a barbarian, 6 rounds per day); **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
 #### Baluchitherium
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +4 natural armor; **Speed** 40 ft.; **Attack** 2 hooves (1d4); **Ability Scores** **Str** 14, **Dex** 14, **Con** 15, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** 2 hooves (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** trample.
 
 #### Basilosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4), tail slap (1d4); **Ability Scores** **Str** 11, **Dex** 14, **Con** 12, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** low-light vision, hold breath.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d6), tail slap (1d6); **Ability Scores** Str +8, **Dex** –2, **Con** +4; **Special Qualities** blindsense 60 ft.
 
 #### Bat, Dire
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., fly 40 ft. (good); **Attack** bite (1d6); **Ability Scores** **Str** 9, **Dex** 17, **Con** 9, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** blindsense 40 ft.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
 #### Bear
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** **Str** 15, **Dex** 15, **Con** 13, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -527,21 +472,21 @@ When making a charge attack, an axe beak makes a single bite attack. If successf
 
 The infamous grizzly bear is a lumbering and quite impressive companion, particularly when it rises up on its hind feet to loom large. Grizzly bears strike fear into the hearts of most who encounter them.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 17, **Dex** 13, **Con** 13, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (1d8), 2 claws (1d6 plus grab); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4.
 
 #### Bird
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 80 ft. (average); **AC** +1 natural armor; **Attack** bite (1d4), 2 talons (1d4); **Ability Scores** **Str** 10, **Dex** 15, **Con** 12, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
@@ -549,11 +494,11 @@ The infamous grizzly bear is a lumbering and quite impressive companion, particu
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., fly 30 ft. (poor); **AC** +1 natural; **Attack** bite (1d4); **Ability Scores** **Str** 8, **Dex** 17, **Con** 8, **Int** 2, **Wis** 13, **Cha** 5; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Qualities** deceptive target.
 
@@ -565,13 +510,13 @@ A blackwisp egret’s glowing eyes belie its true position at night. In areas of
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 60 ft,; **AC** +1 natural armor; **Attack** 2 talons (1d6), bite (1d4); **Ability Scores** **Str** 15, **Dex** 17, **Con** 14, **Int** 2, **Wis** 12, **Cha** 6
 
 **Special Qualities** low-light vision
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 2 talons (1d8), bite (1d6); **Ability Scores** Str +4, Dex-2, Con+2; **Special Attacks** bleed (from talon attacks)
 
@@ -579,11 +524,11 @@ A blackwisp egret’s glowing eyes belie its true position at night. In areas of
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 60 ft.; **AC** +1 natural armor; **Attack** claw (1d4); **Ability Scores** Str 10, Dex 17, Con 12, Int 2, Wis 13, Cha 12; **Special Qualities** low-light vision, racial skill bonus: +6 Acrobatics when jumping
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack** claw (1d6) Ability Scores Str +4, Dex -2, Con +2
 
@@ -591,11 +536,11 @@ A blackwisp egret’s glowing eyes belie its true position at night. In areas of
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 80 ft. (average).; **Attack** bite (1d4), 2 talons (1d4); **Ability Scores Str** 12, **Dex** 15, **Con** 12, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** low-light vision, +2 on saves vs. disease
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores Str** +2, **Con** +2
 
@@ -605,11 +550,11 @@ A blackwisp egret’s glowing eyes belie its true position at night. In areas of
 
 Unlike the magical beast of the same name, this owl is a mundane but unusually large specimen of its kind, with powerful wings and deadly talons.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft., fly 60 ft. (average); **AC** +2 natural armor; **Attack** 2 talons (1d4); **Ability Scores** **Str** 10, **Dex** 17, **Con** 13, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 talons (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** rend (2 talons, 1d6); Racial Skill Modifiers +4 Stealth.
 
@@ -617,21 +562,21 @@ Unlike the magical beast of the same name, this owl is a mundane but unusually l
 
 [Source]
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 30 ft., fly 40 ft. (average); **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** Str 12, Dex 16, Con 12, Int 2, Wis 13, Cha 5; **Special Qualities** low-light vision
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** Str +4, Dex -2, Con +2
 
 #### Boar
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +6 natural armor; **Attack** gore (1d6); **Ability Scores** **Str** 13, **Dex** 12, **Con** 15, **Int** 2, **Wis** 13, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** ferocity.
 
@@ -639,11 +584,11 @@ Unlike the magical beast of the same name, this owl is a mundane but unusually l
 
 [Source]
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 40 ft.; **AC** +6 natural armor; **Attack** gore (1d8); **Ability Scores** Str 13, Dex 12, Con 15, Int 2, Wis 13, Cha 4; **Special Qualities** low-light vision, scent
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack** gore (1d10); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -651,11 +596,11 @@ Unlike the magical beast of the same name, this owl is a mundane but unusually l
 
 **Source**: PPC:Orcs
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +6 natural armor; **Attack** gore (1d6); **Ability Scores** **Str** 15, **Dex** 10, **Con** 15, **Int** 2, **Wis** 11, **Cha** 4; **SQ** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** spines.
 
@@ -665,11 +610,11 @@ Those hit by a bristle boar’s gore attack must succeed at a Reflex saving thro
 
 #### Brachiosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** tail (2d4); **Ability Scores** **Str** 13, **Dex** 14, **Con** 11, **Int** 2, **Wis** 13, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tail (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** trample (1d8).
 
@@ -677,11 +622,11 @@ Those hit by a bristle boar’s gore attack must succeed at a Reflex saving thro
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +8 natural armor; **Attack** slam (1d10); **Ability Scores Str** 12, **Dex** 15, **Con** 12, **Int** 2, **Wis** 17, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** slam (2d6); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (slam), trample.
 
@@ -689,11 +634,11 @@ Those hit by a bristle boar’s gore attack must succeed at a Reflex saving thro
 
 **Source**: Orcs
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 15, **Dex** 14, **Con** 13, **Int** 2, **Wis** 11, **Cha** 4; **SQ** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** trample.
 
@@ -703,21 +648,21 @@ Those hit by a bristle boar’s gore attack must succeed at a Reflex saving thro
 
 The bustard is a sizable bird with long legs. Bustards can fly, but they do so relatively poorly and prefer to walk or run.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., fly 50 ft. (poor); **AC** +2 natural armor; **Attack** bite (1d6), 2 talons (1d4); **Ability Scores** **Str** 13, **Dex** 14, **Con** 13, **Int** 2, **Wis** 13, **Cha** 5; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
 #### Camel
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +1 natural armor; **Attack** bite (1d4) or spit (ranged touch attack, target is sickened for 1d4 rounds, range 10 feet); **Ability Scores** **Str** 18, **Dex** 16, **Con** 14, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
@@ -725,11 +670,11 @@ The bustard is a sizable bird with long legs. Bustards can fly, but they do so r
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +1 natural; **Speed** 5 ft., swim 20 ft., jet 90 ft.; **Attack** tentacles (1d4 plus grab), bite (1d3); **Ability Scores** Str 14, Dex 15, Con 11, Int 2, Wis 12, Cha 2; **Special Qualities** low-light vision, pressure adaptation.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tentacles (1d6 plus grab), bite (1d4); **Ability Scores** Str +4, Dex -2, Con +2;; **Special Attacks** constrict (1d6).
 
@@ -739,31 +684,31 @@ The bustard is a sizable bird with long legs. Bustards can fly, but they do so r
 
 This large, brown-furred rodent is equally at home on land or in the water, and is often found near lakes and rivers.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., swim 20 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 15, **Con** 12, **Int** 2, **Wis** 13, **Cha** 5; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
 #### Cat, Big
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 13, **Dex** 17, **Con** 13, **Int** 2, **Wis** 15, **Cha** 10; **Special Attacks** rake (1d4); **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** grab, pounce, rake (1d6).
 
 #### Cat, Small
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 50 ft.; **AC** +1 natural armor; **Attack** bite (1d4 plus trip), 2 claws (1d2); **Ability Scores** **Str** 12, **Dex** 21, **Con** 13, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6), 2 claws (1d3); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Qualities** sprint.
 
@@ -777,11 +722,11 @@ Once per hour, a small cat can move at 10 times its normal speed (500 feet) when
 
 Commonly seen as a docile farm animal, an ill-tempered bull or cow can be an effective animal companion as well.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** gore (1d6); **Ability Scores** **Str** 14, **Dex** 12, **Con** 12, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (gore, 1d8), trample.
 
@@ -789,11 +734,11 @@ Commonly seen as a docile farm animal, an ill-tempered bull or cow can be an eff
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** bite 1d8; **Ability Scores** Str 14, Dex 17, Con 11, Int 2, Wis 11, Cha 10; **Special Qualities** low-light vision, scent, trip.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite 2d6; **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** blood rage*, ferocity.
 
@@ -803,21 +748,21 @@ Commonly seen as a docile farm animal, an ill-tempered bull or cow can be an eff
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft.; **AC** +4 natural; **Attack** 2 claws (1d4); **Ability Scores** Str 12, Dex 14, Con 13, Int 2, Wis 13, Cha 3; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural; **Attack** 2 claws (1d6); **Ability Scores** Str +8, Dex -2, Con +4; Special Attack rend (2 claws, 1d6).
 
 #### Chameleon, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft.; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 14, **Con** 14, **Int** 2, **Wis** 11, **Cha** 7; **Special Qualities** +10 Stealth when still, low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **Speed** 40 ft., climb 40 ft.; **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** pull (tongue, 5 ft.), tongue.
 
@@ -831,21 +776,21 @@ A giant chameleon can grab a foe with its tongue and draw the victim to its mout
 
 This small primate is more dangerous than its size suggests.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +1 natural armor; **Attack** bite (1d4), slam (1d3 plus grab); **Ability Scores** **Str** 13, **Dex** 17, **Con** 12, **Int** 2, **Wis** 12, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6), slam (1d4 plus grab); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
 #### Crocodile
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., swim 30 ft.; **AC** +4 natural armor; **Attack** bite (1d6 plus grab); **Ability Scores** **Str** 15, **Dex** 14, **Con** 15, **Int** 1, **Wis** 12, **Cha** 2; **Special Qualities** hold breath, low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d8) or tail slap (1d12); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** death roll, sprint.
 
@@ -867,11 +812,11 @@ Once per minute a crocodile may sprint, increasing its land speed to 40 feet for
 
 A denizen of the frozen tundra, the reindeer is a sure-footed companion in icy terrain, and it can used for transportation as well as defense.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** gore (1d6); **Ability Scores** **Str** 13, **Dex** 14, **Con** 13, **Int** 2, **Wis** 12, **Cha** 5; **Special Qualities** low-light vision, scent, snow adaptation (ignore difficult terrain from ice and snow).
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2, **Con** +2.
 
@@ -879,21 +824,21 @@ A denizen of the frozen tundra, the reindeer is a sure-footed companion in icy t
 
 **Source** PAP115
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural; **Attack** 2 hooves (1d3); **Ability Scores** Str 11, **Dex** 18, **Con** 11, **Int** 2, **Wis** 12, **Cha** 13; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** 2 hooves (1d4); **Ability Scores** **Str** +2, **Dex** –2, **Con** +2; **Bonus Feat** Nimble Moves.
 
 #### Deinonychus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 60 ft.; **AC** +1 natural armor; **Attack** 2 talons (1d6), bite (1d4); **Ability Scores** **Str** 11, **Dex** 17, **Con** 17, **Int** 2, **Wis** 12, **Cha** 14; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 2 talons (1d8), bite (1d6), 2 claws (1d4) **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** pounce.
 
@@ -901,11 +846,11 @@ A denizen of the frozen tundra, the reindeer is a sure-footed companion in icy t
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +4 natural; **Attack** slam (1d6), gore (1d8); **Ability Scores** **Str** 14, **Dex** 10, **Con** 15, **Int** 2, **Wis** 13, **Cha** 3; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural; **Attack** slam (1d8), gore (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** sweep, trample.
 
@@ -917,11 +862,11 @@ A deinotherium can sweep a target with its downward-curving tusks and knock the 
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** bite (1d8); **Ability Scores Str** 15, **Dex** 19, **Con** 8, **Int** 2, **Wis** 15, **Cha** 10; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Speed** 40 ft.; **Attack** bite (1d10); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** puncture armor, rock throwing.
 
@@ -929,17 +874,17 @@ A deinotherium can sweep a target with its downward-curving tusks and knock the 
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 50 ft.; **AC** +1 natural armor; **Attack** bite (1d4), 2 claws (1d2), tail (1d2); **Ability Scores** Str 10, Dex 21, Con 13, Int 2, Wis 12, Cha 6; **Special Qualities** ball tail, low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6), 2 claws (1d3), tail (1d3); **Ability Scores** Str +4, Dex -2, Con +2.
 
 #### Dimetrodon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** 12, **Dex** 16, **Con** 14, **Int** 1, **Wis** 12, **Cha** 3; **Special Attacks** tearing bite.
 
@@ -947,7 +892,7 @@ Tearing Bite (Ex)
 
 A dimetrodon’s jaws are filled with razor-sharp teeth of two different sizes. This gives the creature a threat range of 19–20 with its bite attack.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +1 natural armor; **Attack** bite (2d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -955,11 +900,11 @@ A dimetrodon’s jaws are filled with razor-sharp teeth of two different sizes. 
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 80 ft. (clumsy); **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 8, **Dex** 15, **Con** 12, **Int** 2, **Wis** 14, **Cha** 6; **SQ** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Attack** bite (1d6); **Ability Scores** **Str** +2, **Con** +2; **Special Attacks** poison (frequency 1 round (6); *effect* 1 **Str** damage; *cure* 1 save, Con-based DC).
 
@@ -967,11 +912,11 @@ A dimetrodon’s jaws are filled with razor-sharp teeth of two different sizes. 
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +6 natural armor; **Attack** tail (1d8); **Ability Scores** **Str** 10, **Dex** 14, **Con** 10, **Int** 2, **Wis** 12, **Cha** 10; **SQ** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** tail (2d6); **Ability Scores** **Str** +6, **Con** +4; **SQ** tail lash.
 
@@ -979,11 +924,11 @@ A dimetrodon’s jaws are filled with razor-sharp teeth of two different sizes. 
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft., burrow 10 ft.; **AC** +2 natural armor; **Attack** bite (1d4); **Ability Scores** Str 12, Dex 15, Con 15, Int 2, Wis 16, Cha 6; **Special Qualities** low-light vision, scent, racial skill bonus: +4 Acrobatics when jumping, +4 Survival when tracking by scent
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -993,11 +938,11 @@ A dimetrodon’s jaws are filled with razor-sharp teeth of two different sizes. 
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus disease); **Ability Scores** Str 13, Dex 17, Con 16, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, racial skill bonus, lesser compression: +4 Perception
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus disease); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1011,11 +956,11 @@ A dire raccoon can move through an area as small as one-half its space without s
 
 #### Dog
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 13, **Dex** 17, **Con** 15, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -1023,11 +968,11 @@ A dire raccoon can move through an area as small as one-half its space without s
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4 plus trip); **Ability Scores Str** 11, **Dex** 17, **Con** 16, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent, racial skill bonus: Bluff +4, Stealth +4
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores Dex** +2, **Con** +2, **Wis** +2; **Special Qualities** opportunistic bite
 
@@ -1039,11 +984,11 @@ On a successful bite attack against an opponent it’s flanking or that is denie
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4 plus trip); **Ability Scores** Str 12, Dex 16, Con 15, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, scent, racial skill bonus: +4 Diplomacy, +4 Survival when tracking by scent; **Special Abilities** cute as heck
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6 plus trip); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1055,21 +1000,21 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4 plus trip); **Ability Scores** Str 12, Dex 16, Con 16, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, scent, racial skill bonus: +4 Survival when tracking by scent, +2 Fortitude vs. disease
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 50 ft.; **AC** +1 natural armor; **Attack** bite (1d6 plus trip); **Ability Scores** Str +4, Dex -2, Con +2
 
 #### Dolphin
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 80 ft.; **AC** +1 natural armor; **Attack** slam (1d4); **Ability Scores** **Str** 12, **Dex** 15, **Con** 13, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, hold breath.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2, **Con** +2; **Special Qualities** blindsight 120 ft.
 
@@ -1077,7 +1022,7 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 **Source**: PZO9470
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Tiny; **Alignment** any nongood; **Speed** 20 ft.; **Attack** bite (1d3), tail* (1d3); **Ability Scores** Str 8, Dex 17, Con 11, Int 4, Wis 10, Cha 7; **Languages** Draconic.
 
@@ -1089,31 +1034,31 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 60 ft.; **AC** +4 natural armor; **Attack** bite (1d8); **Ability Scores Str** 14, **Dex** 18, **Con** 10, **Int** 1, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** grab (bite), gulp.
 
 #### Eel, Electric
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 5 ft., swim 30 ft.; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 14, **Con** 18, **Int** 1, **Wis** 10, **Cha** 6; **Special Qualities** amphibious, low-light vision, electricity resistance 5.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **AC** +2 natural armor; **Ability Scores** Dex +2, Con +2; **Special Qualities** electricity (1d6), electricity resistance 10.
 
 #### Elasmosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 50 ft.; **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** 10, **Dex** 18, **Con** 12, **Int** 2, **Wis** 13, **Cha** 9; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -1121,31 +1066,31 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** gore (1d8); **Ability Scores Str** 14, **Dex** 12, **Con** 15, **Int** 2, **Wis** 17, **Cha** 3; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (2d6); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Attacks** impaling horn, powerful charge (gore).
 
 #### Elephant/Mastodon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** gore (1d8), slam (1d6); **Ability Scores** **Str** 14, **Dex** 14, **Con** 13, **Int** 2, **Wis** 13, **Cha** 7; **Special Abilities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (2d6), slam (1d8); **Ability Scores** +8 **Str**, –2 **Dex**, +4 **Con**; **Special Abilities** trample (2d6).
 
 #### Elk
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +1 natural armor; **Attack** gore (1d6) or 2 hooves (1d3); **Ability Scores** **Str** 12, **Dex** 17, **Con** 14, **Int** 2, **Wis** 15, **Cha** 5; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** gore (1d8) or 2 hooves (1d4); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -1153,11 +1098,11 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +6 natural; **Attack** bite (1d6); **Ability Scores** **Str** 14, **Dex** 10, **Con** 13, **Int** 2, **Wis** 13, **Cha** 3; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural; **Attack** bite (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** trample.
 
@@ -1167,11 +1112,11 @@ A dire corgi, despite its size and ferocity, is really cute. It considers Diplom
 
 The eohippus is a small, primeval ancestor of the modern horse. It has three-toed feet rather than hooves.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 11, **Dex** 15, **Con** 12, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2, **Con** +2.
 
@@ -1181,11 +1126,11 @@ The eohippus is a small, primeval ancestor of the modern horse. It has three-toe
 
 Short legs and overlarge ears make this broad-chested canine seem almost comical.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 9, **Dex** 12, **Con** 15, **Int** 2, **Wis** 13, **Cha** 12; **Special Qualities** low-light vision, Scent, Stability
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores: Size** Medium; **Speed** 40 ft.; **Attack** Bite (1d6); **Str** +4 **Dex** -2, **Con** +2; **Special Qualities** Sure-Footed.
 
@@ -1195,11 +1140,11 @@ Short legs and overlarge ears make this broad-chested canine seem almost comical
 
 This swift raptor has amazing eyesight and sharp talons.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 90 ft. (good); **AC** +1 natural armor; **Attack** bite (1d4), 2 talons (1d3); **Ability Scores** **Str** 10, **Dex** 15, **Con** 11, **Int** 2, **Wis** 15, **Cha** 6; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2, **Con** +2.
 
@@ -1207,11 +1152,11 @@ This swift raptor has amazing eyesight and sharp talons.
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft., climb 20 ft.; **AC** +1 natural armor; **Attack** bite (1d4 plus trip), 2 claws (1d2); **Ability Scores** Str 12, Dex 16, Con 15, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, scent, racial skill bonus: +4 Acrobatics, +4 Survival when tracking by scent
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 40 ft., climb 30 ft.; **Attack** bite (1d6 plus trip), 2 claws (1d3); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1221,17 +1166,17 @@ This swift raptor has amazing eyesight and sharp talons.
 
 This large lizard can display a frightening frill on its neck when it charges.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft.; **AC** +4 natural armor; **Attack** bite (1d6), tail (1d4); **Ability Scores** **Str** 13, **Dex** 15, **Con** 13, **Int** 2, **Wis** 14, **Cha** 10; **Special Attacks** intimidating charge; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), tail (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
 #### Frog, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.,swim 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 15, **Dex** 13, **Con** 16, **Int** 1, **Wis** 9, **Cha** 6; **Special Qualities** low-light vision, scent, tongue, pull.
 
@@ -1239,23 +1184,23 @@ Tongue (Ex)
 
 A giant frog’s tongue is a primary attack with reach equal to three times the frog’s normal reach (15 feet for a Medium giant frog). A giant frog’s tongue deals no damage on a hit, but can be used to grab. A giant frog does not gain the grappled condition while using its tongue in this manner.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2; **Special Qualities** swallow whole.
 
 #### Gar
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 60 ft., **AC** +1 natural armor, **Attack** bite (1d6 plus grab); **Ability Scores** **Str** 14, **Dex** 14, **Con** 15, **Int** 1, **Wis** 13, **Cha** 2.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor, **Attack** bite (1d8), **Ability Scores** +8 **Str**, –2 **Dex**, +4 **Con**.
 
 #### Gecko, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **Attack** bite (1d6); **Ability Scores** **Str** 11, **Dex** 15, **Con** 12, **Int** 2, **Wis** 14, **Cha** 7; **Special Qualities** expert climber, low-light vision.
 
@@ -1263,7 +1208,7 @@ Expert Climber (Ex)
 
 A gecko’s feet allow it to climb virtually any surface, no matter how slick or sheer. In effect, geckos are treated as constantly being under a natural version of the spell spider climb.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (2d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -1271,11 +1216,11 @@ A gecko’s feet allow it to climb virtually any surface, no matter how slick or
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., burrow 10 ft.; **AC** +3 natural armor; **Attack** bite (1d6 plus grab); **Ability Scores** Str 11, Dex 15, Con 12, Int 1, Wis 12, Cha 6; **Special Qualities** low-light vision; **Special Attacks** cheek pouch; **Immune** disease
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus grab); **Ability Scores** Str +8, Dex -2, Con +4
 
@@ -1287,11 +1232,11 @@ A giant hamster can try to stuff a grabbed opponent of two sizes smaller than it
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** tail slap (1d8); **Ability Scores** Str 13, Dex 14, Con 14, Int 2, Wis 13, Cha 5; **Special Qualities** low-light vision; **Defensive Abilities** quills
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** tail slap (2d6); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1303,11 +1248,11 @@ Any creature attacking a giant porcupine with light or one-handed melee weapons 
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** bite (1d6), 2 claws (1d3); **Ability Scores Str** 14, **Dex** 16, **Con** 10, **Int** 2, **Wis** 15, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (1d8), 2 claws (1d4); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** grab (bite).
 
@@ -1315,17 +1260,17 @@ Any creature attacking a giant porcupine with light or one-handed melee weapons 
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft., AC +2 natural armor; **Attack** 2 hooves (1d6); **Ability Scores** **Str** 16, **Dex** 17, **Con** 12, **Int** 2, **Wis** 13, **Cha** 7; **SQ** low-light vision, natural weapons.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2; **Attack** 2 hooves (1d8), slam (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4.
 
 #### Goblin Dog
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 50 ft.; **Attack** bite (1d4); **Ability Scores** **Str** 11, **Dex** 16, **Con** 11, **Int** 2, **Wis** 12, **Cha** 8; **Special Qualities** allergic reaction, low-light vision, scent.
 
@@ -1333,17 +1278,17 @@ Allergic Reaction (Ex)
 
 A goblin dog’s dander is highly irritating to all creatures save those with the goblinoid subtype. A non-goblinoid creature damaged by a goblin dog’s bite, who deals damage to a goblin dog with a natural weapon or unarmed attack, or who otherwise comes into contact with a goblin dog (including attempts to grapple or ride the creature) must make a DC (10 + 1/2 Hit Dice + Con modifier) Fortitude save or break out in an itching rash. A creature affected by this rash takes a –2 penalty to Dexterity and Charisma for 1 day (multiple allergic reactions do not stack). *Remove disease* or any magical healing removes the rash instantly. This is a disease effect.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4.
 
 #### Glyptodon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft.; **AC** +5 natural armor, **Attack** 2 claws (1d8); **Ability Scores** **Str** 13, **Dex** 12, **Con** 13, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 claws (1d10); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4
 
@@ -1351,11 +1296,11 @@ A goblin dog’s dander is highly irritating to all creatures save those with th
 
 [Source]
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 40 ft., swim 20 ft.; **AC** +1 natural armor; **Attack** bite (1d3), 2 hooves (1d3); **Ability Scores** Str 11, Dex 18, Con 11, Int 2, Wis 12, Cha 8; **Special Qualities** low-light vision, scent
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack** bite (1d4), 2 hooves (1d4); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1363,11 +1308,11 @@ A goblin dog’s dander is highly irritating to all creatures save those with th
 
 [Source]
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 40 ft; **AC** +1 natural armor; **Attack** gore (1d4); **Ability Scores** Str 10, Dex 17, Con 11, Int 2, Wis 14, Cha 7; **Special Qualities** low-light vision, scent
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack** gore (1d6); **Ability Scores** Str +4, Dex -2, Con +2; Special Attack powerful charge (gore, 1d8)
 
@@ -1375,11 +1320,11 @@ A goblin dog’s dander is highly irritating to all creatures save those with th
 
 **Source** PAP97
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., fly 60 ft. (average); **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** Str 13, Dex 15, Con 14, Int 2, Wis 12, Cha 9; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6); **Ability Scores** Str +8, Dex –2, Con +2; **Special Attacks** still predator.
 
@@ -1389,33 +1334,33 @@ A Yolubilis heron has the ability to stand perfectly still for hours at a time w
 
 #### Hippopotamus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +6 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** 11, **Dex** 12, **Con** 12, **Int** 2, **Wis** 13, **Cha** 5; **Special Qualities** low-light vision, scent, sweat.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Ability** trample.
 
 #### Horse
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +4 natural armor; **Attack** bite (1d4), 2 hooves* (1d6); **Ability Scores** **Str** 16, **Dex** 13, **Con** 15, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
 * This is a secondary natural attack, see Combat for more information on how secondary attacks work.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained.
 
 #### Hyena
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus trip); **Ability Scores** **Str** 10, **Dex** 17, **Con** 13, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -1423,11 +1368,11 @@ A Yolubilis heron has the ability to stand perfectly still for hours at a time w
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus trip and bone-breaker); **Ability Scores** Str 17, Dex 17, Con 14, Int 2, Wis 13, Cha 6; **Special Qualities** low-light vision, scent, racial skill bonus: +4 Stealth in tall grass, +4 Survival when tracking by scent
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus trip and bone-breaker); **Ability Scores** Str +8, Dex -2, Con +4
 
@@ -1439,7 +1384,7 @@ A creature that is bit by a hyaenodon must make a Fortitude *save* or suffer a -
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft, climb 40 ft; **AC** +2 natural armor; **Attack** 2 claws (1d4)
 
@@ -1447,7 +1392,7 @@ A creature that is bit by a hyaenodon must make a Fortitude *save* or suffer a -
 
 **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Attack** 4 claws (1d4); **Ability Scores** Str +2, Con+2
 
@@ -1457,11 +1402,11 @@ A hypersloth can act as though under the effect of a haste spell for a number of
 
 #### Iguanodon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** claw (1d6); **Ability Scores** **Str** 17, **Dex** 15, **Con** 15, **Int** 2, **Wis** 12, **Cha** 7.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** claw (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** thumb spikes.
 
@@ -1473,21 +1418,21 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 **Source** PAP115
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** **Str** 11, **Dex** 13, **Con** 14, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, problem solver, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +4, **Con** +2, **Wis** +2; **Bonus Feat** Overwhelm.
 
 #### Kangaroo
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **Attack** kick (1d4); **Ability Scores** **Str** 12, **Dex** 14, **Con** 13, **Int** 2, **Wis** 11, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** kick (1d6); **Ability Scores** Str +4, **Dex** +2, **Con** +2.
 
@@ -1495,11 +1440,11 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** bite (1d6), tail slap (1d6); **Ability Scores** Str 15, Dex 14, Con 15, Int 1, Wis 14, Cha 2; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), tail slap (1d8); **Ability Scores** Str +6, Dex -2, Con +4;; **Special Attacks** ramming snout.
 
@@ -1507,11 +1452,11 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** tail (1d8); **Ability Scores Str** 10, **Dex** 16, **Con** 10, **Int** 2, **Wis** 13, **Cha** 10; **Special Qualities** impaling strike, low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** tail (2d6); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** defensive spikes.
 
@@ -1519,7 +1464,7 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft; **AC** +1 natural armor; **Attack** bite (1d8)
 
@@ -1527,7 +1472,7 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special** Qualities combat trained.
 
@@ -1537,31 +1482,31 @@ An iguanodon’s thumb spikes can inflict grievous wounds—they deal triple dam
 
 While some value it for its hair, the llama makes a fine animal companion as well, and it has traditionally been used as a beast of burden in mountainous regions.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 11, **Dex** 16, **Con** 12, **Int** 2, **Wis** 13, **Cha** 9; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4.
 
 #### Manta Ray
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 60 ft.; **AC** +1 natural armor; **Attack** tail slap (1d4); **Ability Scores** **Str** 8, **Dex** 15, **Con** 11, **Int** 1, **Wis** 13, **Cha** 2; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size**: Large; **AC** +2 natural armor; **Attack** tail slap (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** blindsense 30 ft.
 
 #### Mantis, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft., fly 40 ft. (average); **AC** +3 natural armor; **Attack** 2 claws (1d4 plus grab); **Ability Scores** **Str** 10, **Dex** 15, **Con** 10, **Int** —, **Wis** 12, **Cha** 7; **Special Attacks** lunge; **Special Qualities** darkvision; **CMD** trip +8.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** mandibles (1d6 secondary attack against a grabbed target), sudden strike (may take a full attack in the surprise round).
 
@@ -1571,11 +1516,11 @@ While some value it for its hair, the llama makes a fine animal companion as wel
 
 This toothy marsupial has a perhaps undeserved reputation for ferocity.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 15, **Dex** 13, **Con** 12, **Int** 2, **Wis** 10, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +4, **Con** +2.
 
@@ -1585,31 +1530,31 @@ This toothy marsupial has a perhaps undeserved reputation for ferocity.
 
 Somewhat slimmer than the standard lion, the marsupial lion is no less dangerous in battle.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 20 ft.; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 12, **Dex** 16, **Con** 13, **Int** 2, **Wis** 13, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **Speed** climb 30 ft.; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6 plus grab); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
 #### Megalania
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6 plus grab); **Ability Scores** **Str** 13, **Dex** 17, **Con** 12, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +1 natural armor; **Attack** bite (1d8 plus grab and poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4.
 
 #### Megaloceros
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +3 natural armor, **Attack** gore (1d8); **Ability Scores** **Str** 12, **Dex** 17, **Con** 14, **Int** 2, **Wis** 15, **Cha** 5; **Special Abilities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** gore (2d6), 2 hooves (1d4)*; **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (2d6).
 
@@ -1617,11 +1562,11 @@ Somewhat slimmer than the standard lion, the marsupial lion is no less dangerous
 
 #### Megatherium
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft., climb 10 ft.; **AC** +5 natural armor, **Attack** 2 claws (1d4); **Ability Scores** **Str** 9, **Dex** 14, **Con** 11, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 claws (1d6), **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** rend (2 claws, 1d8).
 
@@ -1629,11 +1574,11 @@ Somewhat slimmer than the standard lion, the marsupial lion is no less dangerous
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** 2 talons (1d3); **Ability Scores** Str 13, Dex 16, Con 12, Int 2, Wis 11, Cha 9; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 talons (1d4); **Ability Scores** Str +4, Con +2.
 
@@ -1641,11 +1586,11 @@ Somewhat slimmer than the standard lion, the marsupial lion is no less dangerous
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., swim 30 ft.; **AC** +5 natural armor; **Attack** bite (1d8), tail slap (1d8, reach 10 ft.); **Ability Scores Str** 16, **Dex** 17, **Con** 10, **Int** 2, **Wis** 15, **Cha** 11; **Special Qualities** low-light vision, scent.
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (2d6), tail slap (2d6, reach 15 ft.); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** trample, whip tail.
 
@@ -1655,21 +1600,21 @@ Somewhat slimmer than the standard lion, the marsupial lion is no less dangerous
 
 This large-clawed burrowing mammal is slow but can burrow through loose earth and soil with ease to surprise its foes.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., burrow 10 ft.; **AC** +1 natural armor; **Attack** 2 claws (1d4); **Ability Scores** **Str** 12, **Dex** 15, **Con** 13, **Int** 2, **Wis** 10, **Cha** 5; **Special Qualities** low-light vision, tremorsense 30 ft.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** burrow 20 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d6); **Ability Scores** **Str** +2, **Dex** –2, **Con** +4; **Special Attacks** rend (2 claws, 1d6).
 
 #### Monitor Lizard
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., swim 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6 plus grab); **Ability Scores** **Str** 13, **Dex** 17, **Con** 12, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium, **AC** +2 natural armor; **Attack** bite (1d8 plus grab and poison *[frequency* 1 hour (6), *effect* 1 Dex damage, *cure* 1 save, Con-based DC]); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4
 
@@ -1679,31 +1624,31 @@ This large-clawed burrowing mammal is slow but can burrow through loose earth an
 
 Powerful and often ill tempered, the moose is an intimidating choice for an animal companion.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** gore (1d6), 2 hooves (1d3); **Ability Scores** **Str** 12, **Dex** 15, **Con** 14, **Int** 2, **Wis** 13, **Cha** 7; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (1d8), 2 hooves (1d4); **Ability Scores** **Str** +6, **Dex** –2, **Con** +4; **Special Attacks** powerful charge (gore, 1d8).
 
 #### Moray Eel, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +5 natural armor; **Speed** swim 30 ft.; **Attack** bite (1d8 plus grab); **Ability Scores** **Str** 14, **Dex** 16, **Con** 12, **Int** 1, **Wis** 12, **Cha** 8; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** gnaw.
 
 #### Octopus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **AC** +1 natural armor; **Speed** 20 ft., swim 30 ft., jet 200 ft.; **Attack** bite (1d3), tentacles (grab); **Ability Scores** **Str** 12, **Dex** 17, **Con** 14, **Int** 2, **Wis** 12, **Cha** 3; **Special Qualities** low-light vision, ink cloud.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Attack** bite (1d3 plus poison [*frequency* 1 round (6), *effect* 1 Str damage, *cure* 1 save, Con-based DC]); **Ability Scores** **Str** +2, **Con** +2.
 
@@ -1711,11 +1656,11 @@ Powerful and often ill tempered, the moose is an intimidating choice for an anim
 
 [Source]
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** 2 hooves (1d3), slam (1d3 secondary); **Ability Scores** Str 12, Dex 15, Con 13, Int 2, Wis 12, Cha 6; **Special Qualities** low-light vision
 
-### 4th-LEVEL ADVANCEMENT
+##### 4th-LEVEL ADVANCEMENT
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 2 hooves (1d4), slam (1d4 secondary); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1723,11 +1668,11 @@ Powerful and often ill tempered, the moose is an intimidating choice for an anim
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 5 ft. swim 70 ft.; **Attack** bite (1d4 plus attach and bleed); **Ability Scores** Str 12, Dex 16, Con 12, Int 1, Wis 13, Cha 6; **Special Qualities** low-light vision, keen scent, racial skill bonus: +8 Swim, ferocity, glide; CMD can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus attach and bleed); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -1749,11 +1694,11 @@ An onwu azu can notice creatures by scent within a 180-foot radius underwater an
 
 This bipedal dinosaur has long legs built for speed and a long neck that gives it an ostrichlike profile.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** 2 claws (1d8); **Ability Scores** **Str** 11, **Dex** 15, **Con** 12, **Int** 2, **Wis** 13, **Cha** 8; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 Speed 60 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d8 plus 1d4 bleed); **Ability Scores** **Str** +2, **Dex** +2, **Con** +2; Special Quality sprint.
 
@@ -1761,11 +1706,11 @@ Speed 60 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d8 plus 1d4 bleed); 
 
 **Source** PCS:OLoP
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** claw (1d4); **Ability Scores** **Str** 13, **Dex** 16, **Con** 12, **Int** 2, **Wis** 13, **Cha** 11; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 60 ft.; **Attack** claw (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Qualities** crouch.
 
@@ -1775,11 +1720,11 @@ An ostrich can hide in plain sight as a bush or shrub by crouching down and conc
 
 #### Pachycephalosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 15, **Dex** 16, **Con** 13, **Int** 2, **Wis** 12, **Cha** 5.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** gore (1d10); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** clobbering charge.
 
@@ -1793,11 +1738,11 @@ When a pachycephalosaurus hits a target with its slam attack at the end of a cha
 
 Normally slow moving and docile, pandas are capable of surprising bursts of activity when needed.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +2 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** **Str** 13, **Dex** 12, **Con** 14, **Int** 2, **Wis** 13, **Cha** 9; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +3 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4; **Special Attacks** powerful bite.
 
@@ -1805,7 +1750,7 @@ Normally slow moving and docile, pandas are capable of surprising bursts of acti
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft, burrow 5 ft; **AC** +6 natural armor; **Attack** 2 claws (1d4)
 
@@ -1813,7 +1758,7 @@ Normally slow moving and docile, pandas are capable of surprising bursts of acti
 
 **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** 2 claws (1d6); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2.
 
@@ -1823,11 +1768,11 @@ A dire pangolin’s scales come to fine slicing edges. A creature that strikes a
 
 #### Parasaurolophus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +2 natural armor; **Attack** tail (1d6); **Ability Scores** **Str** 11, **Dex** 18, **Con** 9, **Int** 2, **Wis** 13, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tail (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** trample (1d8).
 
@@ -1835,21 +1780,21 @@ A dire pangolin’s scales come to fine slicing edges. A creature that strikes a
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 5 ft., swim 60 ft.; **AC** +1 natural armor; **Attack** bite (1d8); **Ability Scores** Str 12, Dex 15, Con 12, Int 2, Wis 15, Cha 9; **Special Qualities** keen scent, low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** ambush attack +1d6, bleed (1).
 
 #### Pony
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** 2 hooves (1d3); **Ability Scores** **Str** 13, **Dex** 13, **Con** 12, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained.
 
@@ -1859,11 +1804,11 @@ A dire pangolin’s scales come to fine slicing edges. A creature that strikes a
 
 This lumbering forest creature is adorned with an array of long, sharp quills that protrude from its coarse pelt.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** tail slap (1d4); **Ability Scores** **Str** 14, **Dex** 12, **Con** 15, **Int** 2, **Wis** 13, **Cha** 5; **Special Attacks** quills (as porcupine quills; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** tail slap (1d6); **Ability Scores** **Str** +2, **Dex** –2, **Con** +4; **Special Attacks** quills (as giant porcupine quills).
 
@@ -1873,21 +1818,21 @@ This lumbering forest creature is adorned with an array of long, sharp quills th
 
 This primeval crocodile is equally effective in the water and on land. Its jaws are capable of crushing things with great force.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 30 ft.; **AC** +2 natural armor; **Attack** bite (1d8 plus grab); **Ability Scores** **Str** 13, **Dex** 14, **Con** 15, **Int** 1, **Wis** 12, **Cha** 4; **Special Attacks** constrict (1d8); **Special Qualities** scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6 plus grab); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4; **Special Attacks** constrict (2d6).
 
 #### Pteranodon
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft., fly 50 ft. (clumsy); **Attack** bite (1d8); **Ability Scores** **Str** 8, **Dex** 21, **Con** 10, **Int** 2, **Wis** 14, **Cha** 12; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -1897,11 +1842,11 @@ This primeval crocodile is equally effective in the water and on land. Its jaws 
 
 **Note** This companion was originally intended for kobolds. Consult your GM before choosing this animal. A kobold cavalier can select this as a mount instead of a dog or pony.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 11, **Dex** 14, **Con** 13, **Int** 1, **Wis** 10, **Cha** 4; **CMD** (can’t be tripped); **Special Qualities** blindsight 60 ft.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat training (see Handle Animal).
 
@@ -1909,11 +1854,11 @@ This primeval crocodile is equally effective in the water and on land. Its jaws 
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +2 natural armor; **Speed** 30 ft., fly 50 ft. (clumsy); **Attack** bite (1d8); **Ability Scores** **Str** 9, **Dex** 21, **Con** 10, **Int** 2, **Wis** 14, **Cha** 12; **Special Qualities** low-light vision, scent.
 
-### 9th-level Advancement
+##### 9th-level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6/×3), 2 wings (1d4); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** razor-sharp beak.
 
@@ -1923,11 +1868,11 @@ A quetzalcoatlus’s razor-sharp beak has a critical modifier of x3.
 
 #### Ram
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural; **Attack** gore (1d3); **Ability Scores** **Str** 10, **Dex** 17, **Con** 11, **Int** 2, **Wis** 14, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** powerful charge (1d8); **Bonus Feat** Improved Bull Rush.
 
@@ -1935,21 +1880,21 @@ A quetzalcoatlus’s razor-sharp beak has a critical modifier of x3.
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +1 natural; **Attack** gore (1d4); **Ability Scores** **Str** 10, **Dex** 17, **Con** 11, **Int** 2, **Wis** 14, **Cha** 7; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** bleed (gore, 1), powerful charge (gore, 1d8).
 
 #### Rat, Dire
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft., climb 20 ft., swim 20 ft.; **Attack** bite (1d4); **Ability Scores** **Str** 10, **Dex** 17, **Con** 12, **Int** 2, **Wis** 12, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Attack** bite (1d4 plus disease [*filth fever*: *onset* 1d3 days; *frequency* 1/day; *effect* 1d3 Dex damage and 1d3 Con damage; *cure* 2 consecutive saves, Con-based DC]); **Ability Scores** **Str** +2, **Con** +2.
 
@@ -1957,21 +1902,21 @@ A quetzalcoatlus’s razor-sharp beak has a critical modifier of x3.
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., fly 50 ft. (average); **Attack** bite (1d4); **Ability Scores** Str 8, Dex 13, Con 10, Int 2, Wis 15, Cha 7; **Special Qualities** low-light vision, scavenger.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** Str +4, Dex +2, Con +2.
 
 #### Rhinoceros
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +4 natural armor; **Speed** 40 ft.; **Attack** gore (1d8); **Ability Scores** **Str** 14, **Dex** 14, **Con** 15, **Int** 2, **Wis** 13, **Cha** 5; **Special Qualities** scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (gore, 2d8).
 
@@ -1979,11 +1924,11 @@ A quetzalcoatlus’s razor-sharp beak has a critical modifier of x3.
 
 Rocs taken as animal companions by druids or rangers are typically newly hatched birds—a baby roc is the size of a person and ready for flight and hunting within minutes of hatching. Unfortunately for druids seeking animal companions of legendary size, an animal companion roc is limited to Large size—still large enough for a Medium druid or ranger to use the flying beast as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +5 natural armor; **Speed** 20 ft., fly 80 ft.; **Attack** 2 talons (1d4), bite (1d6); **Ability Scores** **Str** 12, **Dex** 19, **Con** 9, **Int** 2, **Wis** 13, **Cha** 11; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** 2 talons (1d6 plus grab), bite (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -1993,11 +1938,11 @@ Rocs taken as animal companions by druids or rangers are typically newly hatched
 
 Somewhat smaller than the more ferocious saber-toothed tiger, the saber-toothed cat is nonetheless an impressive predatory creature.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** 2 claws (1d4 plus grab); **Ability Scores** **Str** 15, **Dex** 15, **Con** 13, **Int** 2, **Wis** 13, **Cha** 8; **Special Attacks** saber-toothed bite (1d10 bite attack, only on a grapple check to deal damage); **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 claws (1d6 plus grab); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** pounce, saber-toothed bite (2d8 bite attack, only on a grapple check to deal damage).
 
@@ -2007,11 +1952,11 @@ Somewhat smaller than the more ferocious saber-toothed tiger, the saber-toothed 
 
 **Note** This companion was originally intended for kobolds. Consult your GM before choosing this animal. A kobold cavalier can select this as a mount instead of a dog or pony.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 13, **Dex** 12, **Con** 13, **Int** 1, **Wis** 12, **Cha** 4; **Special Qualities** darkvision 60 ft.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat training (see Handle Animal).
 
@@ -2021,11 +1966,11 @@ Somewhat smaller than the more ferocious saber-toothed tiger, the saber-toothed 
 
 This oversized amphibian has a mouth full of tiny but rather sharp teeth.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 30 ft.; **AC** +3 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 13, **Dex** 14, **Con** 15, **Int** 1, **Wis** 12, **Cha** 4; **Special Qualities** amphibious, tremorsense 30 ft. (underwater only), scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **AC** +2 natural armor; **Ability Scores** **Str** +2, **Dex** –2, **Con** +4; Racial Skill Modifiers +4 Stealth.
 
@@ -2033,11 +1978,11 @@ This oversized amphibian has a mouth full of tiny but rather sharp teeth.
 
 **[Source]**
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** antlers (1d8); **Ability Scores** Str 14, Dex 15, Con 13, Int 2, Wis 16, Cha 6; **Special Qualities** low-light vision, scent; **Special Attacks** trample (DC is Strength-based)
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +4 natural armor; **Attack** antlers (2d6); **Ability Scores** Str +8, Dex -2, Con +4
 
@@ -2045,21 +1990,21 @@ This oversized amphibian has a mouth full of tiny but rather sharp teeth.
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** swim 30 ft.; **AC** +4 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 16, **Dex** 13, **Con** 15, **Int** 1, **Wis** 12, **Cha** 6; **SQ** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Attack** bite (1d6); **Ability Scores** **Str** +2, **Con** +2; **SQ** anchor.
 
 #### Shark
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** swim 60 ft.; **AC** +4 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 13, **Dex** 15, **Con** 15, **Int** 1, **Wis** 12, **Cha** 2; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Qualities** blindsense 30 ft.
 
@@ -2069,11 +2014,11 @@ This oversized amphibian has a mouth full of tiny but rather sharp teeth.
 
 This unusual shark is named for its blocky, rectangular head. The creature’s eyes are on each side of its head.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 60 ft.; **AC** +3 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 13, **Dex** 14, **Con** 12, **Int** 1, **Wis** 15, **Cha** 6; **Special Qualities** aquatic, low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +2, **Dex** –2, **Con** +4; **Special Qualities** blindsense 30 ft.
 
@@ -2081,11 +2026,11 @@ This unusual shark is named for its blocky, rectangular head. The creature’s e
 
 **Source** PAP97
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 60 ft. (average); **Attack** bite (1d4); **Ability Scores** Str 12, Dex 13, Con 13, Int 2, Wis 14, Cha 7; **Special Qualities** low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** Str +2, Con +2; **Special Attacks** impale.
 
@@ -2097,11 +2042,11 @@ When an impaler shrike has a creature at least one size smaller than itself grap
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +1 natural; **Attack** gore (1d4); **Ability Scores** **Str** 13, **Dex** 14, **Con** 11, **Int** 2, **Wis** 10, **Cha** 5; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Qualities** egg cracker.
 
@@ -2115,21 +2060,21 @@ A skittergoat’s horns are able to crack through the tough shells of ankheg egg
 
 Its unmistakable black-and-white-striped coloration gives a clear warning sign to any who’ve experienced this foul-smelling creature’s ire.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 9, **Dex** 14, **Con** 13, **Int** 2, **Wis** 12, **Cha** 9; **Special Attacks** spray (ranged touch attack, 30-ft. range, musk, usable 1/day); **Special Qualities** low-light vision, musk (Fort save or sickened for 1d6 rounds, Con-based DC), scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** spray (usable 2/day); **Special Qualities** musk (Fort save or nauseated for 1d3 rounds).
 
 #### Snake, Constrictor
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., climb 20 ft., swim 20 ft.; **AC** +2 natural armor; **Attack** bite (1d3 plus grab); **Ability Scores** **Str** 15, **Dex** 17, **Con** 13, **Int** 1, **Wis** 12, **Cha** 2; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** constrict 1d4.
 
@@ -2139,11 +2084,11 @@ Its unmistakable black-and-white-striped coloration gives a clear warning sign t
 
 Highly venomous and an excellent swimmer, the brightly colored reef snake is at home in tidal waters but can slither about on land if needed.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft., swim 40 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus poison); **Ability Scores** **Str** 10, **Dex** 15, **Con** 12, **Int** 1, **Wis** 13, **Cha** 2; **Special Attacks** poison (frequency 1 round [6]; *effect* 1 **Str** damage; *cure* 1 save; Con-based DC); **Special Qualities** low-light vision, hold breath, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 Ability Scores **Str** +2, **Dex** +2.; **Special Attacks** poison (frequency 1 round [6]; *effect* 1d2 **Str** damage; *cure* 2 saves; Con-based DC]).
 
@@ -2153,47 +2098,47 @@ Ability Scores **Str** +2, **Dex** +2.; **Special Attacks** poison (frequency 1 
 
 This brightly colored snake can spit its venom, giving it a dangerous ranged attack.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft.; **AC** +2 natural armor; **Attack** bite (1d3); **Ability Scores** **Str** 8, **Dex** 15, **Con** 11, **Int** 1, **Wis** 12, **Cha** 2; **Special Attacks** poison (frequency 1 round [6]; *effect* blurred vision [20% miss chance] 1 round; *cure* 1 save; Con-based DC), spit (ranged touch attack, 10-foot range, poison, usable every 2d4 rounds); **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 Ability Scores **Dex** +2, **Con** +2; **Special Attacks** poison (frequency 1 round [6]; *effect* blindness 1 round; *cure* 1 save; Con-based DC).
 
 #### Snake, Viper
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft., swim 20 ft.; **AC** +2 natural armor; **Attack** bite (1d3 plus poison [*Frequency* 1 round (6), *effect* 1 **Con** damage, *cure* 1 save, Con-based DC]); **Ability Scores** **Str** 8, **Dex** 17, **Con** 11, **Int** 1, **Wis** 12, **Cha** 2; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d4 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
 #### Snapping Turtle
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 20 ft.; **AC** +10 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 8, **Dex** 10, **Con** 9, **Int** 1, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, hold breath, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus grab), **Ability Scores** **Str** +8, **Dex** –2, **Con** +4
 
 #### Spinosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., swim 20 ft.; **AC** +3 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 18, **Dex** 15, **Con** 15, **Int** 2, **Wis** 13, **Cha** 3.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
 #### Squid
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +1 natural armor; **Speed** swim 60 ft., jet 240 ft.; **Attack** tentacles (1d4 plus grab), bite (1d3); **Ability Scores** **Str** 14, **Dex** 15, **Con** 11, **Int** 2, **Wis** 12, **Cha** 2; **Special Qualities** low-light vision, ink cloud.
 
@@ -2201,7 +2146,7 @@ Ink Cloud (Ex)
 
 A squid can emit a 5-foot-radius cloud of ink once per minute as a free action while underwater. This cloud provides total concealment. The ink persists for 1 minute.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
@@ -2211,11 +2156,11 @@ A squid can emit a 5-foot-radius cloud of ink once per minute as a free action w
 
 Although this creature isn’t nearly the size of a true giant squid, it remains large enough to do serious damage to foes with its many tentacles.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 40 ft., jet 90 ft.; **AC** +1 natural armor; **Attack** bite (1d6), tentacles (1d4 plus grab); **Ability Scores** **Str** 12, **Dex** 15, **Con** 13, **Int** 2, **Wis** 12, **Cha** 3; **Special Qualities** aquatic, low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), tentacles (1d6 plus grab); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** constrict (1d6); **Special Qualities** ink cloud (20-ft. radius)
 
@@ -2223,7 +2168,7 @@ Although this creature isn’t nearly the size of a true giant squid, it remains
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft, climb 30 ft; **AC** +1 natural armor; **Attack** bite (1d4)
 
@@ -2231,7 +2176,7 @@ Although this creature isn’t nearly the size of a true giant squid, it remains
 
 **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2.
 
@@ -2239,31 +2184,31 @@ Although this creature isn’t nearly the size of a true giant squid, it remains
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Attack** gore (1d4); **Ability Scores** **Str** 10, **Dex** 19, **Con** 14, **Int** 2, **Wis** 15, **Cha** 8; **SQ** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** gore (1d6), 2 hooves (1d4); **Ability Scores** **Str** +2, **Dex** –2, **Con** +2.
 
 #### Stegosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +6 natural armor; **Speed** 30 ft.; **Attack** tail (2d6); **Ability Scores** **Str** 10, **Dex** 18, **Con** 10, **Int** 2, **Wis** 12, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** tail (2d8 plus trip); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
 #### Stingray
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** swim 40 ft.; **Attack** sting (1d3 plus poison [*frequency* 1 round (4), *effect* 1d2 **Dex** and 1 **Con** damage, *cure* 1 save, Con-based DC]); **Ability Scores** **Str** 6, **Dex** 15, **Con** 13, **Int** 1, **Wis** 13, **Cha** 2; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** sting (1d4); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2; **Special Qualities** blindsense 30 ft.
 
@@ -2271,11 +2216,11 @@ Although this creature isn’t nearly the size of a true giant squid, it remains
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +6 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 10, **Dex** 13, **Con** 11, **Int** 2, **Wis** 12, **Cha** 7; **SQ** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large, AC +3 natural armor; **Attack** gore (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **SQ** ferocity, reflexive strike.
 
@@ -2283,17 +2228,17 @@ Although this creature isn’t nearly the size of a true giant squid, it remains
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +4 natural armor; **Attack** 2 claws 1d6; **Ability Scores** Str 12, Dex 18, Con 10, Int 2, Wis 15, Cha 11; **Special Qualities** low-light vision, scent, sprint.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** 2 claws 1d8; **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** bleed (1d6), sweeping strike.
 
 #### Thylacine
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **Attack** bite (1d4); **Ability Scores** **Str** 12, **Dex** 15, **Con** 16, **Int** 2, **Wis** 13, **Cha** 7; **Special Qualities** low-light vision, powerful jaws.
 
@@ -2301,7 +2246,7 @@ Powerful Jaws (Ex)
 
 A thylacine’s muscular jaws threaten a critical hit on a natural roll of 19 or 20.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** -2, **Con** +4.
 
@@ -2309,21 +2254,21 @@ A thylacine’s muscular jaws threaten a critical hit on a natural roll of 19 or
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft., swim 30 ft.; **AC** +4 natural armor; **Attack** bite (1d4); **Ability Scores Str** 15, **Dex** 15, **Con** 11, **Int** 2, **Wis** 17, **Cha** 8; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores Str** +8, **Dex** –2, **Con** +4; **Special Qualities** constrict (1d6), grab.
 
 #### Toad, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.,swim 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 15, **Dex** 13, **Con** 16, **Int** 1, **Wis** 9, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2; **Special Qualities** poison skin (poison—contact, *frequency* 1 round (4), *effect* 1d2 **Wis** damage, *cure* 1 save, Con-based DC]), swallow whole.
 
@@ -2335,21 +2280,21 @@ A creature that strikes a giant toad with an unarmed strike or natural weapon ex
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft.; **AC** +6 natural; **Attack** bite (1d4); **Ability Scores** **Str** 14, **Dex** 8, **Con** 16, **Int** 2, **Wis** 13, **Cha** 9; **SQ** low-light vision
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **Speed** 10 ft.; **AC** +8 natural; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; Bonus Feat Great Fortitude
 
 #### Triceratops
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +6 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 10, **Dex** 13, **Con** 11, **Int** 2, **Wis** 12, **Cha** 7.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large, **AC** +3 natural armor; **Attack** gore (2d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful charge (gore, 2d8).
 
@@ -2357,11 +2302,11 @@ A creature that strikes a giant toad with an unarmed strike or natural weapon ex
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** Str 7, Dex 17, Con 10, Int 2, Wis 14, Cha 13; **Special Qualities** easily trained, low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** Str +4, Dex +4, Con +4.
 
@@ -2369,17 +2314,17 @@ A creature that strikes a giant toad with an unarmed strike or natural weapon ex
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 80 ft. (average); **Attack** bite (1d4), 2 wings (1d3); **Ability Scores** **Str** 10, **Dex** 15, **Con** 12, **Int** 2, **Wis** 12, **Cha** 5; **SQ** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
 #### Tylosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 50 ft.; **AC** +3 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 10, **Dex** 17, **Con** 10, **Int** 2, **Wis** 13, **Cha** 9; **Special Qualities** low-light vision, scent.
 
@@ -2387,11 +2332,11 @@ A creature that strikes a giant toad with an unarmed strike or natural weapon ex
 
 #### Tyrannosaurus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium, **Speed** 30 ft.; **AC** +4 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** 14, **Dex** 16, **Con** 10, **Int** 2, **Wis** 15, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6 plus grab); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** powerful bite.
 
@@ -2403,11 +2348,11 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +4 natural; **Speed** 30 ft.; **Attack** bite (1d8); **Ability Scores** Str 14, Dex 12, Con 17, Int 1, Wis 13, Cha 3; **Special Qualities** scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** Str +8, Dex -2, Con +4.
 
@@ -2415,21 +2360,21 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 60 ft.; **AC** +1 natural armor; **Attack** 2 talons (1d6), bite (1d4); **Ability Scores** Str 11, Dex 17, Con 17, Int 2, Wis 12, Cha 14; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 2 talons (1d8), bite (1d6), 2 claws (1d4) **Ability Scores** Str +4, Dex –2, Con +2; **Special Attacks** pounce.
 
 #### Vulture, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +2 natural armor; **Speed** 10 ft., fly 50 ft. (average); **Attack** bite (1d8); **Ability Scores** **Str** 12, **Dex** 15, **Con** 14, **Int** 2, **Wis** 15, **Cha** 7; **Special Qualities** low-light vision, +4 on saves vs. disease.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6); **Ability** **Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -2437,11 +2382,11 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 **Source**: Orcs
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 60 ft. (average); **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 15, **Con** 12, **Int** 2, **Wis** 13, **Cha** 7; **SQ** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
@@ -2449,11 +2394,11 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 **Source** PCS:AA
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 40 ft.; **AC** +3 natural armor; **Attack** gore (1d6); **Ability Scores** **Str** 14, **Dex** 13, **Con** 14, **Int** 2, **Wis** 13, **Cha** 9; **Special Qualities** hold breath, low-light vision.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +4 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** fatal gore(A walrus’ gore attack threatens on a 19-20).
 
@@ -2461,11 +2406,11 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 **Source**: Orcs
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 15, **Dex** 15, **Con** 14, **Int** 2, **Wis** 11, **Cha** 5; **Special Attacks** rake (1d4); **SQ** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** grab, pounce, rake (1d6).
 
@@ -2473,21 +2418,21 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 **Source**: PRG:B4
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 10 ft.; **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 10, **Dex** 19, **Con** 13, **Int** 2, **Wis** 12, **Cha** 10; **Special Attacks** blood drain (1 Con), grab; **SQ** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
 #### Wolf
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus trip); **Ability Scores** **Str** 13, **Dex** 15, **Con** 15, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus trip); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -2497,11 +2442,11 @@ A tyrannosaurus applies twice its Strength modifier to bite damage.
 
 This creature is a dependable hybrid of wolf and dog.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 15, **Dex** 15, **Con** 13, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Attack** bite (1d6 plus 1d4 bleed).
 
@@ -2509,11 +2454,11 @@ This creature is a dependable hybrid of wolf and dog.
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 80 ft.; **AC** +1 natural armor; **Attack** tail slap (1d8); **Ability Scores** Str 11, Dex 19, Con 10, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, hold breath.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tail slap (2d6); **Ability Scores** Str +8, Dex -2, Con +4.
 
@@ -2521,31 +2466,31 @@ This creature is a dependable hybrid of wolf and dog.
 
 [Source]
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 80 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** Str 11, Dex 19, Con 10, Int 2, Wis 14, Cha 6; **Special Qualities** low-light vision, hold breath.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** blindsight 120 ft., tusk(A charging narwhal can make a single gore attack with its tusk in place of its normal bite attack. If it hits, the tusk deals 2d6 points of damage, plus twice it’s primary attack damage modifier with a ×3 critical multiplier).
 
 #### Whale, Orca
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** swim 80 ft.; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 11, **Dex** 19, **Con** 10, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** low-light vision, hold breath.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Qualities** blindsight 120 ft.
 
 #### Wolliped
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +1 natural armor, **Attack** gore (1d6); **Ability Scores** **Str** 14, **Dex** 16, **Con** 12, **Int** 2, **Wis** 11, **Cha** 4; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +4; **Special Abilities** spit, trample.
 
@@ -2555,11 +2500,11 @@ This creature is a dependable hybrid of wolf and dog.
 
 Stout and stubborn, the yak is sure footed and dependable in rough terrain.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 30 ft.; **AC** +4 natural armor; **Attack** gore (1d8); **Ability Scores** **Str** 14, **Dex** 10, **Con** 12, **Int** 2, **Wis** 10, **Cha** 5; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 AC +2 natural armor; **Ability Scores** **Str** +4, **Con** +4; **Special Qualities** pack animal (speed is never modified by encumbrance).
 
@@ -2569,11 +2514,11 @@ AC +2 natural armor; **Ability Scores** **Str** +4, **Con** +4; **Special Qualit
 
 The iconic black and white stripes of the zebra make it instantly recognizable.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** bite (1d4), 2 hooves (1d4); **Ability Scores** **Str** 14, **Dex** 15, **Con** 13, **Int** 2, **Wis** 14, **Cha** 6; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2, **Con** +2.
 
@@ -2589,11 +2534,11 @@ The hooves are primary attacks.
 
 **Source** SwA:AC
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 40 ft., climb 20 ft.; **AC** +1 natural armor; **Attack(s)** bite (1d4), 2 tentacles (1d2); **Ability Scores** Str 8, Dex 17, Con 14, Int 3, Wis 12, Cha 11; **Special Qualities** darkvision 120 ft., scent, no breath, racial skill bonus: +4 Stealth; Immune cold, disease, poison; **Resist** fire 30; Weaknesses deaf, vulnerable to salt water
 
-### 8th-LEVEL ADVANCEMENT
+##### 8th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack(s)** bite (1d6 plus void bite), 2 tentacles (1d3); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -2623,15 +2568,15 @@ Void Death: Bite-injury; *save* Fortitude, Con-based DC; *onset* 1 hour; *freque
 
 **Prerequisite(s)**: Fortitude +4
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 30 ft., climb 20 ft., swim 20 ft.; **AC** +1 natural armor; **Attack(s)** 2 slams (1d4); **Ability Scores** Str 15, Dex 20, Con 16, Int 3, Wis 4, Cha 13; **Special Qualities** darkvision 60 ft.; **Resist** acid 5, cold 5; **CMD** +12 vs. trip; **Special Attacks** nauseating touch
 
-### 9th-LEVEL ADVANCEMENT
+##### 9th-LEVEL ADVANCEMENT
 
 **Size** Medium; **AC** +2 natural armor; **Attack(s)** 2 slams (1d6); **Ability Scores** Str +4, Dex -2, Con +2; **Special Attacks** revolting aura
 
-### MASTERY (13th-Level)
+##### MASTERY (13th-Level)
 
 **Special Attacks** ravenous young, disease
 
@@ -2659,15 +2604,15 @@ Bogwid Fever: Bite—injury; *save* Fortitude, Con-based DC, onset 1 day, freque
 
 **Source** SwA:AC
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Medium; **Speed** 30 ft., climb 15 ft., fly 60 ft. (good); **AC** +3 natural armor; **Attack(s)** bite (2d6); **Ability Scores** Str 8, Dex 20, Con 10, Int 1, Wis 16, Cha 6; **Special Qualities** stench; **Special Attacks** drone
 
-### 7th-LEVEL ADVANCEMENT
+##### 7th-LEVEL ADVANCEMENT
 
 **Size** Large; **AC** +2 natural armor; **Attack(s)** bite (2d8); **Ability Scores** Str +8, Dex -2, Con +4
 
-### MASTERY (11th-Level)
+##### MASTERY (11th-Level)
 
 Attack 4 tentacles secondary natural attacks (paralysis); **Special Attacks** Paralysis (2d6 rounds, Con-based DC)
 
@@ -2685,11 +2630,11 @@ When a carrion moth dies, its carcass splits open and releases a foul-smelling g
 
 **Prerequisite(s)**: Elder Voice, Stealth 4 ranks, any evil alignment
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft. climb 10 ft.; **AC** +2 natural armor; **Attack** 2 tentacles (1d4 plus grab); **Ability Scores Str** 14, **Dex** 14, **Con** 11, **Int** 4, **Wis** 13, **Cha** 7; **Special Qualities** darkvision 60 ft; **Special Attacks** strangle, constrict (1d4)
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **AC** +2 natural armor; **Attack** bite (1d8 plus trip); **Ability Scores Str** +8, **Dex** -2, **Con** +4; **Special Qualities** quickness; **Special Attacks** grab (Large)
 
@@ -2701,11 +2646,11 @@ When a carrion moth dies, its carcass splits open and releases a foul-smelling g
 
 **Prerequisite(s)**: Elder Voice feat
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Medium; **Speed** 10 ft., burrow 20 ft.; **AC** +3 natural armor; **Attack(s)** bite (1d6 plus grab), 5 tentacles secondary natural attack (1d3 plus grab); **Ability Scores** Str 9, Dex 13, Con 14, Int 2, Wis 11, Cha 10; **Special Qualities** darkvision 60 ft., Tremorsense 60 ft., +8 stealth when burrowed; **Special Attacks** swallow whole 2d6
 
-### 8th-LEVEL ADVANCEMENT
+##### 8th-LEVEL ADVANCEMENT
 
 **Size** Large; **AC** +2 natural armor; **Attack(s)** bite (1d8 plus grab), 5 tentacles secondary natural attack (1d4 plus grab); **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** Multiattack; Special Attack sinkhole
 
@@ -2719,11 +2664,11 @@ A dust digger can burrow into sand, loose soil, or dirt to lie in ambush just un
 
 **Prerequisite(s)**: Elder Voice, Craft (trapmaking) 4 ranks, any evil alignment
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft. climb 30 ft.; **Attack** bite (1d4 plus poison) and 2 claws (1d3); **Ability Scores Str** 12, **Dex** 19, **Con** 17, **Int** 6, **Wis** 15, **Cha** 8; **Special Qualities** darkvision 60 ft., low-light vision, +8 Craft (trapmaking); **Special Attacks** poison (frequency 1 round [6], effect 1d2 Dex damage, cure 2 consecutive saves, Con-based DC)
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6 plus poison) and 2 claws (1d4); **Ability Scores Str** +2, Dex-2, **Con** +2; **Special Qualities** spider empathy (HD+4) **Special Attacks** traps, web (ranged, Con-based DC, HP equal to Con)
 
@@ -2735,11 +2680,11 @@ A dust digger can burrow into sand, loose soil, or dirt to lie in ambush just un
 
 **Prerequisite(s)**: Elder Voice feat
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 20 ft., climb 40 ft.; **Attack(s)** bite (1d6 plus poison), 2 claws (1d4); **Ability Scores** Str 14, Dex 20 Con 15, Int 2, Wis 13, Cha 7; **Special Qualities** plant defenses
 
-### 8th-LEVEL ADVANCEMENT
+##### 8th-LEVEL ADVANCEMENT
 
 **Special Attacks**
 
@@ -2763,15 +2708,15 @@ Bite—injury; *save* Fortitude, Con-based DC; *frequency* 1/round for 4 rounds;
 
 **Prerequisite(s)**: Elder Voice feat, Great Fortitude
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Medium; **Speed** 10 ft., burrow 20 ft.; **AC** +4 natural armor; **Attack(s)** bite (2d4); **Ability Scores** Str 16, Dex 9, Con 16, Int 6, Wis 11, Cha 13; **Special Qualities** darkvision 60 ft., tremorsense 60ft., blind, blood gorger, freeze;Special Attacks swallow whole (2d6 and 2d6 acid)
 
-### 9th-LEVEL ADVANCEMENT
+##### 9th-LEVEL ADVANCEMENT
 
 **Size** Large; **AC** +4 natural armor; **Attack(s)** bite (2d6); **Ability Scores** Str +8, Dex -2, Con +4
 
-### MASTERY (11th-Level)
+##### MASTERY (11th-Level)
 
 **Special Attacks** blood lantern
 
@@ -2793,15 +2738,15 @@ As a swift action in any round it inflicts damage to a victim it has swallowed w
 
 **Prerequisite(s)**: Elder Voice, Knowledge (dungeoneering) 7 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **AC** +4 natural armor Speed 10 ft., swim 20 ft.; **Attack** 6 bites (1d3 plus grab); **Ability Scores Str** 8, **Dex** 19, **Con** 22, **Int** 4, **Wis** 13, **Cha** 2; **Special Qualities** all-around vision, darkvision 60 ft., amorphous (Immune: critical hits, precision damage), +4 Perception; **Special Attacks** blood drain
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 6 bites (1d4 plus grab) **Ability Scores Str** +2, **Dex** -2, **Con** +2; **Special Attacks** gibbering (Con-based DC), ground manipulation, spittle (ranged, Con-based DC)
 
-### 11th-Level Advancement
+##### 11th-Level Advancement
 
 **Special Qualities** DR 5/bludgeoning; **Special Attacks** Engulf (6d4 damage plus 2 Con damage, AC flat-footed half of natural armor, 4 hp)
 
@@ -2811,11 +2756,11 @@ As a swift action in any round it inflicts damage to a victim it has swallowed w
 
 **Prerequisite(s)**: Elder Voice, Stealth 4 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **AC** +1 natural armor; **Speed** 30 ft. climb 30 ft.; **Attack** bite (1d3) and 4 tentacles (1d3); **Ability Scores Str** 10, **Dex** 16, **Con** 11, **Int** 3, **Wis** 14, **Cha** 5; **Special Qualities** darkvision 60 ft., scent, +8 stealth in rocky terrain; **DR** 5/ magic; CMD can’t be tripped
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d4) and 4 tentacles (1d4); **Ability Scores Str** +2, **Dex** -2, **Con** +2; **DR** 10/ magic
 
@@ -2823,15 +2768,15 @@ As a swift action in any round it inflicts damage to a victim it has swallowed w
 
 **Prerequisite(s)**: Elder Voice feat, Great Fortitude
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 0 ft., fly 60 ft. (good); **AC** +2 natural armor; **Attack(s)** 3 claws (1d6 plus grab), bite (1d4); **Ability Scores** Str 12, Dex 14, Con 17, Int 5, Wis 12, Cha 10; **Special Qualities** darkvision 60 ft., barbed carapace, no breath; CMB +4 grapple; **Special Attacks** constrict (1d6)
 
-### 9th-LEVEL ADVANCEMENT
+##### 9th-LEVEL ADVANCEMENT
 
 **Size** Medium; **AC** +2 natural armor; **Attack(s)** 3 claws (1d8 plus grab), bite (1d8); **Ability Scores** Str +4, Dex -2, Con +2
 
-### MASTERY (11th-Level)
+##### MASTERY (11th-Level)
 
 Barbed Carapace (Ex)
 
@@ -2849,11 +2794,11 @@ The acid from a lunarma’s breath weapon lasts for 1d4 additional rounds, deali
 
 **Prerequisite(s)**: Elder Voice, Knowledge (dungeoneering) 7 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **AC** +6 natural armor; **Speed** 20 ft.; **Attack** bite (1d6 plus disease) and 2 tentacles (1d4 plus grab); **Ability Scores Str** 10, **Dex** 12, **Con** 9, **Int** 5, **Wis** 14, **Cha** 5; **Special Qualities** darkvision 60 ft., scent, +8 stealth in lair, +5 ft. range for tentacle; **Immune** disease **Special Attacks** disease Filth Fever (onset 1d3 days, frequency 1/ day, effect 1d3 Dex damage, d3 Con damage, cure 2 consecutive saves, Con– based DC)
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus disease) and 2 tentacles (1d6 plus grab); **Ability Scores Str** +8, **Dex** -2, **Con** +4; **Special Attacks** constrict (tentacle, 1d6)
 
@@ -2861,11 +2806,11 @@ The acid from a lunarma’s breath weapon lasts for 1d4 additional rounds, deali
 
 **Prerequisite(s)**: Elder Voice feat
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 5 ft., swim 40 ft.; **AC** +2 natural armor; **Attack(s)** 2 claws (1d4 plus grab and poison); **Ability Scores** Str 10, Dex 13, Con 14, Int 5, Wis 12, Cha 11; **Special Qualities** darkvision 60 ft., low-light vision, scent, racial skill bonus: +8 Swim, ferocity; **CMD** can’t be tripped.; **Resist** cold 5; **Special Attacks** death frenzy, constrict (1d4)
 
-### 9th-LEVEL ADVANCEMENT
+##### 9th-LEVEL ADVANCEMENT
 
 **Size** Medium; **Attack(s)** 2 claws (1d6 plus grab and poison); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -2887,11 +2832,11 @@ Claw-injury; *save* fortitude, Con-based DC; *frequency* 1/round for 4 rounds; *
 
 **Prerequisite(s)**: Elder Voice
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **AC** +3 natural armor; **Speed** 40 ft., climb 10 ft.; **Attack** bite (1d2) and antennae (rust); **Ability Scores Str** 8, **Dex** 19, **Con** 11, **Int** 2, **Wis** 13, **Cha** 8; **Special Qualities** darkvision 60 ft., scent metals 90 ft.; **Special Attacks** rust (1/4 hp in damage, 2nd hit broken, 4th hit destroyed)
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium **AC** +2 natural armor; **Attack** bite (1d3) and antennae (rust); **Ability Scores Str** +2, **Dex** -2, **Con** +2; **Special Attacks** rust (as normal)
 
@@ -2899,11 +2844,11 @@ Claw-injury; *save* fortitude, Con-based DC; *frequency* 1/round for 4 rounds; *
 
 **Prerequisite(s)**: Elder Voice feat
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Medium; **Speed** 30 ft., burrow 15 ft.; **AC** +1 natural armor; **Attack(s)** bite (1d6 plus attach), tail slap (1d6); **Ability Scores** Str 8, Dex 15, Con 10, Int 3, Wis 14, Cha 5; **Special Qualities** DR 5/slashing, +8 Stealth in rocky terrain, sensitive tail; CMB +8 grapple; **Special Attacks** blood drain (1 Con and 1 Str)
 
-### 9th-LEVEL ADVANCEMENT
+##### 9th-LEVEL ADVANCEMENT
 
 **Size** Large; **AC** +2 natural armor; **Attack(s)** bite (1d8 plus attach), tail slap (1d8); **Ability Scores** Str +8, Dex -2, Con +4
 
@@ -2919,11 +2864,11 @@ A salt worm may attack with its tail while attached to a victim.
 
 **Prerequisite(s)**: Elder Voice feat
 
-### STARTING STATISTICS
+##### STARTING STATISTICS
 
 **Size** Small; **Speed** 20 ft., climb 20 ft.; **Attack(s)** 2 talons (1d4); **Ability Scores** Str 7, Dex 17, Con 12, Int 2, Wis 14, Cha 11; **Special Qualities** darkvision 60 ft., All-around vision; **Special Attacks** blinding stench
 
-### 7th-LEVEL ADVANCEMENT
+##### 7th-LEVEL ADVANCEMENT
 
 **Special Attacks**: devour the eyes of the soul
 
@@ -2941,11 +2886,11 @@ Tearjerkers eat the eyes of their victims before any other part of the anatomy. 
 
 **Prerequisite(s)**: Elder Voice
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **AC** +4 natural armor; **Speed** 20 ft., climb 20 ft.; **Attack** sting (1d4 plus poison) and tentacle (1d4 plus grab); **Ability Scores Str** 13, **Dex** 15, **Con** 12, **Int** 1, **Wis** 14, **Cha** 6; **Special Qualities** all-around vision, blindsense 30 ft., darkvision 60 ft.; **Special Attacks** poison (frequency 2 rounds, effect 1d4 Con damage plus nausea, cure 1 save, Con-based DC), constrict (1d4)
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** sting (1d6 plus poison) and tentacle (1d6 plus grab); **Ability Scores Str** +2, **Dex** -2, **Con** +2; **Special Qualities** Reach +5 ft.; **Special Attacks** constrict (1d6)
 
@@ -3017,15 +2962,15 @@ The following creatures can be chosen as Magical Beast companions by a character
 
 **Source** PPC:HoG
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Medium; **Speed** 20 ft.; **AC** +4 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 16, **Dex** 10, **Con** 15, **Int** 2, **Wis** 13, **Cha** 11; **Special Qualities** darkvision 60 ft., low-light vision, gaze (one target within 30 ft., paralysis 1d4 rounds, Fort negates, once per day).
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **AC** +2 natural armor; **Ability Scores** Dex +4, **Con** +4; **Attack** bite (1d6); **Special Qualities** gaze (three times per day).
 
-### Mastery (11th level)
+##### Mastery (11th level)
 
 **Size** The basilisk’s gaze attack functions as flesh to stone (caster level equals basilisk’s HD) instead of inflicting paralysis.
 
@@ -3035,11 +2980,11 @@ The following creatures can be chosen as Magical Beast companions by a character
 
 **Prerequisite(s)**: Diplomacy or Intimidate 7 ranks, Knowledge (arcana) 7 ranks.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Medium; **Speed** 40 ft., climb 20 ft.; **AC** +6 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 16, **Dex** 12, **Con** 16, **Int** 7, **Wis** 14, **Cha** 12; **Special Attacks** breath weapon (20-ft. line, 4d6 electricity damage, Reflex half, once per day), grab; **Special Qualities** electricity resistance 10.
 
-### Mastery (11th level)
+##### Mastery (11th level)
 
 **Size:** Large;**AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** breath weapon (three times per day), constrict 1d8; **Special Qualities** immune to electricity.
 
@@ -3047,23 +2992,23 @@ The following creatures can be chosen as Magical Beast companions by a character
 
 **Source** PPC:HoG
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Medium; **Speed** 40 ft., burrow 20 ft.; **AC** +4 natural armor; **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** 16, **Dex** 14, **Con** 16, **Int** 2, **Wis** 13, **Cha** 6.
 
-### Mastery (11th level)
+##### Mastery (11th level)
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (1d8), claws (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** leap (When charging, it can attempt a DC 20 Acrobatics check to jump into the air and land next to its enemies. If successful, it can make four claw attacks against foes in reach but cannot make a bite attack).
 
 #### Bunyip
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Medium; **Speed** 10 ft., swim 50 ft.; **Attack** bite (1d8 plus bleed); **Ability Scores** Str 12, Dex 16, Con 13, Int 2, Wis 11, Cha 7; **Special Qualities** low-light vision, keen scent 120 ft.; **Special Attacks** bleed (1d6)
 
-### 8th-Level Advancement
+##### 8th-Level Advancement
 
 **AC** +2 natural armor; **Special Attacks** blood rage, roar
 
@@ -3077,13 +3022,13 @@ A bunyip’s roar is supernaturally loud and horrifying. When a bunyip roars (a 
 
 #### Cat-Fisher
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Tiny; **Speed** 30 ft., fly 80 ft. (average); **Attack** bite (1d3) and 2 claws (1d2); **Ability Scores** Str 6, Dex 17, Con 11, Int 2, Wis 14, Cha 7; **Special Qualities** low-light vision, scent, Perception +3 on sight-based checks, +4 Stealth
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Small; **Attack** bite (1d4) and 2 claws (1d3); **Ability Scores** Str +4, Dex -2, Con +2; **Special Qualities** sound mimicry (any)
 
@@ -3091,13 +3036,13 @@ A bunyip’s roar is supernaturally loud and horrifying. When a bunyip roars (a 
 
 **Prerequisite(s)**: base Fortitude bonus +4
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Medium; **Speed** 40 ft., swim 20 ft.; **AC** +4 natural armor; **Attack** bite (1d10), gore (1d8), 2 hooves (1d6); **Ability Scores** Str 12, Dex 10, Con 18, Int 5, Wis 15, Cha 10; **Special Qualities** darkvision 60 ft., low-light vision; **Special Attacks** stench (10 feet)
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (2d8), gore (2d6), 2 hooves (1d8); **Ability Scores** Str +8, Dex -2, Con +4; **Special Attacks** stench (20 feet) Mastery (11th-Level)
  **Special Attacks** poison breath, stench (30 feet)
@@ -3116,13 +3061,13 @@ This functions as the universal monster ability, has a radius detailed above, an
 
 **Prerequisite(s)**: Perception 6 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Tiny; **Speed** 40 ft., burrow 10 ft., fly 80 ft. (average); **Attack** bite (1d3) and 2 talons (1d3); **Ability Scores** Str 8, Dex 16, Con 11, Int 5, Wis 16, Cha 5; **Special Qualities** low-light vision, scent, can speak one random language used near their territory, Sleight of Hands is a class skill and +3 bonus.
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Small; **Attack** bite (1d4) and 2 talons (1d4); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -3132,23 +3077,23 @@ This functions as the universal monster ability, has a radius detailed above, an
 
 **Prerequisite(s)**: Survival 7 ranks.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Medium; **Speed** 20 ft., burrow 20 ft.; **AC** +6 natural armor; **Attack** bite (1d6 plus poison); **Ability Scores** **Str** 16, **Dex** 14, **Con** 16, **Int** 3, **Wis** 10, **Cha** 5; **Special Attacks** poison (frequency 1 round [6]; *effect* 1d2 Con damage; *cure* 2 saves, Con-based DC); **Special Qualities** acid resistance 10, darkvision 60 ft., low-light vision, tremorsense 60 ft., electricity resistance 10.
 
-### Mastery (11th level)
+##### Mastery (11th level)
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (1d8 plus poison); **Attack** Ability Scores **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** breath weapon (30-ft. line, 8d6 acid damage, Reflex half, once per day); **Special Qualities** immune to acid, immune to electricity.
 
 #### Frost-Ferret
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Tiny; **Speed** 20 ft., climb 20 ft.; **AC** +1 natural armor; **Attack** bite (1d3); **Ability Scores** Str 3, Dex 16, Con 10, Int 2, Wis 12, Cha 5; **Special Qualities** darkvision 60 ft., low-light vision, scent, Stealth +4, Acrobatics +8; Immune cold; **Special Attacks** breath weapon (2d6, 15 ft)
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Small; **AC** +2 natural armor; **Attack** bite (1d4); **Ability Scores** Str +4, Dex -2, Con +2; **Special Attacks** breath weapon (4d6, 20 ft)
 
@@ -3164,23 +3109,23 @@ The breath weapon is usable once every 1d4 rounds, and allows a Reflex save for 
 
 **Prerequisite(s)**: Beast-Speaker, Ride 7 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., fly 80 ft. (average); **AC** +4 natural armor; **Attack** bite (1d4), 2 talons (1d4); **Ability Scores Str** 10, **Dex** 17, **Con** 12, **Int** 5, **Wis** 13, **Cha** 8; **Special Qualities** darkvision 60 ft., low-light vision, Scent; +4 Acrobatics, +4 Perception;
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d6), 2 talons (1d6); **Ability Scores Str** +6, **Dex** -2, **Con** +4; **Special Attacks** pounce, rake (2 talons, 1d4)
 
 #### Hippocampus
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Medium; **Speed** 5 ft., swim 60 ft.; **AC** +2 natural armor; **Attack** bite (1d3) and tail slap (1d3); **Ability Scores** Str 8, Dex 11, Con 13, Int 2, Wis 12, Cha 11; **Special Qualities** darkvision 60 ft., low-light vision, water dependency
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d4) and tail (1d4); **Ability Scores** Str +8, Dex -2, Con +2
 
@@ -3190,11 +3135,11 @@ The breath weapon is usable once every 1d4 rounds, and allows a Reflex save for 
 
 **Prerequisite(s)**: Beast-Speaker
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft., fly 100 ft. (average); **AC** +1 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores Str** 10, **Dex** 17, **Con** 10, **Int** 2, **Wis** 12, **Cha** 9; **Special Qualities** darkvision 60 ft., low-light vision, Scent; +4 Perception;
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +1 natural armor; **Attack** bite (1d6), 2 talons (1d4); **Ability Scores Str** +5, **Dex** -2, **Con** +4
 
@@ -3204,21 +3149,21 @@ The breath weapon is usable once every 1d4 rounds, and allows a Reflex save for 
 
 **Prerequisite(s)**: Beast-Speaker, Intimidate 4 ranks, Survival 7 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., fly 50 ft. (clumsy); **AC** +4 natural armor; **Attack** bite (1d6), 2 claws (1d8), or spikes (ranged 1d4, 12 per 24 hours); **Ability Scores Str** 12, **Dex** 17, **Con** 14, **Int** 7, **Wis** 12, **Cha** 9; **Special Qualities** darkvision 60 ft., low-light vision, Scent; +4 Perception, +4 Survival when tracking
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8), 2 claws (2d4), or spikes (ranged 1d6, 24 per 24 hours); **Ability Scores Str** +8, **Dex** -2, **Con** +4
 
 #### Maw
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; Speed 20 ft.; AC +4 natural; Attack bite (1d8) or claw (1d3); **Ability Scores** Str 12, Dex 12, Con 14, Int 1, Wis 12, Cha 2; Special Qualities +4 saves vs. disease and poison
 
-### 7th-level Advancement
+##### 7th-level Advancement
 
 **Size** Medium; AC +2 natural; Attack bite (1d10 plus disease) or claw (1d4); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -3228,11 +3173,11 @@ Bite-injury; *save* Fortitude, Con-based DC; *onset* 1d3 days; *frequency* 1/day
 
 #### Mule-Lizard
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; Speed 20 ft.; AC +2 natural; Attack bite (1d4); **Ability Scores** Str 12, Dex 12, Con 14, Int 1, Wis 12, Cha 2; Special Qualities Low-light vision, scent, adaptive camouflage, strong-legged
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; Attack bite (1d8); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -3250,11 +3195,11 @@ The mule-lizard is bipedal but has stable, strong legs. They gain a +4 bonus on 
 
 **Prerequisite(s)**: Beast-Speaker
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft; **AC** +3 natural armor; **Attack** bite (1d4), 2 claws (1d4 plus grab); **Ability Scores Str** 11, **Dex** 14, **Con** 14, **Int** 2, **Wis** 12, **Cha** 10; **Special Qualities** darkvision 60 ft., low-light vision, Scent;
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d5), 2 claws (1d6 plus grab); **Ability Scores Str** +8, **Dex** -2, **Con** +4
 
@@ -3262,13 +3207,13 @@ The mule-lizard is bipedal but has stable, strong legs. They gain a +4 bonus on 
 
 **Source**: LG:LC
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 40 ft., fly 60 ft. (average; unable to carry a rider while flying); **AC** +2 natural armor; **Attack** bite (1d4), 2 hooves* (1d6); **Ability Scores Str** 16, Dex 13, Con 15, Int 2, Wis 12, Cha 9; **Special Qualities** darkvision 60 ft., low-light vision, scent.
 
 * This is a secondary natural attack, see Combat for more information on how secondary attacks work.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Speed 40 ft., fly 100 ft. (average; the pegasus can carry a rider while flying, but reduces its fly speed by half while doing so.); **Attack bite (1d4), 2 hooves (1d6, primary natural attack); Ability Scores Str +2, Con +2.****
 
@@ -3276,13 +3221,13 @@ The mule-lizard is bipedal but has stable, strong legs. They gain a +4 bonus on 
 
 **Prerequisite(s)**: Chaotic Evil, Bluff 5 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Medium; **Speed** 40 ft. fly 120 ft. (average) ; **AC** +1 natural armor; **Attack** bite (1d8 plus grab) and 2 claws (1d6 plus grab); **Ability Scores** Str 15, Dex 17, Con 13, Int 10, Wis 12, Cha 10; **Special Qualities** low-light vision, scent, racial skill bonus +8 Bluff, +4 Acrobatics, sound mimicry (voices); **CMB** +4 grapple
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6 plus grab) and 2 claws (1d8 plus grab); **Ability Scores** Str +8, Dex -2, Con +4; **Special Qualities** pounce, rake (2 claws 1d8)
 
@@ -3292,11 +3237,11 @@ The creature perfectly imitates certain sounds or even specific voices. The crea
 
 #### Ridge Flier
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; Speed 10 ft., fly 80 ft. (average); AC +1 natural; Attack bite (1d4); **Ability Scores** Str 12, Dex 17, Con 12, Int 1, Wis 14, Cha 10; Special Qualities Low-light vision, sense intruder, hyper-aggression racial skill bonus: +4 Perception
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **AC** +1 natural; **Ability Scores** Str +2, Con +2
 
@@ -3312,13 +3257,13 @@ If the ridge flier enters a combat not already under the effects of the hyper-ag
 
 #### Stag-Cat
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Tiny; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** gore (1d4), bite (1d3), 2 claws (1d2); **Ability Scores** Str 6, Dex 16, Con 8, Int 2, Wis 14, Cha 7; **Special Qualities** Dodge and Mobility as bonus feats, scent
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Small; **AC** +2 natural armor; **Attack** gore (1d6), bite (1d4), 2 claws (1d3); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -3328,27 +3273,27 @@ If the ridge flier enters a combat not already under the effects of the hyper-ag
 
 **Prerequisite(s)**: Diplomacy 7 ranks, Knowledge (arcana) or Knowledge (religion) 7 ranks.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size**: Tiny; **Speed** 10 ft., fly 60 ft. (good); **AC** +2 natural armor; **Attack** talons (1d4 plus burn); **Ability Scores** **Str** 10, **Dex** 17, **Con** 12, **Int** 5, **Wis** 14, **Cha** 15; **Special Attacks** breath weapon (30-ft. line, 3d6 fire, Reflex half, once per day), burn (1d4).
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 Size Small; **AC** 19 +4 natural armor; **Attack** talons (1d6 plus burn); **Ability Scores** **Str** +2, **Con** +4, **Cha** +2; **Special Attacks** breath weapon (three times per day), burn (1d6).
 
-### Mastery (11th level)
+##### Mastery (11th level)
 
 **Size** Three times per day, the sun falcon can blast an intense wave of heat and light in a 20-foot cone as a standard action. Creatures within this area must succeed at a Reflex save or take 1d6 points of fire damage and be blinded for 1d4+1 rounds. Creatures that succeed at this save take no fire damage and are instead dazzled for 1 round. The save DC is Charisma-based.
 
 #### Trollhound
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d8 plus trip); **Ability Scores** Str 14, Dex 13, Con 13, Int 2, Wis 11, Cha 6; **Special Qualities** darkvision 60 ft. low-light vision, scent, fast healing 3, +4 Survival when following tracks
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bites (2d6 plus trip); **Ability Scores** Str +4, Dex -2, Con +2; **Special Attacks** bloodfire fever
 
@@ -3360,11 +3305,11 @@ Bloodfire fever: Bite—injury; *save* Fortitude; onset 1 day; *frequency* 1/day
 
 **Prerequisite(s)**: Beast-Speaker, Intimidate 4 ranks, Ride 4 ranks, any evil alignment
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus trip); **Ability Scores Str** 17, **Dex** 15, **Con** 13, **Int** 6, **Wis** 14, **Cha** 10; **Special Qualities** darkvision 60 ft., low-light vision, Scent; +2 Perception, +2 Stealth, +2 Survival
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus trip); **Ability Scores Str** +8, **Dex** -2, **Con** +4
 
@@ -3372,13 +3317,13 @@ Bloodfire fever: Bite—injury; *save* Fortitude; onset 1 day; *frequency* 1/day
 
 **Prerequisite(s)**: speak Aklo
 
-### Starting Statistics
+##### Starting Statistics
 
 [Source])
 
 **Size** Tiny; **Speed** 30 ft., Climb 30 ft.; **Attack** bite (1d3 plus 1 bleed), 2 claws (1d2); **Ability Scores** Str 6, Dex 15, Con 10, Int 5, Wis 12, Cha 5; **Special Qualities** darkvision 60 ft. low-light vision, constant detect magic, Special Qualities constant speak with animals
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Small; **AC** +1 natural armor; **Attack** bite (1d4 plus 1 bleed), 2 claws (1d3); **Ability Scores** Str +4, Dex -2, Con +2; **Special Qualities** otherworldly touch
 
@@ -3394,43 +3339,43 @@ The following creatures can be chosen as Magical Beast companions by a character
 
 **Prerequisite(s)**: Diplomacy, Intimidate, or Handle Animal 5 ranks; Ride 5 ranks.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 30 ft., fly 40 ft. (average; unable to carry a rider while flying); **AC** +4 natural armor; **Attack** bite (1d6); **Ability Scores Str** 16, **Dex** 15, **Con** 16, **Int** 5, **Wis** 13, **Cha** 8; **Languages** Common (cannot speak); **Special Qualities** darkvision 60 ft., low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Speed** 40 ft., fly 80 ft. (average; unable to carry a rider while flying); **AC** +2 natural armor; **Attack** bite (1d6), 2 talons (1d6); **Ability Scores** **Str** +2, **Con** +2; **Special Attacks** pounce, rake (1d6).
 
-### Mastery (7th Level)
+##### Mastery (7th Level)
 
 The griffon can carry a rider while flying, but reduces its fly speed by half while doing so.
 
 #### Hippocampus
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 5 ft., swim 40 ft.; **AC** +4 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 16, **Dex** 9, **Con** 15, **Int** 2, **Wis** 12, **Cha** 11; **Special Qualities** darkvision 60 ft., low-light vision, scent, water dependency.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Speed** swim 60 ft.; **Attack** bite (1d6); **Ability Scores** **Str** +2, **Dex** +4.
 
-### Mastery (7th Level)
+##### Mastery (7th Level)
 
 The hippocampus’s swim speed increases by 20 feet, and it gains a tail slap secondary attack that deals 1d4 points of damage plus half its Strength bonus.
 
 #### Hippogriff
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 40 ft., fly 60 ft. (average; unable to carry a rider while flying); **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 15, **Dex** 15, **Con** 14, **Int** 2, **Wis** 12, **Cha** 9; **Special Qualities** darkvision 60 ft., low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Speed** 40 ft., fly 100 ft. (average; unable to carry a rider while flying); **Attack** bite (1d6), 2 claws (1d4); **Ability Scores** **Str** +2, **Con** +2.
 
-### Mastery (7th Level)
+##### Mastery (7th Level)
 
 The hippogriff can carry a rider while flying, but reduces its fly speed by half while doing so.
 
@@ -3438,15 +3383,15 @@ The hippogriff can carry a rider while flying, but reduces its fly speed by half
 
 **Prerequisite(s)**: Alignment within one step of neutral evil.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft.; AC +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 17, **Dex** 15, **Con** 13, **Int** 6, **Wis** 14, **Cha** 10; **Languages** Common, Goblin; **Special Qualities** darkvision 60 ft., low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **AC** +2 natural armor; **Attack** bite (1d8 plus trip); **Ability Scores** **Str** +2, **Con** +2.
 
-### Mastery (7th Level)
+##### Mastery (7th Level)
 
 Once per day as a standard action, the worg can make a fearful howl. This functions as the fear cone (30 ft.) version of the fear universal monster rule.
 
@@ -3462,11 +3407,11 @@ As you gain levels, your plant companion grows in power as well. It gains the sa
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft.; **AC** +1 natural armor; **Attack** 3 slams (1d3 plus bleed); **Ability Scores Str** 10, **Dex** 16, **Con** 11, **Int** 2, **Wis** 11, **Cha** 15; **Special Qualities** low-light vision, tremorsense 60 ft. change foliage (Su), root deep; **Special Attacks** Bleed (1d3)
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Ability Scores Str** +2, **Dex** -2, **Con** +2; **Special Attacks** blinding bloom, bleed (1d6)
 
@@ -3476,11 +3421,11 @@ As you gain levels, your plant companion grows in power as well. It gains the sa
 
 Able to crawl swiftly on five rootlike legs, the hunting cactus has long arms it can slam foes with—arms covered with hundreds of thin, sharp needles.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** 2 slams (1d6); **Ability Scores** **Str** 14, **Dex** 13, **Con** 17, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** needles (a creature grappling a hunting cactus or attacking it with a natural attack or unarmed strike takes 1d4 points of piercing damage); **CMD** +6 vs. trip.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 slams (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +2; **Special Qualities** low-light vision.
 
@@ -3492,21 +3437,21 @@ These slam attacks deal both bludgeoning and piercing damage.
 
 This single-stalked cactus sports dozens of long, thin needles. Capable of crawling on three stalklike roots, the sniper cactus can fire its thorns with deadly accuracy.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft.; **AC** +2 natural armor; **Attack** gore (1d4) or thorn* (ranged attack, 60-foot range, 1d8 piercing damage. *This attack gains no bonus from this creature’s Strength score on damage rolls.); **Ability Scores** **Str** 10, **Dex** 13, **Con** 14, **Int** 1, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision; **CMD** +2 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** gore (1d6) or 2 thorns (ranged attack, 60-foot range, 2d6 piecing damage); **Ability Scores** **Dex** +2, **Con** +2.
 
 #### Carnivorous Flower
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 10 ft.; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 10, **Dex** 17, **Con** 15, **Int** 2, **Wis** 12, **Cha** 10; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (2d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** rage (1/day, as the barbarian class feature for 6 rounds).
 
@@ -3516,21 +3461,21 @@ This single-stalked cactus sports dozens of long, thin needles. Capable of crawl
 
 This pale mass of fungal matter looks something like a spider with a thorny, acidic mouth in place of a body.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus 1d2 acid); **Ability Scores** **Str** 14, **Dex** 13, **Con** 12, **Int** 1, **Wis** 11, **Cha** 4; **Special Attacks** spit acid (ranged touch attack, 30-foot range, 1d6 acid damage); **Special Qualities** darkvision 60 ft.; **CMD** +12 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d8 plus 1d4 acid); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** spit acid (ranged touch attack, 30-foot range, 1d8 acid damage); **Special Qualities** darkvision 60 ft.
 
 #### Crawling Vine
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., climb 20 ft.; **AC** +2 natural armor; **Attack** slam (1d4); **Ability Scores** **Str** 13, **Dex** 17, **Con** 13, **Int** 1, **Wis** 12, **Cha** 2; **Special Attacks** grab; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +1 natural armor; **Attack** slam (1d6); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** constrict 1d6.
 
@@ -3540,11 +3485,11 @@ This pale mass of fungal matter looks something like a spider with a thorny, aci
 
 This surprisingly mobile, multicolored ball of fungus crawls around on a nest of dozens of little filament-like “legs.” Its poisonous spores cause those affected to endure bright, dazzling spots of color.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +1 natural armor; **Attack** slam (1d4 plus poison); **Ability Scores** **Str** 12, **Dex** 15, **Con** 14, **Int** 1, **Wis** 12, **Cha** 9; **Special Attacks** poison (frequency 1 round [4]; *effect* 1d2 Wis damage and dazzled; *cure* 1 save; Con-based DC); **Special Qualities** darkvision 60 ft., defensive puff (1/minute as an immediate action when hit, the fungus can expose one adjacent creature to its poison); **CMD** can’t be tripped.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** slam (1d6 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -3554,11 +3499,11 @@ This surprisingly mobile, multicolored ball of fungus crawls around on a nest of
 
 This bulbous green plant can climb or crawl via a network of vines. Its central reservoir can gulp down foes to digest them in an internal well of acid, holding them tight while they struggle.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., climb 10 ft.; **AC** +1 natural armor; **Attack** 2 vines (1d4 plus grab); **Ability Scores** **Str** 12, **Dex** 11, **Con** 13, **Int** 1, **Wis** 10, **Cha** 3; **Special Attacks** swallow whole (1d6 acid); **Special Qualities** freeze, low-light vision; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 vines (1d6 plus grab); **Ability Scores** **Str** +6, **Dex** –2, **Con** +2; **Special Attacks** swallow whole (1d8 acid).
 
@@ -3568,21 +3513,21 @@ This attack is a primary natural attack that deals bludgeoning damage.
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 15 ft.; **AC** +2 natural armor; **Attack** bite (1d4), slam (1d3 plus strangling ensnare); **Ability Scores Str** 13, **Dex** 9, **Con** 10, **Int** 2, **Wis** 14, **Cha** 7; **Special Qualities** pumpkin form; **Special Attacks** strangling ensnare, explode
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6), slam (1d4 plus strangling ensnare); **Ability Scores Str** +2, **Dex** -2, **Con** +2; **Special Attacks** fear aura, breath weapon (20 ft- cone, 1d10 fire, Reflex save, Con-based DC, usable every 1d4 rounds)
 
 #### Puffball (Floating Fungus)
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., fly 60 ft. (average); **AC** +1 natural armor; **Attack** thorn (1d4 plus poison); **Ability Scores** **Str** 10, **Dex** 15, **Con** 12, **Int** 2, **Wis** 14, **Cha** 6; **Special Attacks** poison (*Frequency* 1 round [6], *Effect* 1 Con damage, *Cure* 1 save, Con-based DC); **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2.
 
@@ -3592,21 +3537,21 @@ This attack is a primary natural attack that deals bludgeoning damage.
 
 This mass of creeping vines and leaves slithers almost like a snake. Contact with this predatory plant causes a sickening and sometimes debilitating rash.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft.; **AC** +1 natural armor; **Attack** slam (1d4 plus poison); **Ability Scores** **Str** 10, **Dex** 15, **Con** 13, **Int** 1, **Wis** 11, **Cha** 2; **Special Attacks** poison (frequency 1 round [4]; *effect* 1 **Dex** damage and sickened for 1 round; *cure* 1 save; Con-based DC); **Special Qualities** low-light vision; **CMD** can’t be tripped.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** slam (1d6 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** poison (frequency 1 round [4]; *effect* 1d2 **Dex** damage and sickened for 1 round; *cure* 2 saves; Con-based DC).
 
 #### Sapling Treant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., climb 30 ft.; **AC** +1 natural armor; **Attack** 2 slams (1d6); **Ability Scores** **Str** 15, **Dex** 10, **Con** 12, **Int** 2, **Wis** 12, **Cha** 7; **Special Qualities** double damage against objects, low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 slams (1d8); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -3616,11 +3561,11 @@ This mass of creeping vines and leaves slithers almost like a snake. Contact wit
 
 Looking something like a two-headed serpent, this slithering plant strikes with two sticky, constricting slams.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft.; **AC** +1 natural armor; **Attack** 2 slams (1d4 plus 1d2 acid plus grab); **Ability Scores** **Str** 14, **Dex** 17, **Con** 13, **Int** 1, **Wis** 12, **Cha** 6; **Special Attacks** constrict (1d8 acid); **Special Qualities** low-light vision; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 slams (1d6 plus 1d3 acid plus grab); **Ability Scores** **Str** +6, **Dex** –2, **Con** +4; **Special Attacks** constrict (2d6 acid).
 
@@ -3630,11 +3575,11 @@ Looking something like a two-headed serpent, this slithering plant strikes with 
 
 This mobile flytrap features two spiky jaws and scuttles about on a tangle of roots.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft.; **AC** +2 natural armor; **Attack** 2 bites (1d4 plus grab); **Ability Scores** **Str** 12, **Dex** 15, **Con** 14, **Int** 1, **Wis** 12, **Cha** 5; **Special Qualities** low-light vision; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 3 bites (1d6 plus grab); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -3650,11 +3595,11 @@ Vermin companions follow the same rules as animal companions, advancing their Hi
 
 #### Ant, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 20 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus grab); **Ability Scores** **Str** 10, **Dex** 12, **Con** 15, **Int** —, **Wis** 12, **Cha** 10; **Special Qualities** low-light vision, scent; **CMD** trip +8.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus grab), sting (1d4 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** poison ( frequency 1 round [4], effect 1 Str damage, cure 1 save, Con-based DC).
 
@@ -3664,21 +3609,21 @@ Vermin companions follow the same rules as animal companions, advancing their Hi
 
 This long-legged, beetle-like insect can spew a stream of poison at its foes from a distance.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., fly 30 ft. (clumsy); **AC** +2 natural armor; **Attack** bite (1d4 plus poison), 2 claws (1d3); **Ability Scores** **Str** 13, **Dex** 15, **Con** 13, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison (frequency 1 round [4]; *effect* 1d2 Dex; *cure* 1 save; Con-based DC), poison stream (exposes all creatures in a 15-ft. line to poison, Reflex save negates; Dex-based DC; usable every 1d4 rounds as a standard action); **Special Qualities** darkvision 60 ft.; **CMD** trip +8.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6 plus poison), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** poison (frequency 1 round [4]; *effect* 1d2 Dex; *cure* 2 saves; Con-based DC).
 
 #### Beetle, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., fly 20 ft. (poor); **AC** +6 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 13, **Dex** 12, **Con** 13, **Int** —, **Wis** 11, **Cha** 4; **Special Qualities** darkvision; **CMD** trip +8.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** trample (1d4).
 
@@ -3688,11 +3633,11 @@ This long-legged, beetle-like insect can spew a stream of poison at its foes fro
 
 This many-legged wormlike creature is a larval form of a moth or butterfly, but as long as it remains a vermin companion, it will not go through this metamorphosis.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +2 natural armor; **Attack** bite (1d6), bristles (1d4 plus poison); **Ability Scores** **Str** 14, **Dex** 13, **Con** 13, **Int** —, **Wis** 11, **Cha** 2; **Special Attacks** bristles (a creature attacking the giant caterpillar with a natural attack or non-reach melee weapon must succeed at a Reflex save or take damage as if the caterpillar had struck the creature with its bristles attack; Dex-based DC with a +2 racial bonus), poison (frequency 1 round [4]; *effect* 1d2 **Str** damage; *cure* 1 save; Con-based DC); **Special Qualities** compression, darkvision 60 ft.; **CMD** can’t be tripped.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d8), bristles (1d6 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -3700,11 +3645,11 @@ This is a secondary natural attack that deals piercing damage.
 
 #### Centipede, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus poison); **Ability Scores** **Str** 8, **Dex** 17, **Con** 11, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison (*frequency* 1 round [6], *effect* 1 **Dex** damage, *cure* 1 save, **Con**-based DC); **Special Qualities** darkvision 60 ft.; **CMD** can’t be tripped.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -3714,11 +3659,11 @@ This is a secondary natural attack that deals piercing damage.
 
 The long thin tendrils that lash out from this centipede’s tail can trip foes with surprising ease.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft., climb 40 ft.; **AC** +3 natural armor; **Attack** bite (1d6 plus poison); **Ability Scores** **Str** 9, **Dex** 13, **Con** 13, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison (frequency 1 round [4]; *effect* 1d2 **Dex** damage; *cure* 1 save; Con-based DC); **Special Qualities** darkvision 60 ft.; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8 plus poison), tail slap (1d2 nonlethal plus trip); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -3730,21 +3675,21 @@ This attack gains no bonus from the creature’s Strength score on damage rolls.
 
 Swift and unsettling, the giant cockroach is notoriously difficult to slay. These creatures prefer dark places and seem to have no opposition to crawling through filth.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 20 ft., fly 20 ft. (poor); **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 9, **Dex** 10, **Con** 17, **Int** —, **Wis** 11, **Cha** 2; **Special Qualities** darkvision 60 ft., hold breath, light sensitivity, tremorsense 60 ft.; **CMD** +8 vs. trip; Bonus Feat Endurance.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 Speed 30 ft., climb 30 ft., fly 40 ft. (poor); **AC** +2 natural armor; **Ability Scores** **Str** +2, **Dex** +2, **Con** +2; Bonus Feat Diehard.
 
 #### Crab, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., swim 20 ft.; **AC** +5 natural armor; **Attack** 2 claws (1d3 plus grab); **Ability Scores** **Str** 13, **Dex** 14, **Con** 13, **Int** —, **Wis** 11, **Cha** 4; **Special Attacks** constrict (1d3); **Special Qualities** aquatic, darkvision, water dependency (survive out of water for 1 hour per point of **Con**, after which it begins to suffocate as if it were drowning); **CMD** trip +12.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** 2 claws (1d4 plus grab); **Ability Scores** **Str** +2, **Dex** –2, **Con** +2; **Special Attacks** constrict (1d4).
 
@@ -3752,11 +3697,11 @@ Speed 30 ft., climb 30 ft., fly 40 ft. (poor); **AC** +2 natural armor; **Abilit
 
 **Prerequisite**: ability to have vermin companions
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; Speed 20 ft. swim 20 ft.; AC +5 natural; Attack 2 claws (1d3 plus grab); **Ability Scores** Str 12, Dex 12, Con 12, Int -, Wis 10, Cha 1; Special Attacks constrict (1d3); Special Qualities amphibious, darkvision, racial skill bonus: +4 Stealth in muddy or swampy terrain; CMD trip +12
 
-### 4th-level Advancement
+##### 4th-level Advancement
 
 **Size** Medium; Attack 2 claws (1d4 plus grab); **Ability Scores** Str +4, Dex -2, Con +2; Special Attacks constrict (1d4)
 
@@ -3764,11 +3709,11 @@ Speed 30 ft., climb 30 ft., fly 40 ft. (poor); **AC** +2 natural armor; **Abilit
 
 **Requirement** the the Beast Speaker feat
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** fly 20 ft. (perfect); AC +2 natural; Attack tentacle melee touch (1d6 electricity plus paralysis); **Ability Scores** Str 6, Dex 12, Con 14, Int -, Wis 12, Cha 1; Special Attacks paralysis (Conbased DC); Special Qualities blindsight 60 feet, blind, amorphous, shocking tentacles; DR 10/slashing or piercing; CMD cannot be tripped
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; AC +2 natural; Attack tentacle melee touch (1d8 electricity plus paralysis); **Ability Scores** Str +8, Dex -2, Con +4
 
@@ -3782,11 +3727,11 @@ A thundercloud jellyfish’s arms deliver electricity damage and a paralysis *ef
 
 These long-winged insects have dazzlingly colorful bodies.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., fly 40 ft. (perfect); **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** 13, **Dex** 17, **Con** 12, **Int** —, **Wis** 12, **Cha** 9; **Special Qualities** darkvision 60 ft.; **CMD** +8 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 20 ft., fly 80 ft. (perfect); **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; Bonus Feat Flyby Attack.
 
@@ -3796,21 +3741,21 @@ These long-winged insects have dazzlingly colorful bodies.
 
 Also known as sea scorpions, these aquatic insects have pincers and a long stinger.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 40 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d3), sting (1d3 plus poison); **Ability Scores** **Str** 10, **Dex** 11, **Con** 12, **Int** —, **Wis** 13, **Cha** 2; **Special Qualities** darkvision 60 ft.; **Special Attacks** poison (frequency 1 round [4]; *effect* 1 Con damage; *cure* 1 save; Con-based DC); **CMD** +8 vs. trip.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** 2 claws (1d4), sting (1d4 plus poison); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** poison (frequency 1 round [6]; *effect* 1d2 Con damage; *cure* 1 save; Con-based DC).
 
 #### Leech, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 5 ft., swim 20 ft.; **AC** +0 natural armor; **Attack** bite (1d4 plus attach); **Ability Scores** **Str** 9, **Dex** 14, **Con** 12, **Int** —, **Wis** 10, **Cha** 1; **Special Attacks** attach, blood drain (1 Str); **Special Qualities** amphibious, blindsense 30 ft., scent, susceptible to salt; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus attach); **Ability Scores** **Str** +2, **Dex** –2, **Con** +2; **Special Attacks** blood drain (1 Str and 1 Con damage); **Special Qualities** blindsight 30 ft.
 
@@ -3820,11 +3765,11 @@ Also known as sea scorpions, these aquatic insects have pincers and a long sting
 
 The giant locust has long limber legs and the ability to spit a caustic glob of noxious goo.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft., fly 20 ft. (poor); **AC** +3 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 17, **Con** 11, **Int** —, **Wis** 10, **Cha** 7; **Special Attacks** spit goo (ranged touch attack, 30-foot range, sickened for 1 round); **Special Qualities** +18 Acrobatics when jumping, darkvision 60 ft., leap (can take 10 on Acrobatics checks to jump, even when distracted or threatened); **CMD** +8 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 20 ft., climb 20 ft., fly 60 ft. (average); **AC** +2 natural armor; **Attack** bite (1d8); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** voracious (bite attack deals double damage to creatures with the plant subtype and to objects made of paper, wood, or other plant materials).
 
@@ -3832,11 +3777,11 @@ The giant locust has long limber legs and the ability to spit a caustic glob of 
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., climb 20 ft., fly 20 ft. (poor); **AC** +3 natural armor; **Attack** bite (1d4) or 2 kicks (1d3, bludgeoning and piercing); **Ability Scores Str** 13, **Dex** 16, **Con** 10, **Int** -, **Wis** 10, **Cha** 7; **Special Qualities** +18 Acrobatics when jumping, darkvision 60 ft., leap (can take 10 on Acrobatics checks to jump, even when distracted or threatened); **CMD** +8 vs. trip.; **Special Attacks** spit goo (ranged touch attack, 30-foot range, sickened for 1 round)
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Speed** 20 ft., climb 20 ft., fly 60 ft. (average); **AC** +2 natural armor; **Attack** bite (1d6) or 2 kicks (1d4, bludgeoning and piercing); **Ability Scores Str** +4, **Dex** -2, **Con** +2; **Special Attacks** voracious (bite attack deals double damage to creatures with the plant subtype and to objects made of paper, wood, or other plant materials).
 
@@ -3846,11 +3791,11 @@ The giant locust has long limber legs and the ability to spit a caustic glob of 
 
 This colorful aquatic vermin has powerful claws capable of striking with blinding speed.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft., swim 30 ft.; **AC** +3 natural armor; **Attack** 2 pincers (1d6); **Ability Scores** **Str** 12, **Dex** 17, **Con** 14, **Int** —, **Wis** 13, **Cha** 6; **Special Qualities** aquatic blindsense 10 ft., darkvision 60 ft., sonic resistance 5; **CMD** +12 vs. trip.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** 2 pincers (1d8); **Ability Scores** **Str** +6, **Dex** –2, **Con** +2; **Special Attacks** speedy pincers (can make iterative attacks with one of its pincer attacks); **Special Qualities** blindsight 10 ft., sonic resistance 10.
 
@@ -3860,31 +3805,31 @@ This colorful aquatic vermin has powerful claws capable of striking with blindin
 
 Between its bloodthirsty nature and the annoying drone of its wings, the giant mosquito is a much-loathed creature. Unlike its smaller cousins, a giant mosquito can easily kill larger creatures by draining them of their blood.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., fly 60 ft. (good); **AC** +1 natural armor; **Attack** bite (1d6 plus bleed and grab); **Ability Scores** **Str** 14, **Dex** 21, **Con** 15, **Int** —, **Wis** 13, **Cha** 6; **Special Attacks** bleed (1d4), grab; **Special Qualities** darkvision 60 ft.; **CMD** +8 vs. trip.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d8 plus bleed and grab); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** bleed (2d4), blood drain (1d2 Constitution).
 
 #### Scorpion, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** 2 claws (1d4 plus grab) and sting (1d4 plus poison); **Ability Scores** **Str** 11, **Dex** 12, **Con** 12, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison ( frequency 1 round (6), effect 1 Str damage, cure 1 save, Con-based DC); **Special Qualities** darkvision, tremorsense 30 ft; **CMD** trip +12.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** 2 claws (1d6 plus grab) and sting (1d6 plus poison); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4; **Special Attacks** poison ( frequency 1 round [6], effect 1d2 Str damage, cure 1 save, Con-based DC); **Special Qualities** tremorsense 60 ft.
 
 #### Slug, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft.; **AC** +4 natural armor; **Attack** tongue (1d4 plus 1 acid); **Ability Scores** **Str** 13, **Dex** 8, **Con** 13, **Int** —, **Wis** 10, **Cha** 1; **Special Attacks** spit acid (ranged touch attack, 30 foot range, 1d6 acid damage); **Special Qualities** blindsense 30 ft., DR 5/slashing or piercing, susceptible to salt; **CMD** can’t be tripped.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** tongue (1d6 plus 1d2 acid); **Ability Scores** **Str** +2, **Dex** –2, **Con** +2; **Special Attacks** spit acid (ranged touch attack, 30-foot range, 1d8 acid damage); **Special Qualities** blindsight 30 ft.
 
@@ -3894,21 +3839,21 @@ Between its bloodthirsty nature and the annoying drone of its wings, the giant m
 
 This vermin’s double set of vertical mandibles make this giant solifugid a particularly ferocious-looking companion. Its speed allows it to strike at its enemies from cover without them knowing what happened.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 50 ft., climb 30 ft.; **AC** +1 natural armor; **Attack** bite (1d6), 2 claws (1d3); **Ability Scores** **Str** 12, **Dex** 15, **Con** 15, **Int** —, **Wis** 11, **Cha** 2; **Special Qualities** darkvision 60 ft.; **CMD** +12 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +3 natural armor; **Attack** bite (1d8), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** pounce, rend (2 claws, 1d4).
 
 #### Spider, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +0 natural armor; **Attack** bite (1d4 plus poison); **Ability Scores** **Str** 6, **Dex** 17, **Con** 10, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison (frequency 1 round [4], effect 1 Str damage, cure 1 save, **Con**-based DC); **Special Qualities** darkvision, tremorsense 30 feet; **CMD** trip +12.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6 plus poison); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -3916,11 +3861,11 @@ This vermin’s double set of vertical mandibles make this giant solifugid a par
 
 **Requirement** ability have vermin companions)
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; Speed 30 ft. climb 30 ft.; Attack bite (1d4 plus poison), spit ranged touch (30 ft., poison); **Ability Scores** Str 5, Dex 20, Con 10, Int -, Wis 10, Cha 1; Special Qualities darkvision, tremorsense 30 feet; CMD trip +12
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; AC +1 natural; Attack bite (1d6 plus poison), spit (30 ft., poison); **Ability Scores** Str +4, Dex -2, Con +2
 
@@ -3932,11 +3877,11 @@ This vermin’s double set of vertical mandibles make this giant solifugid a par
 
 The web tyrant spider’s bright coloration and long legs make for a stunning but unnerving companion.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 10, **Dex** 17, **Con** 10, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** web; **Special Qualities** darkvision 60 ft.; **CMD** +12 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2.
 
@@ -3946,21 +3891,21 @@ The web tyrant spider’s bright coloration and long legs make for a stunning bu
 
 The giant termite has a set of large powerful mandibles, and it is particularly effective when fighting alongside other termite companions.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., climb 30 ft.; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 11, **Con** 12, **Int** —, **Wis** 12, **Cha** 7; **Special Attacks** swarming (two giant termites can share the same space, and if they both attack the same target, they are considered to be flanking that foe); **Special Qualities** darkvision 60 ft.; **CMD** +8 vs. trip.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +3 natural armor; **Attack** bite (1d8 plus 1d6 acid); **Ability Scores** **Str** +4, **Dex** –2, **Con** +2; **Special Attacks** gnaw (bite attack ignores hardness of 5 or less).
 
 #### Wasp, Giant
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., fly 60 ft. (good); **AC** +2 natural armor; **Attack** sting (1d6 plus poison); **Ability Scores** **Str** 10, **Dex** 14, **Con** 11, **Int** —, **Wis** 13, **Cha** 4; **Special Attacks** poison ( frequency 1 round [6], effect 1 **Dex** damage, cure 1 save, **Con**-based DC); **Special Qualities** darkvision; **CMD** trip +8.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** sting (1d8 plus poison); **Ability Scores** **Str** +8, **Dex** –2, **Con** +4.
 
@@ -3968,11 +3913,11 @@ The giant termite has a set of large powerful mandibles, and it is particularly 
 
 **Source** LG:LH
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., fly 60 ft. (good); **AC** +2 natural armor; **Attack** sting (1d6 plus painful sting and poison); **Ability Scores Str** 10, **Dex** 14, **Con** 11, **Int** -, **Wis** 13, **Cha** 4; **Special Qualities** darkvision; CMD +8 vs. trip.; **Special Attacks** painful sting (sickened, 1d4 rounds, fortitude save, Con-based DC), poison (frequency 1 round [6], effect 1 Dex damage, cure 1 save, Con-based DC)
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** sting (1d8 plus painful sting and poison); **Ability Scores Str** +8, **Dex** -2, **Con** +4
 
@@ -4203,11 +4148,11 @@ Replacing a lost or killed cohort or follower involves a similar collaboration b
 
 This companion is available via the Beast Speaker feat. The 11th-level mastery benefit is given if the character takes the Beast Speaker Mastery feat.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., burrow 20 ft.; **AC** +5 natural armor; **Attack** bite (1d8 plus 1d4 acid and grab); **Ability Scores** **Str** 12, **Dex** 12, **Con** 15, **Int** 1, **Wis** 13, **Cha** 6; **Special Qualities** darkvision 60 ft., low-light vision, tremorsense 60 ft.; **CMD** +8 vs. trip
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (2d6 plus 1d4 acid and grab); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2; **Special Attacks** spit acid
 
@@ -4221,11 +4166,11 @@ Once every 6 hours, the ankheg can spit a 30-foot line of acid. Creatures struck
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft., climb 30 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus grab); **Ability Scores** **Str** 14, **Dex** 10, **Con** 17, **Int** —, **Wis** 10, **Cha** 6; **Special Qualities** low-light vision, scent; **CMD** trip +8.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Int** +2; **Special Qualities** combat trained.
 
@@ -4237,15 +4182,15 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Good-aligned, Heal 3 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Tiny; **Speed** 60 ft.; **AC** +1 natural armor; **Attack** gore (1d3); **Ability Scores** **Str** 3, **Dex** 20, **Con** 9, **Int** 5, **Wis** 12, **Cha** 14; **Special Qualities** darkvision 60 ft., low-light vision, scent, racial skill bonus: +8 Acrobatics when jumping; **Special Attacks** healing horn
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Small; **AC** +2 natural armor; **Attack** gore (1d4); **Ability Scores** **Str** +4, **Dex** -2, **Cha** +2; Spell-Like Abilities detect evil (at will)
 
-### Mastery (11th-Level)
+##### Mastery (11th-Level)
 
 **Spell-Like Abilities** magic circle against evil (constant), neutralize poison (constant)
 
@@ -4261,11 +4206,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Knowledge (dungeoneering) 3 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 50 ft. climb 30 ft.; **AC** +4 natural armor; **Attack** bite (1d6) or kick (2d6); **Ability Scores** **Str** 11, **Dex** 18, **Con** 13, **Int** 6, **Wis** 14, **Cha** 11; **Special Qualities** darkvision 60 ft., low-light vision, racial skill bonus: +10 Acrobatics when jumping; **Special Attacks** chikfari poison devastating kick
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** bite (1d8) or kick (2d8); **Ability Scores** **Str** +8, **Dex** -2, **Con** +4
 
@@ -4285,15 +4230,15 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Speak Draconic
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft., fly 50 ft. (poor); **AC** +3 natural armor; **Attack** bite (1d6), bite (1d4), gore (1d4), 2 claws (1d2); **Ability Scores** **Str** 7, **Dex** 16, **Con** 11, **Int** 4, **Wis** 13, **Cha** 10; **Special Qualities** darkvision 60 ft., low-light vision, scent; **CMD** +4 vs. trip; **Special Attacks** breath weapon (2d6, 20/10 ft.)
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **AC** +3 natural armor; **Attack** bite (1d8), bite (1d6), gore (1d6), 2 claws (1d4); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2; **Special Attacks** breath weapon 4d6, 30/15 ft.
 
-### Mastery (11th-Level)
+##### Mastery (11th-Level)
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d6), bite (1d8), gore (1d8), 2 claws (1d6); **Ability Scores** **Str** +8, **Dex** -2, **Con** +4; **Special Attacks** breath weapon (6d6, 40/20 ft.)
 
@@ -4319,11 +4264,11 @@ To determine a chimera’s head color and breath weapon randomly, roll 1d10 and 
 
 **Prerequisite(s)** Elf or Half-Elf only
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** bite (1d4 plus trip), claws (1d3); **Ability Scores** Str 11, Dex 19, Con 13, Int 2, Wis 12, Cha 6.; **Special Qualities** scent
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus trip), claws (1d4); **Ability Scores** +4 Str, –2 Dex, +4 Con; **Special Qualities** sprint.
 
@@ -4333,11 +4278,11 @@ To determine a chimera’s head color and breath weapon randomly, roll 1d10 and 
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 30 ft., burrow 30 ft.; **AC** +5 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 14, **Dex** 13, **Con** 17, **Int** —, **Wis** 12, **Cha** 2; **Special Qualities** darkvision 60 ft., scent; **CMD** overrun, trip +12.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Int** +2; **Special Qualities** combat trained.
 
@@ -4347,11 +4292,11 @@ To determine a chimera’s head color and breath weapon randomly, roll 1d10 and 
 
 **Special** A medium cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +3 natural armor; **Attack** bill slam (1d8); **Ability Scores** **Str** 16, **Dex** 15, **Con** 15, **Int** 2, **Wis** 11, **Cha** 6; **Special Qualities** low-light vision, scent
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained, darkvision 30 ft.
 
@@ -4361,11 +4306,11 @@ To determine a chimera’s head color and breath weapon randomly, roll 1d10 and 
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 10 ft., fly 80 ft. (average); **AC** +0 natural armor; **Attack** bit (1d6), 2 talons (1d4); **Ability Scores** **Str** 14, **Dex** 13, **Con** 12, **Int** 2, **Wis** 12, **Cha** 8; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2; **Special Qualities** combat trained.
 
@@ -4375,13 +4320,13 @@ To determine a chimera’s head color and breath weapon randomly, roll 1d10 and 
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +3 natural armor; **Attack** 2 hooves* (1d6); **Ability Scores** **Str** 14, **Dex** 15, **Con** 14, **Int** 2, **Wis** 13, **Cha** 6; **Special Qualities** low-light vision, scent.
 
 * This is a secondary natural attack, see Combat for more information on how secondary attacks work.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2, **Con** +2; **Special Qualities** combat trained.
 
@@ -4393,11 +4338,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Knowledge (nature) 3 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 40 ft., burrow 10 ft., fly 80 ft. (average); **AC** +2 natural armor; **Attack** bite (1d4 plus trip) and 2 talons (1d4); **Ability Scores** **Str** 12, **Dex** 17, **Con** 15, **Int** 5, **Wis** 16, **Cha** 6; **Special Qualities** darkvision 60 ft., low-light vision, scent, racial skill bonus +4 Survival when tracking by scent
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **Attack** bite (1d6 plus trip) and 2 talons (1d6); **Ability Scores** **Str** +4, **Dex** -2, +2 ???
 
@@ -4407,11 +4352,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft.; **AC** +4 natural armor; **Attack** bite (1d3 plus poison *[frequency* 1 round (6), *effect* 1d2 Con damage, *cure* 1 save, Con-based DC]); **Ability Scores** **Str** 16, **Dex** 8, **Con** 17, **Int** 1, **Wis** 15, **Cha** 6; **Special Qualities** darkvision 60 ft., scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained.
 
@@ -4421,15 +4366,15 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 This companion is available via the Beast Speaker feat. The 11th-level mastery benefit is given if the character takes the Beast Speaker Mastery feat.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 30 ft.; **AC** +3 natural armor; **Attack** bite (1d8), 2 claws (1d4 plus grab); **Ability Scores** **Str** 13, **Dex** 17, **Con** 18, **Int** 3, **Wis** 14, **Cha** 8; **Special Qualities** darkvision 60 ft. low-light vision, scent, double damage against object, racial skill bonus: +4 Perception.
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **AC** +4 natural armor; **Attack** bite (1d10), 2 claws (1d6 plus grab); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2; **Special Attacks** rend (2 claws 1d6+ 1.5 Str)
 
-### Mastery (11th-Level)
+##### Mastery (11th-Level)
 
 **Size** Large; **AC** +4 natural armor; **Attack** bite (2d6), 2 claws (1d8 plus grab); **Ability Scores** **Str** +8, **Dex** -2, **Con** +4; **Special Attacks** rend (2 claws 1d8 +1.5 Str)
 
@@ -4439,11 +4384,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 10 ft., fly 60 ft. (average); **AC** +1 natural armor; **Attack** bite (1d6), 2 talons (1d4); **Ability Scores** **Str** 12, **Dex** 13, **Con** 14, **Int** 2, **Wis** 12, **Cha** 6; **Special Qualities** low-light vision.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Dex** +2; **Special Qualities** combat trained.
 
@@ -4455,11 +4400,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Perception 3 ranks
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft. fly 20 ft. (perfect); **Attack** bite (1d4 plus trip); **Ability Scores** **Str** 13, **Dex** 17, **Con** 13, **Int** 5, **Wis** 17, **Cha** 6; **Special Qualities** darkvision 60 ft., low-light vision, exuded mist, scent, racial skill bonus +4 Survival when tracking by scent
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6 plus trip); **Ability Scores** **Str** +4, **Dex** -2, **Con** +2
 
@@ -4473,15 +4418,15 @@ A hollow hound is constantly exuding a mist from their paws, tail and eyes. The 
 
 This companion is available via the Beast Speaker feat. The 11th-level mastery benefit is given if the character takes the Beast Speaker Mastery feat.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 20 ft., swim 20 ft.; **AC** +2 natural armor; **Attack** 3 bites (1d4); **Ability Scores** **Str** 11, **Dex** 16, **Con** 12, **Int** 2, **Wis** 11, **Cha** 9; **Special Qualities** darkvision 60 ft. low-light vision, scent, fast healing 2, **racial skill bonus**: +2 Perception.
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 4 bites (1d6); **Ability Scores** **Str** +2, **Dex** -2, **Con** +2; **Special Qualities** fast healing 4
 
-### Mastery (11th-Level)
+##### Mastery (11th-Level)
 
 **Size** Huge; **AC** +2 natural armor; **Attack** 5 bites (1d8); **Ability Scores** **Str** +4, **Dex** -2, **Con** +4; **Special Qualities** fast healing 5
 
@@ -4489,11 +4434,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Source**: JBE:SPPC
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 20 ft., burrow 30 ft.; **AC** +0 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 12, **Dex** 16, **Con** 12, **Int** —, **Wis** 10, **Cha** 1; **Special Qualities** darkvision 60 ft., tremorsense 60 ft.; **CMD** cannot be tripped.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +1 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +4, Dex –2, **Con** +2
 
@@ -4503,11 +4448,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 50 ft.; **AC** +0 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 12, **Dex** 18, **Con** 13, **Int** 1, **Wis** 12, **Cha** 4; **Bonus Feat** Run; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained.
 
@@ -4517,11 +4462,11 @@ This companion is available via the Beast Speaker feat. The 11th-level mastery b
 
 **Prerequisite(s)**: Endurance
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 30 ft., burrow 20 ft.; **AC** +3 natural armor; **Attack** bite (2d6); **Ability Scores** **Str** 10, **Dex** 18, **Con** 13, **Int** 5, **Wis** 12, **Cha** 10; **Special Qualities** darkvision 60 ft. low-light vision, tremorsense 60 ft., Immunities fire cold; **CMD** +4 vs. grapple; **Special Attacks** heat
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +3 natural armor; **Attack** bite (2d8); **Ability Scores** **Str** +6, **Dex** -2, **Con** +4
 
@@ -4535,11 +4480,11 @@ An enraged remorhaz generates heat so intense that anything touching its body ta
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 40 ft.; **AC** +4 natural armor; **Attack** bite (1d4), 2 claws (1d3); **Ability Scores** **Str** 16, **Dex** 11, **Con** 17, **Int** 1, **Wis** 13, **Cha** 5; **Special Qualities** darkvision 60 ft., scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained.
 
@@ -4549,7 +4494,7 @@ An enraged remorhaz generates heat so intense that anything touching its body ta
 
 **Special** A Small cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d3), bite (1d4); **Ability Scores** **Str** 13, **Dex** 13, **Con** 15, **Int** 2, **Wis** 13, **Cha** 8; **Special Qualities** blindsight60 ft., scent, stand on hind legs
 
@@ -4557,7 +4502,7 @@ Stand on Hind Legs (Ex)
 
 When making a full attack, a shade ferret must stand on its hind legs. This causes the shade ferret to take a –2 penalty on all Reflex saves for the round.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Con** +2; **Special Qualities** combat trained, superior scent
 
@@ -4571,11 +4516,11 @@ This ability functions like the scent ability except that it can detect an oppon
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 40 ft., climb 40 ft.; **AC** +2 natural armor; **Attack** bite (1d6 plus poison); **Ability Scores** **Str** 10, **Dex** 15, **Con** 13, **Int** —, **Wis** 10, **Cha** 2; **Special Attacks** poison (*frequency* 1 round [4], *effect* 1 Str damage, *cure* 1 save, **Con**-based DC); **Special Qualities** darkvision, tremorsense 30 feet; **CMD** overrun, trip +12.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Ability Scores** **Str** +2, **Int** +2; **Special Qualities** combat trained.
 
@@ -4583,11 +4528,11 @@ This ability functions like the scent ability except that it can detect an oppon
 
 **Source**: Speak with Animals: Magical Beast Companions 1
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +2 natural armor; **Attack** 2 claws (1d4), bite (1d10); **Ability Scores** **Str** 11, **Dex** 16, **Con** 12, **Int** 2, **Wis** 15, **Cha** 15; **Special Qualities** darkvision 60 ft., low-light vision, scent, tremorsense 60 ft., racial skill bonus +4 Stealth; **CMD** can’t be tripped; **Special Attacks** ambush
 
-### 9th-Level Advancement
+##### 9th-Level Advancement
 
 **Size** Large; **AC** +2 natural armor; **Attack** 2 claws (1d6), bite (2d6); **Ability Scores** **Str** +8, **Dex** -2, **Con** +4
 
@@ -4601,11 +4546,11 @@ If a tazelwurm catches an opponent flat-footed it gains a +4 circumstance bonus 
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Medium; **Speed** 40 ft.; **AC** +1 natural armor; **Attack** bite (1d3); **Ability Scores** **Str** 12, **Dex** 15, **Con** 17, **Int** 2, **Wis** 10, **Cha** 8; **Special Qualities** low-light vision, scent.
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Attack** bite (1d4); **Ability Scores** **Str** +2; **Special Qualities** combat trained.
 
@@ -4613,11 +4558,11 @@ If a tazelwurm catches an opponent flat-footed it gains a +4 circumstance bonus 
 
 **Source**: JBE:SPPC
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Small; **Speed** 10 ft., fly 60 ft. (average); **AC** +1 natural armor; **Attack** bite (1d4); **Ability Scores** **Str** 10, **Dex** 15, **Con** 12, **Int** 2, **Wis** 15, **Cha** 5; **Special Qualities** darkvision 60 ft., +4 on saves vs. diseases
 
-### 4th-Level Advancement
+##### 4th-Level Advancement
 
 **Size** Medium; **AC** +2 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** +2, **Con** +2
 
@@ -4627,10 +4572,10 @@ If a tazelwurm catches an opponent flat-footed it gains a +4 circumstance bonus 
 
 **Special** A cavalier can choose this as a mount.
 
-### Starting Statistics
+##### Starting Statistics
 
 **Size** Large; **Speed** 40 ft.; **AC** +3 natural armor; **Attack** bite (1d6); **Ability Scores** **Str** 17, **Dex** 12, **Con** 15, **Int** 2, **Wis** 12, **Cha** 8; **Special Qualities** low-light vision, scent.
 
-### 7th-Level Advancement
+##### 7th-Level Advancement
 
 **Ability Scores** **Str** +2, **Dex** +2; **Special Qualities** combat trained. 

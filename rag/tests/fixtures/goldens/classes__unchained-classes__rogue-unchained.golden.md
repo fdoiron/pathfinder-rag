@@ -20,7 +20,30 @@ The rogue’s class skills are Acrobatics (Dex), Appraise (Int), Bluff (Cha), Cl
 
 **Skill Ranks per Level**: 8 + Int modifier.
 
-| Level: Base Attack Bonus; 1st: +0; 2nd: +1; 3rd: +2; 4th: +3; 5th: +3; 6th: +4; 7th: +5; 8th: +6/+1; 9th: +6/+1; 10th: +7/+2; 11th: +8/+3; 12th: +9/+4; 13th: +9/+4; 14th: +10/+5; 15th: +11/+6/+1; 16th: +12/+7/+2; 17th: +12/+7/+2; 18th: +13/+8/+3; 19th: +14/+9/+4; 20th: +15/+10/+5 |  |
+**Table: Rogue**
+
+| Level | Base Attack Bonus | Fort Save | Ref Save | Will Save | Special |
+| --- | --- | --- | --- | --- | --- |
+| 1st | +0 | +0 | +2 | +0 | Finesse training, sneak attack +1d6, trapfinding |
+| 2nd | +1 | +0 | +3 | +0 | Evasion, rogue talent |
+| 3rd | +2 | +1 | +3 | +1 | Danger sense +1, finesse training, sneak attack +2d6 |
+| 4th | +3 | +1 | +4 | +1 | Debilitating injury, rogue talent, uncanny dodge |
+| 5th | +3 | +1 | +4 | +1 | Rogue’s edge, sneak attack +3d6 |
+| 6th | +4 | +2 | +5 | +2 | Danger sense +2, rogue talent |
+| 7th | +5 | +2 | +5 | +2 | Sneak attack +4d6 |
+| 8th | +6/+1 | +2 | +6 | +2 | Improved uncanny dodge, rogue talent |
+| 9th | +6/+1 | +3 | +6 | +3 | Danger sense +3, sneak attack +5d6 |
+| 10th | +7/+2 | +3 | +7 | +3 | Advanced talents, rogue talent, rogue’s edge |
+| 11th | +8/+3 | +3 | +7 | +3 | Finesse training, sneak attack +6d6 |
+| 12th | +9/+4 | +4 | +8 | +4 | Danger sense +4, rogue talent |
+| 13th | +9/+4 | +4 | +8 | +4 | Sneak attack +7d6 |
+| 14th | +10/+5 | +4 | +9 | +4 | Rogue talent |
+| 15th | +11/+6/+1 | +5 | +9 | +5 | Danger sense +5, rogue’s edge, sneak attack +8d6 |
+| 16th | +12/+7/+2 | +5 | +10 | +5 | Rogue talent |
+| 17th | +12/+7/+2 | +5 | +10 | +5 | Sneak attack +9d6 |
+| 18th | +13/+8/+3 | +6 | +11 | +6 | Danger sense +6, rogue talent |
+| 19th | +14/+9/+4 | +6 | +11 | +6 | Finesse training, sneak attack +10d6 |
+| 20th | +15/+10/+5 | +6 | +12 | +6 | Master strike, rogue talent, rogue’s edge |
 
 ### Class Features
 
@@ -32,7 +55,7 @@ Rogues are proficient with all simple weapons, plus the hand crossbow, rapier, s
 
 #### Sneak Attack
 
-Precision Damage & Critical Hits
+##### Precision Damage & Critical Hits
 
 Precision damage (such as that dealt by a rogue’s sneak attack ability) applies to more creatures than it did in previous editions of the game.
 
@@ -47,7 +70,7 @@ The following creature types (or subtypes) have immunity to critical hits (that 
 - **Aeon (subtype)**: “*Immunity to cold, poison, and critical hits.*“
 - **Elemental (subtype)**: Elementals are “*not subject to critical hits or flanking. Does not take additional damage from precision-based attacks, such as sneak attack.*“
 - **Incorporeal (subtype)**: “*An incorporeal creature is immune to critical hits (unless the attacks are made using a weapon with the ghost touch special weapon quality.)*“
-- **Ooze (Type)**: <Oozes are…> “*not subject to critical hits or flanking. Does not take additional damage from precision-based attacks (such as sneak attack.)*“
+- **Ooze (Type)**: \<Oozes are…> “*not subject to critical hits or flanking. Does not take additional damage from precision-based attacks (such as sneak attack.)*“
 - **Protean (subtype)**: *(50% chance to ignore, see below*)*
 - **Swarm (Type)**: “*A swarm has no clear front or back and no discernible anatomy, so it is not subject to critical hits.*“
 
@@ -55,20 +78,20 @@ Precision-Based Damage (like Sneak Attack)
 
 The following creature types (or subtypes) do not take additional damage from precision-based attacks (such as sneak attack):
 
-- **Elemental (subtype)**: “<An elemental…> *does not take additional damage from precision-based attacks (such as sneak attack.)*“
+- **Elemental (subtype)**: “\<An elemental…> *does not take additional damage from precision-based attacks (such as sneak attack.)*“
 - **Incorporeal (subtype)**: “*An incorporeal creature is immune to precision-based damage (such as sneak attack damage) unless the attacks are made using a weapon with the ghost touch special weapon quality.*“
-- **Ooze (Type)**: “<An ooze is…> *does not take additional damage from precision-based attacks (such as sneak attack.)*“
+- **Ooze (Type)**: “\<An ooze is…> *does not take additional damage from precision-based attacks (such as sneak attack.)*“
 - **Protean (subtype)**: *(50% chance to ignore, see below*)*
 
 Creatures Immune to Flanking
 
 Opponents do not gain any special flanking bonuses against the following creature types (or subtypes):
 
-- **Ooze (Type)**: “<An ooze is…> *not subject to … flanking.*“
+- **Ooze (Type)**: “\<An ooze is…> *not subject to … flanking.*“
 - **Swarm (Type)**: “*A swarm has no clear front or back and no discernible anatomy, so it is not subject to flanking.*“
-- **Elemental (subtype)**: “<Elementals are…> *not subject to flanking.*“
+- **Elemental (subtype)**: “\<Elementals are…> *not subject to flanking.*“
 
-***Special**: Proteans have a special ability called “*Amorphous Anatomy”* which might protect them: “<*Amorphous Anatomy>* grants <a protean> a 50% chance to ignore additional damage caused by critical hits and sneak attacks,”
+***Special**: Proteans have a special ability called “*Amorphous Anatomy”* which might protect them: “\<*Amorphous Anatomy>* grants \<a protean> a 50% chance to ignore additional damage caused by critical hits and sneak attacks,”
 
 If a rogue can catch an opponent when he is unable to defend himself effectively from her attack, she can strike a vital spot for extra damage.
 
@@ -122,7 +145,7 @@ At 4th level, a rogue can react to danger before her senses would normally allow
 
 If a rogue already has uncanny dodge from a different class, she automatically gains improved uncanny dodge (see below) instead.
 
-Skill Unlocks
+##### Skill Unlocks
 
 Skill unlocks give characters new abilities and ways to use their skills upon reaching 5, 10, 15, and 20 ranks in a skill. Any character with the Signature Skill feat can earn skill unlocks for a single skill, and they are a prime feature of the revised version of the rogue, who uses her rogue’s edge ability to gain skill unlocks for several of her most iconic skills. Alternatively, you might make skill unlocks a universal part of the game, but you should be aware they add significant power and flexibility to skills, so giving them for free to all classes would grant power boosts to other highly skilled classes such as the investigator and bard, particularly in comparison to the rogue. Another alternative is to eliminate access to the Signature Skill feat, limiting skill unlocks to rogues and rogues alone. 
 
@@ -202,11 +225,4 @@ The following themes represent some of the most popular and effective unchained 
 | Oniwaban |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
 | Star Master |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |
 
-X=replaced, (X)=optional replacement, C=changed
-
-**Subpages**
-
-- Alternate Classes
-- Archetypes
-- Rogue Talents, Advanced
-- Unchained Rogue Talents 
+X=replaced, (X)=optional replacement, C=changed 

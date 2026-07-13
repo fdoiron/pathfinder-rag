@@ -2,7 +2,7 @@
 
 **Aura** moderate enchantment; **CL** 10th; **Slot** none; **Price** 12,000 gp; **Weight** 5 lbs.
 
-### DESCRIPTION
+## DESCRIPTION
 
 A rod of wonder is a strange and unpredictable device that randomly generates any number of weird effects each time it is used. Activating the rod is a standard action. Typical powers of the rod include the following.
 
@@ -31,6 +31,6 @@ A rod of wonder is a strange and unpredictable device that randomly generates an
 | 96—97 | Wielder (50% chance) or the target (50% chance) turns permanently blue, green, or purple (no save). |
 | 98—100 | Flesh to stone (or stone to flesh if the target is stone already) if the target is within 60 feet (Fortitude DC 18 negates). |
 
-### CONSTRUCTION REQUIREMENTS
+## CONSTRUCTION REQUIREMENTS
 
 **Feats** Craft Rod, confusion; **Special** creator must be chaotic; **Cost** 6,000 gp 
