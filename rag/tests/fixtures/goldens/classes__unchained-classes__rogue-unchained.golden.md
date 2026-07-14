@@ -205,24 +205,24 @@ The following themes represent some of the most popular and effective unchained 
 
 | Archetype / Alternate Class Feature | Class Features Changed or Replaced |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Class Skills | Skill Ranks per Level | Weapon & Armor | Finesse Training |  |  |  | Sneak Attack |  |  |  |  |  |  |  |  |  | Trapfinding | Evasion | Rogue Talents |  |  |  | Advanced Talents |  |  |  |  |  | Danger Sense | Debilitating Injury | Uncanny Dodge | Rogue’s Edge |  |  |  | Improved Uncanny Dodge | Master Strike |
-| 1 | 3 | 11 | 19 | 1 | 3 | 5 | 7 | 9 | 11 | 13 | 15 | 17 | 19 | 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20 | 5 | 10 | 15 | 20 |
-| Paizo |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Note: Most of the the core rogue‘s existing archetypes will also work with the unchained rogue. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| 3rd Party Publishers |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Note: Most of the the core rogue‘s existing archetypes will also work with the unchained rogue. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Everyman Gaming, LLC. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Arcane Charlatan |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | C |  | X |  |  |  |  |  |
-| Bruiser |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Contender |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Unchained Ninja (alternate class) | C |  | C |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X | X | X | X | X | X | X | X | X | X | X | X | X | X |  | X | X | X | X |  | X |
-| **(The following archetypes further modify the Unchained Ninja alternate class:)** |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| Goto |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  | X |  |  |  | X |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
-| Hoka-han |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X | C | X |  | X |  | X |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
-| Kishu |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
-| Konran |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  | X |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
-| Oniwaban |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
-| Star Master |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |
+|  | Class Skills | Skill Ranks per Level | Weapon & Armor | Finesse Training |  |  |  | Sneak Attack |  |  |  |  |  |  |  |  |  | Trapfinding | Evasion | Rogue Talents |  |  |  | Advanced Talents |  |  |  |  |  | Danger Sense | Debilitating Injury | Uncanny Dodge | Rogue’s Edge |  |  |  | Improved Uncanny Dodge | Master Strike |  |
+|  |  |  |  | 1 | 3 | 11 | 19 | 1 | 3 | 5 | 7 | 9 | 11 | 13 | 15 | 17 | 19 |  |  | 2 | 4 | 6 | 8 | 10 | 12 | 14 | 16 | 18 | 20 |  |  |  | 5 | 10 | 15 | 20 |  |  |  |
+| Paizo |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Note: Most of the the core rogue‘s existing archetypes will also work with the unchained rogue. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+|  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| 3rd Party Publishers |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Note: Most of the the core rogue‘s existing archetypes will also work with the unchained rogue. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Everyman Gaming, LLC. |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Arcane Charlatan |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | C |  | X |  |  |  |  |  |  |
+| Bruiser |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Contender |  |  |  | X | X | X | X |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Unchained Ninja (alternate class) | C |  | C |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X | X | X | X | X | X | X | X | X | X | X | X | X | X |  | X | X | X | X |  | X |  |
+| **(The following archetypes further modify the Unchained Ninja alternate class:)** |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
+| Goto |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  | X |  |  |  | X |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |
+| Hoka-han |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X | C | X |  | X |  | X |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |
+| Kishu |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |
+| Konran |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  | X |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |
+| Oniwaban |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  | X |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |
+| Star Master |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |  |  |  |  | X |  |  |  |  |  |  |  |  |
 
 X=replaced, (X)=optional replacement, C=changed 
