@@ -2,6 +2,7 @@ import logging
 import re
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 
 import lxml.html
 from pydantic import HttpUrl
@@ -118,6 +119,11 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
 
 BASE_URL = 'https://www.d20pfsrd.com'
 _HASH_SUFFIX_RE = re.compile(r'__[0-9a-f]{10}$')
+
+
+def is_hub_page(slug: str) -> bool:
+    """category/index landing pages (no url path segment) -> link lists. No useful content"""
+    return '__' not in slug
 
 
 def _slug_to_url(slug: str) -> HttpUrl:
@@ -242,6 +248,34 @@ def parse_page(html: str, slug: str) -> Article:
         body_md=body,
         n_chars=n_chars,
     )
+
+
+# ---------------------------------------------------------------
+# corpus directory parser
+# ---------------------------------------------------------------
+
+
+def parse_corpus_dir(html_dir: Path, min_body_length: int) -> list[Article]:
+    articles: list[Article] = []
+    for html_file in sorted(html_dir.glob('*.html')):
+        slug = html_file.stem
+
+        if is_hub_page(slug):
+            logger.info(f'dropped {slug!r}: hub page')
+            continue
+
+        try:
+            article = parse_page(html_file.read_text(encoding='utf-8'), slug)
+        except ValueError as e:
+            logger.warning(f'dropped {slug!r}: parse error: {e}')
+            continue
+
+        if article.n_chars < min_body_length:
+            logger.warning(f'dropped {slug!r}: body too short ({article.n_chars} < {min_body_length} chars)')
+            continue
+
+        articles.append(article)
+    return articles
 
 
 # ---------------------------------------------------------------

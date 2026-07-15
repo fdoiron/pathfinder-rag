@@ -10,12 +10,10 @@ from rag.parsing import (
     _normalize_whitespace,
     _retag_pseudo_headings,
     _slug_to_url,
+    is_hub_page,
+    parse_corpus_dir,
     parse_page,
 )
-
-# TODO deferred to M1.4 (parse_corpus_dir), not this file's scope: hub-page filter (no '__' in slug),
-# min_body_length filter, drop reasons logged
-
 
 # ---------------------------------------------------------------
 # helpers
@@ -359,6 +357,47 @@ def test_parse_page_removes_script_tags():
 def test_parse_page_raises_value_error_with_slug_for_malformed_html():
     with pytest.raises(ValueError, match='my-slug'):
         parse_page('', 'my-slug')
+
+
+# ---------------------------------------------------------------
+# is_hub_page
+# ---------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ('slug', 'expected'),
+    [
+        ('feats', True),
+        ('bestiary', True),
+        ('feats__combat-feats__greater-two-weapon-fighting-combat', False),
+        ('bestiary__monster-listings__dragons__dragon', False),
+    ],
+)
+def test_is_hub_page(slug, expected):
+    assert is_hub_page(slug) == expected
+
+
+# ---------------------------------------------------------------
+# parse_corpus_dir
+# ---------------------------------------------------------------
+
+
+def test_parse_corpus_dir_keeps_good_pages_and_logs_distinguishable_drop_reasons(tmp_path, caplog):
+    good_body = '<p>' + 'Real content about a monster ' * 10 + '</p>'
+
+    (tmp_path / 'feats.html').write_text(_page('<p>Hub page listing content</p>'), encoding='utf-8')
+    (tmp_path / 'bestiary__aboleth.html').write_text(_page(good_body), encoding='utf-8')
+    (tmp_path / 'traits__stub.html').write_text(_page('<p>Too short.</p>'), encoding='utf-8')
+    (tmp_path / 'bestiary__broken.html').write_text('', encoding='utf-8')
+
+    with caplog.at_level('INFO'):
+        articles = parse_corpus_dir(tmp_path, min_body_length=50)
+
+    assert [a.doc_id for a in articles] == ['bestiary__aboleth']
+
+    assert any('hub page' in m and 'feats' in m for m in caplog.messages)
+    assert any('too short' in m and 'traits__stub' in m for m in caplog.messages)
+    assert any('parse error' in m and 'bestiary__broken' in m for m in caplog.messages)
 
 
 # ---------------------------------------------------------------
