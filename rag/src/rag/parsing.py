@@ -190,13 +190,14 @@ def _retag_pseudo_headings(content: lxml.html.HtmlElement) -> None:
 def parse_page(html: str, slug: str) -> Article:
     try:
         root = lxml.html.fromstring(html)
+        content = root.get_element_by_id('article-content')
+        # Save page breadcrumbs for metadata as list[str]
+        breadcrumbs_div = content.find_class('breadcrumbs')[0]
     except Exception as e:
+        # covers malformed HTML plus missing #article-content or div.breadcrumbs
+        # (page doesn't match the expected site template)
         raise ValueError(f'Failed to parse HTML for slug {slug!r}: {e}') from e
 
-    content = root.get_element_by_id('article-content')
-
-    # Save page breadcrumbs for metadata as list[str]
-    breadcrumbs_div = content.find_class('breadcrumbs')[0]
     breadcrumb = [a.text_content().strip() for a in breadcrumbs_div.iter('a')]
 
     # Remove unneeded in tree, drop_tree keeps .tail.
