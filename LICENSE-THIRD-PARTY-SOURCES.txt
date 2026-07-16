@@ -1,0 +1,1609 @@
+# Third-party OGL sourcebook attributions found in the scraped pages
+#
+# Extracted each page’s div.section15 (OGL Section 15 declaration) on scraper/data/html/ (24,080 html files) before parse_page() strips the section.
+# Format : citation count \t sourcebook / product title
+# Split each citation on the Copyright marker and deduplicated to 22,199 section 15 citations. 
+#
+#Open Game License v 1.0a Copyright 2000, Wizards of the Coast, Inc.
+
+#System Reference Document. Copyright 2000, Wizards of the Coast, Inc.;
+#Authors Jonathan Tweet, Monte Cook, Skip Williams, based on material by
+#E. Gary Gygax and Dave Arneson.
+
+#Pathfinder Roleplaying Game Core Rulebook © 2009, Paizo Publishing, LLC;
+#Author: Jason Bulmahn, based on material by Jonathan Tweet, Monte Cook,
+#and Skip Williams.
+
+
+
+1069	Pathfinder Roleplaying Game: Ultimate Equipment (OGL)
+825	Advanced Player’s Guide
+726	Pathfinder Roleplaying Game Ultimate Combat
+656	Pathfinder Roleplaying Game: Ultimate Magic
+632	Pathfinder Roleplaying Game: Advanced Class Guide
+475	Pathfinder Roleplaying Game Advanced Race Guide
+426	Pathfinder RPG Core Rulebook
+419	Pathfinder Roleplaying Game Ultimate Wilderness
+367	Pathfinder Roleplaying Game Bestiary 2
+350	Pathfinder Roleplaying Game Monster Codex
+348	Pathfinder Roleplaying Game NPC Codex
+343	Pathfinder Roleplaying Game Bestiary 3
+321	Pathfinder Campaign Setting: Inner Sea Gods
+304	Pathfinder Roleplaying Game Bestiary 5
+292	Pathfinder Roleplaying Game Ultimate Intrigue
+288	Pathfinder Roleplaying Game: Ultimate Campaign
+288	Pathfinder Roleplaying Game Bestiary 4
+285	Pathfinder Roleplaying Game Horror Adventures
+251	Pathfinder Roleplaying Game Bestiary 6
+227	Pathfinder Roleplaying Game Adventurer’s Guide
+200	Alien Codex
+194	Pathfinder Roleplaying Game Occult Adventures
+158	Pathfinder Roleplaying Game Planar Adventures
+150	Pathfinder Player Companion: Inner Sea Primer
+148	Pathfinder Roleplaying Game Core Rulebook
+128	Mediterranean Monsters (Pathfinder RPG)
+122	Advanced Bestiary, Copyright 2014, Green Ronin Publishing, LLC; Author Jeff Hersh, Developer Owen K.C. Stephens
+120	Path of Iron
+119	Aventyr Bestiary
+117	Pathfinder RPG Bestiary
+116	Pathfinder Player Companion: Potions & Poisons
+116	Pathfinder Roleplaying Game Mythic Adventures
+110	Pathfinder Campaign Setting: Inner Sea Combat
+110	Pathfinder RPG GameMastery Guide
+105	Pathfinder Player Companion: Martial Arts Handbook
+104	Pathfinder Player Companion: Magic Tactics Toolbox
+102	Pathfinder Player Companion: Armor Master’s Handbook
+101	Pathfinder Player Companion: Weapon Master’s Handbook
+99	Pathfinder Player Companion: Quests & Campaigns
+98	African Monsters (PF1)
+95	Asian Monsters (PF1)
+92	Pathfinder Player Companion: Ranged Tactics Toolbox
+92	Pathfinder Campaign Setting: Inner Sea Intrigue
+89	Pathfinder Player Companion: Adventurer’s Armory 2
+88	Exotic Encounters Compendium Copyright 2013, Necromancers of the Northwest, LLC; Author: Alex Riggs, Joshua Zaback
+84	Pathfinder Roleplaying Game Pathfinder Unchained
+81	The Colossal Creatures Bestiary Copyright 2025 Zenith Games; Author Jeff Gomez
+81	Pathfinder Player Companion: Blood of Shadows
+80	Pathfinder Player Companion: Wilderness Origins
+80	Pathfinder Player Companion: Magical Marketplace
+80	Pathfinder Player Companion: Dirty Tactics Toolbox
+80	Pathfinder Player Companion: Melee Tactics Toolbox
+78	Mythos Monsters (PF1)
+78	Pathfinder Campaign Setting: Inner Sea Races
+77	Pathfinder Player Companion: People of the Wastes
+74	Pathfinder Player Companion: Dragon Empires Primer
+74	Pathfinder Player Companion: Kobolds of Golarion
+73	Sandy Petersen’s Cthulhu Mythos
+73	Pathfinder Campaign Setting: Inner Sea Magic
+72	Pathfinder Player Companion: Agents of Evil
+71	Pathfinder Player Companion: Blood of the Ancients
+70	Pathfinder Player Companion: Heroes from the Fringe
+69	Pathfinder Player Companion: Merchant’s Manifest
+66	Sea Monsters (PF1)
+66	Pathfinder Player Companion: Blood of the Moon
+66	Pathfinder Player Companion: Heroes of the Street
+66	Pathfinder Roleplaying Game Villain Codex
+65	Pathfinder Player Companion: Champions of Purity
+65	Pathfinder Player Companion: Divine Anthology
+63	Pathfinder Player Companion: People of the River
+62	Pathfinder Campaign Setting: The Inner Sea World Guide
+61	Faerie Bestiary (PF1)
+61	Pathfinder Player Companion: Elemental Master’s Handbook
+61	Pathfinder Player Companion: Legacy of the First World
+60	Pathways Bestiary
+60	Pathfinder Campaign Setting: Aquatic Adventures
+59	Pathfinder Player Companion: Plane-Hopper’s Handbook
+58	Arcforge Universe Cyclopedia
+58	Pathfinder Player Companion: Heroes of Golarion
+57	Pathfinder Player Companion: Monster Hunter’s Handbook
+56	Pathfinder Player Companion: Champions of Balance
+56	Pathfinder Player Companion: Chronicle of Legends
+54	Pathfinder Campaign Setting: Inner Sea NPC Codex
+54	Pathfinder Campaign Setting: Artifacts & Legends
+53	Pathfinder Roleplaying Game Book of the Damned
+53	Akashic Mysteries
+53	Pathfinder Player Companion: Halflings of Golarion
+52	Pathfinder Campaign Setting: Construct Handbook
+52	Pathfinder Player Companion: Disciple’s Doctrine
+52	Midgard Bestiary for Pathfinder RPG
+51	Forgotten Foes
+51	Pathfinder Player Companion: Advanced Class Origins
+50	Pathfinder Player Companion: Pathfinder Society Primer
+50	Pathfinder Campaign Setting: Inner Sea Bestiary
+50	The Book of Many Things
+50	Pathfinder Adventure Path: Rise of the Runelords Anniversary Edition
+49	Pathfinder Player Companion: Monster Summoner’s Handbook
+49	Pathfinder Player Companion: Spymaster’s Handbook
+49	Pathfinder Player Companion: Blood of the Sea
+49	Pathfinder Campaign Setting: Rival Guide
+48	Nemesis Unleashed Volume II
+48	Legendary Planet Adventure Path
+48	Pathfinder Player Companion: Heroes of the Wild
+48	Pathfinder Player Companion: Arcane Anthology
+47	Pathfinder Player Companion: Dragonslayer’s Handbook
+46	Pathfinder Campaign Setting: Occult Bestiary
+46	TheCreatureCodex.Tumblr.com Author: thecreaturecodex
+46	Book of Beasts: Monsters of the River Nations, copyright 2010 Jon Brazer Enterprises; Author Steven Helt
+46	Pathfinder Player Companion: Blood of the Beast
+45	Mechanical Monsters
+45	Pathfinder Player Companion: Haunted Heroes Handbook
+45	Pathfinder Player Companion: People of the Stars
+44	Pathfinder Campaign Setting: Technology Guide
+44	Pathfinder Player Companion: Cohorts and Companions
+44	Pathfinder Player Companion: Bastards of Golarion
+43	Pathfinder Campaign Setting: Inner Sea Temples
+42	The Genius Guide to the Talented Bestiary
+42	Pathfinder Player Companion: Legacy of Dragons
+41	Pathfinder Player Companion: Familiar Folio
+41	Pathfinder Player Companion: Healer’s Handbook
+41	Pathfinder Player Companion: Knights of the Inner Sea
+41	Pathfinder Player Companion: Antihero’s Handbook
+40	Pathfinder Player Companion: Champions of Corruption
+39	Pathfinder Chronicles – Cheliax: Empire of Devils Copyright 2009, Paizo Publishing, LLC Authors: Jonathan H. Keith, Colin McComb, Steven E.
+38	Pathfinder Player Companion: Dungeoneer’s Handbook
+38	Pathfinder Player Companion: People of the Sands
+38	Pathfinder Companion: Adventurer’s Armory
+37	Pathfinder Player Companion: Animal Archive
+37	Pathfinder Player Companion: Faiths & Philosophies
+37	Pathfinder Player Companion: Goblins of Golarion
+36	Pathfinder Player Companion: The Harrow Handbook
+36	Pathfinder Roleplaying Game Ultimate Equipment
+36	Pathfinder Player Companion: Giant Hunter’s Handbook
+36	Pathfinder Adventure Path #48: Shadows of Gallowspire
+35	Pathfinder Roleplaying Game: Niobe
+35	Pathfinder Campaign Setting: Inner Sea Monster Codex
+35	Pathfinder Player Companion: Black Markets
+35	Pathfinder Player Companion: Occult Origins
+34	Pathfinder 43: Haunting of Harrowstone
+34	Pathfinder Campaign Setting: Pathfinder Society Field Guide
+34	Pathfinder Player Companion: Heroes of the High Court
+34	Pathfinder Player Companion: Blood of the Elements
+34	Pathfinder Player Companion: Blood of Angels
+34	Pact Magic Unbound, Vol. 1
+34	PPC:BoF
+33	Pathfinder Player Companion: Demon Hunter’s Handbook
+32	Pathfinder Companion: Taldor, Echoes of Glory
+32	Jade Regent Player’s Guide
+31	Galactic Bestiary 19
+31	Pathfinder Adventure Path #139: The Dead Roads
+31	Pathfinder Roleplaying Game: The World of Vampire Hunter D
+31	Pathfinder Player Companion: Heroes of the Darklands
+30	Pathfinder Companion: Legacy of Fire Player’s Guide
+29	Rappan Athuk Copyright 2012 Bill Webb, Frog God Games
+29	Pathfinder Companion: Sargava, the Lost Colony
+29	Pathfinder Companion: Gnomes of Golarion
+28	Pathfinder Adventure Path #137: The City Outside of Time
+28	Pathfinder Chronicles: Heart of the Jungle
+28	Pathfinder Campaign Setting: Distant Realms
+28	Pathfinder Player Companion: Undead Slayer’s Handbook
+28	Pathfinder Player Companion: Blood of the Coven
+28	Pathfinder Player Companion: Paths of the Righteous
+27	Pathfinder Campaign Setting: Numeria, Land of Fallen Stars
+27	PCh:FG
+26	Kobold Quest From Ashes to Empire Copyright 2024 Explorer's Guild Publishing; Author Richard Davis
+26	Fort Scurvy
+26	Pathfinder Player Companion: Humans of Golarion
+25	Pathfinder Adventure Path #91: Battle of Bloodmarch Hill
+25	Pathfinder Adventure Path #47: Ashes at Dawn
+25	Pathfinder Adventure Path #131: The Reaper’s Right Hand
+25	Pathfinder Campaign Setting: Demons Revisited
+25	Pathfinder Campaign Setting: Inner Sea Taverns
+25	Pathfinder Campaign Setting: Path of the Hellknight
+25	Pathfinder Chronicles Seekers of Secrets Paizo Publishing, LLC
+24	Compendium Imaginarium
+24	Pathfinder Campaign Setting: Planes of Power
+24	Pathfinder Player Companion: Psychic Anthology
+24	Pathfinder Adventure Path #49: The Brinewall Legacy
+24	Mystical: Kingdom of Monsters Anniversary Edition
+23	Pathfinder Campaign Setting: Paths of Prestige
+23	Pathfinder Player Companion: Blood of the Night
+22	Pathfinder Adventure Path #141: Last Watch
+22	Legendary Planet: Confederates of the Shattered Zone
+22	Pathfinder Campaign Setting: Horsemen of the Apocalypse: Book of the Damned, Vol. 3
+22	The War of the Goblin King
+22	Pathfinder Player Companion: Blood of Fiends
+22	Pathfinder Roleplaying Game Adventurer's Guide
+22	Spheres Bestiary: Magical Beasts and Climactic Encounters
+21	Pathfinder Adventure Path #45: Broken Moon
+21	Pathfinder Adventure Path #115: Trail of the Hunted
+21	Pathfinder Campaign Setting: Isles of the Shackles
+21	Pathfinder Campaign Setting: Lost Treasures
+21	Pathfinder Campaign Setting: Dungeons of Golarion
+21	Pathfinder Campaign Setting: Giants Revisited
+21	Pathfinder 7: Edge of Anarchy
+21	Pathfinder Adventure Path #46: Wake of the Watcher
+20	Pathfinder Campaign Setting: Chronicle of the Righteous
+20	Pathfinder Campaign Setting: Occult Mysteries
+20	Pathfinder Companion: Dwarves of Golarion Copyright 2009, Paizo Publishing, LLC; Authors: David A. Eitelbach, Russ Taylor, JD Wiker, Keri Wi
+20	Pathfinder Player Companion: Varisia, Birthplace of Legends
+19	Pathfinder Adventure Path #122: Into the Shattered Continent
+19	Pathfinder Adventure Path #37: Souls for Smuggler’s Shiv
+19	Pathfinder Campaign Setting: Mythical Monsters Revisited
+19	Legendary Planet: The Scavenged Codex
+19	Terrors of Obsidian Apocalypse: Haunts Copyright 2015, Louis Porter Jr. Design, Inc
+19	Pathfinder 2: The Skinsaw Murders
+19	Pathfinder 5: Sins of the Saviors
+18	Pathfinder Adventure Path #56: Raiders of the Fever Sea
+18	Pathfinder Adventure Path #81: Shifting Sands
+18	Pathfinder Chronicles: Classic Treasures Revisited
+18	Sutra Magic copyright 2010 Frank Car, All rights reserved, Author Frank Carr
+18	Pathfinder 24: The Final Wish
+17	Pathfinder Adventure Path #61: Shards of Sin
+17	Pathfinder Module: City of Golden Death
+17	Pathfinder Campaign Setting: The Worldwound
+17	Pathfinder Campaign Setting: Horror Realms
+17	Pathfinder 20: House of the Beast
+17	Classic Monsters Revisited
+16	Pathfinder Adventure Path #144: Midwives to Death
+16	Pathfinder Adventure Path #124: City in the Deep
+16	Remarkable Races: Compendium of Unusual PC Races, Pathway to Adventure Edition Copyright 2009, Alluria Publishing; Author: J. Matthew Kubisz
+16	Pathfinder Adventure Path #119: Prisoner of the Blight
+16	Pathfinder Adventure Path #89: Palace of Fallen Stars
+16	Pathfinder Adventure Path #116: Fangs of War
+16	Pathfinder Chronicles: Gods and Magic
+16	Pathfinder Campaign Setting: Distant Shores
+16	Pathfinder Roleplaying Game: NPC Codex
+16	Pathfinder Companion: Elves of Golarion Copyright 2009, Paizo Publishing, LLC; Authors: David A. Eitelbach, Russ Taylor, JD Wiker, Keri Wike
+16	Pathfinder Roleplaying Game: Ultimate Wilderness
+16	Pathfinder 3: The Hook Mountain Massacre
+16	Pathfinder Player Companion: Faiths of Purity
+16	Pathfinder Module: The Witchwar Legacy
+15	Contact Other Plane: Dead Void
+15	Call of the Frog God Copyright 2013 Bill Webb, Frog God Games, Authors Casey Christofferson
+15	Pathfinder Adventure Path #123: The Flooded Cathedral
+15	Pathfinder Companion: Orcs of Golarion
+15	Pathfinder Campaign Setting: Undead Revisited
+15	Pathfinder Companion: Dwarves of Golarion
+15	Pathfinder 23: The Impossible Eye
+14	Galactic Bestiary 4
+14	Pathfinder Campaign Setting: Lost Kingdoms
+14	Pathfinder Adventure Path #126: Beyond the Veiled Past
+14	Pathfinder Campaign Setting: Irrisen, Land of Eternal Winter
+14	Pathfinder Player Companion: Pirates of the Inner Sea
+14	Pathfinder Adventure Path #82: Secrets of the Sphinx
+14	Pathfinder 36: Sound of a Thousand Screams
+13	Rappan Athuk
+13	Contact Other Plane: World of the Old Scrolls I
+13	Pathfinder Adventure Path #117: Assault on Longshadow
+13	Cloud Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+13	Pathfinder Campaign Setting: The First World, Realm of the Fey
+13	Pathfinder Adventure Path #129: The Twilight Child
+13	Pathfinder Adventure Path #128: Songbird, Scion, Saboteur
+13	Icebound Copyright 2021, Michael Mars; Author: Tom Knauss
+13	Pathfinder 19: Howl of the Carrion King
+13	Like a Boss
+13	Skull & Shackles Player’s Guide
+13	Pathfinder Player Companion: Faiths of Corruption
+12	Pathfinder Campaign Setting: Andoran, Birthplace of Freedom
+12	From the Deep Adventure Path #1: Uncertain Futures Copyright 2012 Dreamscarred Press. Author Michael Mc Carthy (not indicated in original Se
+12	Pathfinder Campaign Setting: Belkzen, Hold of the Orc Hordes
+12	Pathfinder Campaign Setting: Lands of the Linnorm Kings
+12	Liber Vampyr Copyright 2010-2013, Necromancers of the Northwest, LLC; Authors: Alex Riggs, Joshua Zaback, and Justin Holloway
+12	Pathfinder Adventure Path #120: Vault of the Onyx Citadel
+12	Pathfinder Chronicles: Dark Markets, A Guide to Katapesh
+12	Spheres of Power
+12	Pathfinder 9: Escape from Old Korvosa
+12	Pathfinder Chronicles: Dungeon Denizens Revisited
+11	The Iconic Bestiary: Classics of Fantasy Copyright 2005, Lions Den Press; Author Ari Marmell
+11	The Bardess’ Library #14: The Holy
+11	Pathfinder Campaign Setting: Qadira, Jewel of the East
+11	Pathfinder Adventure Path #55: The Wormwood Mutiny
+11	Nature Bestiary Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+11	Pathfinder Companion: Qadira, Gateway to the East
+11	Pathfinder Player Companion: Undead Slayer's Handbook
+11	PPC:AM
+11	Pathfinder Chronicles Campaign Setting
+11	Pathfinder Player Companion: Faiths of Balance
+11	PRG:UM
+11	Spheres Bestiary: Undead and the Immortal Forlorn
+11	Pathfinder 44: Trial of the Beast
+11	Pathfinder 26: The Sixfold Trial
+11	Pathfinder 4: Fortress of the Stone Giants
+11	Pathfinder Campaign Setting: Lost Cities of Golarion
+10	Pathfinder 21: The Jackal's Price Copyright 2009, Paizo Publishing, LLC; Author: Darrin Drader
+10	Legendary Levels: Deific Bestiary
+10	Pathfinder Campaign Setting: Druma, Profit and Prophecy
+10	Speak with Animals: Animal Companions II
+10	Pathfinder Campaign Setting: Magnimar, City of Monuments
+10	The Bardess’ Library #8: Forgotten Classes
+10	Pathfinder Adventure Path #57: Tempest Rising
+10	Legendary Classes Emissary
+10	Pathfinder Adventure Path #63: The Asylum Stone
+10	Pathfinder 6: Spires of Xin-Shalast
+10	The Bardess’ Library #6: Magic
+10	GameMastery Module E1: Carnival of Tears, Copyright 2007 Paizo Publishing, LLC. Authors: Tim Hitchcock and Nicolas Logue
+10	The Genius Guide To: Simple Monster Templates
+10	Pathfinder Adventure Path #140: Eulogy for Roslar’s Coffer
+10	Pathfinder Campaign Setting: Lords of Chaos: Book of the Damned, Vol. 2
+10	The Bardess’ Library #2 - Elements
+10	We Be Leshys Copyright 2025 Zenith Games Authors Mike Welham and Jeff Gomez
+10	Classic Horrors Revisited
+10	Pathfinder 1: Burnt Offerings
+10	Legendary Classes: Cloak & Dagger
+10	PRG Ultimate Wilderness
+10	Pathfinder Adventure Path #42: Sanctum of the Serpent God
+10	Pathfinder 11: Skeletons of Scarwall
+9	Pathfinder Campaign Setting: Taldor, The First Empire
+9	Orcus on 34th Level
+9	Pathfinder Adventure Path #118: Siege of Stone
+9	Pathfinder Adventure Path #125: Tower of the Drowned Dead
+9	Pathfinder Campaign Setting: Osirion, Legacy of Pharaohs
+9	Pathfinder Adventure Path #60: From Hell’s Heart
+9	Wayfinder #17
+9	Wayfinder #18
+9	Pathfinder Adventure Path #75: Demon’s Heresy
+9	Pathfinder Campaign Setting: Undead Unleashed
+9	Pathfinder Module: Crypt of the Everflame
+9	Pathfinder Module: Tears at Bitter Manor
+9	Pathfinder Adventure Path #62: Curse of the Lady’s Light
+9	Pathfinder Adventure Path #71: Rasputin Must Die!
+9	Pathfinder 10: A History of Ashes
+9	Pathfinder 8: Seven Days to the Grave
+8	Pact Magic Unbound: Grimoire of Lost Souls Copyright 2016 Radiance House; Authors Alexander Augunas, Dario Nardi
+8	Eastern Journey Adventures
+8	Pathfinder Adventure Path #133: Secrets of Roderic’s Cove
+8	The Blargy Blog Author: KVid
+8	Pathfinder Campaign Setting: Nidal, Land of Shadows
+8	Pathfinder Adventure Path #130: City in the Lion’s Eye
+8	Pathfinder Adventure Path #121: The Lost Outpost
+8	Pathfinder Adventure Path #59: The Price of Infamy
+8	Pathfinder Adventure Path #142: Gardens of Gallowspire
+8	Beasts of Legend: Malevolent Medium Monsters
+8	The Bardess’ Library #5: Dragons
+8	Pathfinder Adventure Path #127: Crownfall
+8	Pathfinder Campaign Setting: Concordance of Rivals
+8	Pathfinder Module D1.5: Revenge of the Kobold King, Copyright 2008, Paizo Publishing, LLC. Author: Nicholas Logue
+8	Aethera Campaign Setting: Aetheric Heroes
+8	Crimson Heroes
+8	Book of Beasts: Slayer Codex
+8	Winter Heroes: Pregenerated Characters
+8	Pathfinder 8: Seven Days to the grave
+8	GameMastery Module D0: Hollow’s Last Hope, Copyright 2007 Paizo Publishing, LLC. Author: Jason Bulmahn and F. Wesley Schneider
+8	The Book of Many Things Volume 2: Shattered Worlds
+8	Book of Magic: Spell Codex Volume 1
+8	Awesome Ancestries: Variant Species Options, Vol. 2 – Mortals of the Multiverse
+8	Pathfinder Adventure Path #34: Blood for Blood
+8	Book of Heroic Races: Advanced Favored Class Options
+8	Pathfinder Module: The Harrowing
+7	Major Creation: The Bloodlord
+7	Magimundi Bestiary
+7	Ultimate Evil
+7	The Tower Vault Heist
+7	The Bardess’ Library #4: Mythology
+7	The Bardess’ Library #18: Fun
+7	SpirosBlaak Gazetteer 1: The Prison Island of Kraephos
+7	Pathfinder Adventure Path #77: Herald of the Ivory Labyrinth
+7	Good Hope - Crushing Despair
+7	Acid Quasi-Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+7	Obsidian Quasi-Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+7	GameMastery Module D1: Crown of the Kobold King, Copyright 2007 Paizo Publishing, LLC. Author: Nicolas Logue
+7	Monstrous Sea Wasp from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+7	Name’s Games 2021 Annual Collection
+7	Shadowsfall: Favored Class Options
+7	Pathfinder Adventure Path #44: Trial of the Beast
+7	Pathfinder Chronicles: Faction Guide
+6	Pathfinder Adventure Path #53: Tide of Honor
+6	Pathfinder Campaign Setting: Misfit Monsters Redeemed
+6	Pathfinder Module: Plunder & Peril
+6	Pathfinder Adventure Path #66: The Dead Heart of Xin
+6	Pathfinder Adventure Path #58: Island of Empty Eyes
+6	Lost Atlanteans, Copyright 2024, Bloodstone Press; author Beth Jones
+6	Pathfinder Adventure Path #70: The Frozen Stars
+6	Pathfinder Campaign Setting: Cheliax, The Infernal Empire
+6	Legendary Classes Cartomancer
+6	Centipedes Reforged Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+6	We Be Dragons Copyright 2025 Zenith Games Author Jeff Gomez
+6	Pathfinder Campaign Setting: Lands of Conflict
+6	Call of the Wild, Book 1 – The Druid
+6	Legendary Summoners
+6	Pathfinder Roleplaying Game: PRG:UM Pathfinder Roleplaying Game: Ultimate Magic
+6	Ultimate Strongholds
+6	GameMastery Module D2: Seven Swords of Sin
+6	Pathfinder Module D4: Hungry Are the Dead
+6	Mystical: Kingdom of Monsters
+6	Pathfinder Adventure Path #40: Vaults of Madness
+6	Pathfinder Roleplaying Game Bestiary
+6	Pathfinder Adventure Path #35: War of the River Kings
+6	Pathfinder 32: Rivers Run Red
+6	Pathfinder 22: The End of Eternity
+5	Pathfinder Adventure Path #110: The Thrushmoor Terror
+5	From the Deep: A Dragon’s Orders Copyright 2014 Dreamscarred Press Author Michael McCarthy
+5	Pathfinder Adventure Path #100: A Song of Silver
+5	Pathfinder Module: The Godsmouth Heresy
+5	Pathfinder Adventure Path #90: The Divinity Drive
+5	The Bardess’ Library #10: More Mythology
+5	Deadly Delves: Dragon’s Dream
+5	Book of Beasts: Monsters of the Shadow Plane
+5	Pathfinder Adventure Path #99: Dance of the Damned
+5	Isle of the Angry Apes
+5	Humanoid Bestiary Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+5	Speak with Animals: Magical Beast Companions II
+5	Magical Beastiary Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+5	Pathfinder Adventure Path #72: The Witch Queen’s Revenge
+5	Fiend Bestiary Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+5	Pathfinder Chronicles: Princes of Darkness, Book of the Damned, Vol. I
+5	Player Paraphernalia #20 The Elemental Summoner (Summoner Archetype)
+5	Ultimate Engineering
+5	Undead Bestiary Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+5	Book of Heroic Races: Advanced Elans
+5	Heroes of the Multiverse, Vol. 4: Ranged Experts
+5	Little Red Goblin Games Racial Guide 6: Classice Monsters
+5	Pathfinder Campaign Setting: Rival Guide Pathfinder Campaign Setting: Rival Guide
+5	The Pathfinder Chronicles Campaign Setting Copyright 2008, Paizo Publishing; Author: Stan!, Keith Baker, Wolfgang Baur, Clinton J. Boomer, J
+5	Pathfinder Chronicles: Cities of Golarion
+5	Pathfinder Adventure Path #78: City of Locusts
+5	Book of Beasts: Legendary Foes
+5	Pathfinder Adventure Path #33: The Varnhold Vanishing
+5	Advanced Bestiary
+5	Dungeon Denizens Revisited
+5	Wayfinder #1
+5	Pathfinder Adventure Path #74: Sword of Valor
+4	Monstrous Menagerie Vol. I
+4	Speak with Animals: Animal Companions I
+4	Contact Other Plane: World of Final Adventures II
+4	101 Variant Monsters Copyright 2013, Steven D. Russell; Author Steven D. Russell
+4	Dungeon Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+4	The Bardess’ Library #20: More Dragons
+4	Pathfinder Roleplaying Game: Bonus Bestiary
+4	Altered Beasts: Gnolls, Vol. I
+4	Amazons vs Valkyries: Cult of Ares
+4	Wayfinder #4
+4	Magical Beastiary 2 Copyright 2025 Varyag's Forge Author Jakub Chlebowicz
+4	Pathfinder Adventure Path #111: Dreams of the Yellow King
+4	Pathfinder Adventure Path #51: The Hungry Storm
+4	Lightning Quasi-Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+4	Pathfinder Adventure Path #52: Forest of Spirits
+4	Lost Lore: Divine Hunters Copyright 2015 Frog God Games, LLC; Author John Ling
+4	Pathfinder Adventure Path #80: Empty Graves
+4	Source Pathfinder Adventure Path #79: The Half-Dead City
+4	The Bardess’ Library #19: The Arts
+4	The Bardess’ Library #15: Martial Artists
+4	Pathfinder Adventure Path #95: Anvil of Fire
+4	Pathfinder Player Companion: People of the North
+4	Pathfinder #15 Second Darkness: The Armageddon Echo
+4	Pathfinder Companion: Osirion, Land of Pharaohs, Copyright 2008, Paizo Publishing, LLC; Authors: Jason Nelson and Todd Stewart
+4	Galactic Bestiary 20
+4	GameMastery Module D3: The Demon Within
+4	GameMastery Module E1: Carnival of Tears
+4	Pathfinder Module: Feast of Dust
+4	Pathfinder Campaign Setting: Inner Sea Races (OGL)
+4	Pathfinder: Spiral of Bones #5 Copyright 2018 Paizo, Inc. Author: Crystal Frasier
+4	Book of Heroic Races: Advanced Compendium
+4	Pathfinder Chronicles Faction Guide
+4	Pathfinder 21: The Jackal’s Price
+4	5 Adventures, 25 Rooms
+4	Pathfinder Campaign Setting: Distant Worlds
+4	The Book of Fiends
+3	Pathfinder Roleplaying Game Ultimate Campaign
+3	Kobold Quarterly issue 12, Copyright 2009, Open Design LLC, www.koboldquarterly.com. All rights reserved
+3	Ecology from Pathfinder Adventure Path #60: From Hell’s Heart
+3	Everyman Minis: Microsized Monsters
+3	The Bardess’ Library #3: Nature
+3	Section 15 Copyright Notice Phantasia Zoologica I: Dogs
+3	Wayfinder #12
+3	Monster Lore Compendium WOTC Community Forums – Monsters and Races
+3	Cerulean Seas
+3	Pathfinder 15: The Armageddon Echo
+3	The Bardess’ Library #7: Fey
+3	Orcus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scott
+3	WOTC Community Forums – Monsters and Races – Monster Lore Compendium
+3	Speak with Animals: Magical Beast Companions 1
+3	Minions v3.5 Copyright 2003, Bastion Press, Inc. Authors: Greg Dent, Brian Goings, Brian Patterson, Charles W. Plemons III, Christopher West
+3	MKoM: Haunted Eve Monsters Only Pack
+3	Pathfinder Adventure Path #41: The Thousand Fangs Below
+3	Pathfinder 34: Blood for Blood
+3	Paragon Hags & Occult Rituals Copyright 2025 Zenith Games Author Landon Winkler
+3	Southlands Bestiary for Pathfinder Roleplaying Game
+3	Remarkable Races: Compendium of Unusual PC Races, Pathway to Adventure Edition
+3	Pathfinder Adventure Path #79: The Half-Dead City
+3	Pathfinder Campaign Setting: Heaven Unleashed
+3	Nabasu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+3	Pathfinder Chronicles: Princes of Darkness, Book of the Damned Vol. I
+3	Pathfinder Adventure Path volume #28: The Infernal Syndrome
+3	Pathfinder Module: Tomb of the Iron Medusa
+3	Breath of Life: The Archivist, Copyright 2023, Orphaned Bookworm Productions, LLC, Authors: Connor Bates and Norman Mitchell Jr
+3	Grimoire Viperian: A Tome of Exotic Lore Copyright 2021 Magic Skull Games Author: Steven F. Johnson
+3	Ancient Idols
+3	Boneneedle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+3	Queen Thermite from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+3	Book of Beasts: Warpriest Codex
+3	Hirelings: Into the Wild
+3	The Bardess’ Library #9: Guile
+3	The War of the Goblin King The War of the Goblin King
+3	Pathfinder Chronicles: City of Strangers
+3	Pathfinder Adventure Path volume #26: The Sixfold Trial
+3	Pathfinder Companion: Second Darkness Player’s Guide
+3	Pathfinder Companion: Andoran, Spirit of Liberty
+3	Pathfinder: Spiral of Bones #3 Copyright 2018 Paizo, Inc. Author: Crystal Frasier
+3	Pathfinder Chronicles: Seekers of Secrets
+3	Pathfinder Chronicles: Dragons Revisited
+3	Pathfinder Adventure Path #28: The Infernal Syndrome
+3	Pathfinder Adventure Path #43: The Haunting of Harrowstone
+3	Pathfinder Module: Curse of the Riven Sky
+3	Pathfinder Adventure Path #108: Hell Comes to Westcrown
+3	Pathfinder Module: The Emerald Spire Superdungeon
+3	Book of Heroic Races: Advanced Wyvarans
+3	Pathfinder 31: Stolen Land
+3	Pathfinder 12: Crown of Fangs
+3	Kobold Quarterly issue 14, Copyright 2010, Open Design LLC, www.koboldquarterly.com. All rights reserved
+3	Pathfinder Module: Carrion Hill
+3	Kitsune Compendium
+3	Pathfinder 14: Children of the Void
+3	Pathfinder 43
+3	Pathfinder Adventure Path #84: Pyramid of the Sky Pharaoh
+2	System Reference Document
+2	Ecology from Pathfinder Adventure Path #57: Tempest Rising
+2	Ecology from Pathfinder Adventure Path #64: Beyond the Doomsday Door
+2	Blood and Broomsticks
+2	PAP44
+2	MKoM: Haunted Eve Guide to the Scribe’s Marsh
+2	Pathfinder Adventure Path #50: Night of Frozen Shadows
+2	Ecology from Pathfinder Adventure Path #36: Sound of a Thousand Screams
+2	Pathfinder Adventure Path #38: Racing to Ruin
+2	Pathfinder Campaign Setting: Fey Revisited
+2	The Cave That Time Forgot (PF1)
+2	Dark Stalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+2	Kobold Quarterly Web Site
+2	The Bardess’ Library #17: Occult
+2	Pathfinder 4
+2	The Bardess’ Library #1: Divinity
+2	Pathfinder Module: Realm of the Fellknight Queen
+2	Cat and Mouse
+2	Corpsespinner from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+2	Pathfinder Module: The Dragon’s Demand
+2	Inphidians from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+2	Ecology from Pathfinder Adventure Path #54: The Empty Throne
+2	The Cat Lord from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+2	The Mouse Lord from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+2	Dagon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+2	Pathfinder Adventure Path #76: The Midnight Isles
+2	Dream Spectre from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+2	Adventurer’s Handbook: Genius Guide Volume 1
+2	Airfiend from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Eri
+2	Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+2	Pathfinder Adventure Path #54: The Empty Throne
+2	Pathfinder Adventure Path #64: Beyond the Doomsday Door
+2	Lightning Treant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+2	Clockwork Automaton
+2	Skeleton Warrior from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+2	Legendary Witches
+2	Pathfinder Module D4: Hungry Are the Dead Copyright 2008, Paizo Publishing, LLC. Author: Tim Hitchcock
+2	PAP25
+2	Legendary Slayers
+2	Breath of Life: The Geomancer
+2	Pathfinder 23 – The Impossible Eye
+2	Pathfinder Module D4: Hungry Are the Dead, Copyright 2008, Paizo Publishing, LLC. Author: Tim Hitchcock
+2	Pathfinder: Spiral of Bones #4 Copyright 2018 Paizo, Inc. Author: Crystal Frasier
+2	Pathfinder Roleplaying Game Core Rulebook Pathfinder RPG Core Rulebook
+2	Pathfinder Campaign Setting: Faiths of Golarion
+2	Pathfinder 29: Mother of Flies
+2	Pathfinder Chronicals: Campaign Setting
+2	Pathfinder Roleplaying Player Companion: People of the Wastes
+2	Curse of the Crimson Throne Player’s Guide
+2	Pathfinder Player Companion: Alchemy Manual
+2	Rise of the Runelords Player’s Guide
+2	Pathfinder Module: The House on Hook Street
+2	Pathfinder Companion: Elves of Golarion Copyright 2009, Paizo Publishing, LLC; Authors: Jeff Quick, Hal MacLean, and Sean K Reynolds
+2	Pathfinder Adventure Path #93: Forge of the Giant God
+2	Pathfinder Adventure Path #83: The Slave Trenches of Hakotep
+2	Pathfinder Module: From Shore to Sea
+2	Pathfinder Companion: Cheliax, Empire of Devils
+2	Pathfinder Roleplaying Game: Villain Codex
+2	Pathfinder Adventure Path #113: What Grows Within
+2	Pathfinder Campaign Setting: Occult Realms
+2	DESCRIPTION
+2	Phantasia Zoologica I: Dogs
+2	Quid Novi VI, Volume II
+2	ClerverNickname @ EnWorld Forums
+2	Wayfinder #11
+2	AndyCollins.net Wight Template
+2	Pure Steam Campaign Setting
+2	Bandits of the Tranym
+2	GameMastery Module D1: Crown of the Kobold King
+2	Pathfinder Chronicles: Guide to the River Kingdoms
+1	Abyssal Harvester from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Adherer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Amphisbaena Encepalon Gorger from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog G
+1	Arcanoplasm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Bedlam from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Belabra from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Blindheim from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Blood Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Boggart from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Bone Cobbler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Bonesucker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Brume from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Carbuncle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Tome of Horrors Complete
+1	Cerebral Stalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Cherum from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Clamor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Into the Wilds: Consumed
+1	Corpse Orgy from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Crag Man from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Crystalline Horror from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Decapus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Draconid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Dust Digger from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ecology from Pathfinder Adventure Path #46: Wake of the Watcher
+1	Encephalon Gorgers on the Moon
+1	Encephalon Gorger from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Executioner’s Hood from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Eye of the Deep from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Ecology from Pathfinder Adventure Path #63: The Asylum Stone
+1	Flumph from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Fogwarden from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Still Not Done With PF1: The Forgotten Ones Copyright 2026 Rogue Genius Games Author Owen K.C. Stephens
+1	Froghemoth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Kobold Quarterly Issue 12
+1	Gambado from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	creaturedaily.com
+1	Gohl from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Gorbel from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Gutslug from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Eric
+1	Hell Moth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Ecology from Pathfinder Adventure Path #55: The Wormwood Mutiny
+1	Marsh Jelly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Jubilex-Touched Marsh Jelly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog Go
+1	Lurker Above from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ecology from Pathfinder Campaign Setting: Misfit Monsters Redeemed
+1	Mawler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Nuckalavee from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Zargoth’s Tome of Familiars, Copyright 2021, Arcana Games, LLC
+1	Quantum from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Eric
+1	Stone Roper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Pathfinder 32: Rivers Run Red Pathfinder 32: Rivers Run Red
+1	Dead Man’s Chest Copyright 2005 Necromancer Games, Inc.; Authors Lance Hawvermale, Rob Mason, Robert Hunter, Patrick Goulah, Greg Ragland, M
+1	Skin Stitcher from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Larval Slime Crawler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Mature Slime Crawler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Sudoth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	T’Shann from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Eric
+1	Tendrul from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Tentacled Horror from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Tentamort from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Thessalgorgon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Thessalhydra from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Thessalisk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Transposer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Trapper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Vilstrak from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Volt from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Vorin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Well Lurker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Wolf-In-Sheep’s-Clothing from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Axe beak from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Falcon, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	The Varnhold Vanishing
+1	Raven Swarm from the Tome of Horrors III Copyright 2005 Necromancer Games, Inc.; Author: Scott Greene, with Casey Christofferson, Erica Bals
+1	Creatures of Freeport is
+1	Raven Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Nyambe: African Adventures
+1	Section 15: Copyright Notice – Phantasia Zoologica I Phantasia Zoologica I: Dogs
+1	Fox from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott Gr
+1	Eel, Electric from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Eel, Giant Moray from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Eel, Gulper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Mammoth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Mastodon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Jaguar from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Leopard, Snow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Lion, Cave from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Lion, Mountain from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Lynx from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Mythical Lion from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Smilodon (Saber-Toothed Cat) from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog G
+1	Dire Smilodon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Smilodon, Homotherium from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Dragonfish from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Archerfish, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Giant Barracuda from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Medium Barracuda from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Small Barracuda from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Caribe, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Catfish, Giant Electric from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Pike, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Quipper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Piranha Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Tiger Barb, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Giant Abyssal Dire Frog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Giant Dire Frog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Giant Frog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Killer Frog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Poisonous Frog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Poisonous Frog Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Hamster, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Dire bison from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Deer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Dire goat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Moose from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Scythe Horn from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ram from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott Gr
+1	Dire Ram from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Sheep from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Hippopotamus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Dire Hippopotamus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Hyaenodon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Lizard, Giant Rock-Horned (Blood Lizard) from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distribut
+1	Chameleon, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Brontotherium from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Elasmotherium from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Oliphant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Dire Porcupine from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Mandrill from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Marmoset, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Racoon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Racoon, Dire from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Large Stingray from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Medium Stingray from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Small Stingray from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Woolly Rhinoceros from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Seahorse, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Skunk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Dire Sloth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	ClerverNickname @ EnWorld
+1	Giant Tuatara from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Giant Snapping Turtle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Pathfinder Roleplaying Game – Pathfinder 12: Crown of Fangs
+1	Brass Man from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors S
+1	Caryatid Column from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Chrystone from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Pa
+1	Clockworks and the Brain Gear from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog
+1	Clockwork Advanced Bronze Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Clockwork Brain Gear from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Clockwork Drone from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Clockwork Overseer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Clockwork Parasite from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Clockwork Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Clockwork Titan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Clockwork Warrior from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Iron Cobra from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Jade Colossus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Elemental Construct from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Air Elemental Construct from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Earth Elemental Construct from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Fire Elemental Construct from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Water Elemental Construct from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Dragonship from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Flagstone Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Furnace Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Gelatinous Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Ice Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Iron Maiden Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Magnesium Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Masks of the Living God
+1	Pathfinder Module – Masks of the Living God
+1	Mummy Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ooze Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Rope Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Stone Guardian Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Stone Guardian from Tome of Horrors, Revised
+1	Tallow Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Witch-Doll Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Wood Golem from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Screaming Skull from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Reliquary Guardian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Sepulchral Guardian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Necrophidius from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Necrophidius from Tome of Horrors Revised, Copyright 2002, Necromancer Games, Inc.; Author Scott Greene, Author Scott Greene, based on origi
+1	Obsidian Minotaur from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Orcish Warclops
+1	Scarecrow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Lead Skeleton from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Adamantine Wasp Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Warden Jack Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Tome of Horrors from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	The source of this content is unclear
+1	Dracolisk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	New Argonauts New Argonauts
+1	Faerie Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Kobold Quarterly Web site
+1	Smoke Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Wrath Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Gargax the Mighty Master of the Dungeon Dragons from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and di
+1	Mist Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Adult Mist Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Ancient Mist Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Young Mist Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Fire Drake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Ice Drake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	MKoM Fast Play Quick Reference Sheets
+1	Glass Wyrm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Ecology from Pathfinder Adventure Path #33: The Varnhold Vanishing
+1	Psiwyrm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Sea Serpents from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Brine Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Deep Hunter Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Fanged Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Gilded Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Shipbreaker Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Spitting Sea Serpent from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Nocturnal template from Advanced Bestiary
+1	Asrai from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Baccae from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Baobhan Sith from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Brownie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Buckawn from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Forgotten One from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Forlarren from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Fyr from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott Gr
+1	Gray Nisp from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Gremlin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Grig Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Grimm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Grimstalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Grimstalker from Tome of Horrors II, Copyright 2004, Necromancer Games, Inc
+1	Killmoulis from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Korred from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Leprechaun from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Mimi from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Common Mite from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Pestie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scot
+1	Nereid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Debased Nixie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Oakman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Pech from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Phooka from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Quickling from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Redcap from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Spriggan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sc
+1	Ecology from Pathfinder 43: Haunting of Harrowstone
+1	Sprite from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Sprite: Auth
+1	Stroke Lad from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Tombstone Fairy from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Woodwose from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Barbegazi from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Dark Creeper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Frost Man from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Abberant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Biclops from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Bronze Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cave Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Ferrous Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Jack-in-Irons Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Sand Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Sea Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Smoke Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Volcano Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Wood Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Half Ogre from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors S
+1	Cave Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Ice Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Rock Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Swamp Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Two-Headed Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Ubue from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scott
+1	Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott Greene, based o
+1	Grippli from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Huggermugger from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Kuah-Lij from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Lan
+1	Lava Child from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Jotunblood template from Advanced Bestiary
+1	Nilbog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Ogren from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Ogrillon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sc
+1	Black Orc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games, Author Ca
+1	Blood Orc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games, Author Ca
+1	Ghost-Faced Orc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games, Aut
+1	Greenskin Orc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games, Autho
+1	Orog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scott
+1	Silid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Skulk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Breath of Life: The Spelljack
+1	Stormwarden from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Tabaxi from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Troblin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Eric
+1	The Raven’s Call
+1	Abyssal Wolf from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Afanc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Ahlinni from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Al-mi’raj from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors S
+1	Psionic Al-mi’raj from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Amphisbanea Basilisk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Amphisbaena from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Aurumvorax from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Babbler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Baric from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Barrow Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Basilisk, Crimson from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Basilisk, Greater from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Bat, Doombat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Bat, Mobat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Ecology from Pathfinder Adventure Path #65: Into the Nightmare Rift
+1	Blood Hawk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Boalisk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Bonesnapper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Brain Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Bunyip from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Caterwaul from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Cave Leech from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Cave Moray from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Cavern Lizard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Cerberus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Pathfinder Adventure Path #38
+1	Mythic Monsters: Greek
+1	Cupacabra from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Er
+1	Church Grim from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Clubnek from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Cooshees from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Corpse Rook from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Pathfinder Module: No Response from Deepmar
+1	Death Dog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Death Worm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Dead Man's Chest Copyright 2005 Necromancer Games, Inc.; Authors Lance Hawvermale, Rob Mason, Robert Hunter, Patrick Goulah, Greg Ragland, M
+1	Devil Dog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Disenchanter from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Dragon Horse from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Dragonnel from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Eblis from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Elusa Hound from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ethereal Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Eye Killer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Umbral Eye Killer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Fire Lizard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Fire Whale from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Flail Snail from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Floating Eye from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ecology from Pathfinder Adventure Path #59: The Price of Infamy
+1	Greater Gelid Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Lesser Gelid Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Giant Bog Turtle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Gloom Crawler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Gnasher Lizard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Golden Cat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Gorgimera from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Gorilla Bear from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Graymalkin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Slinker Graymalkin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Tether from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Gryph from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Hippocampus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Hoar Fox from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Jaculi from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Kamadan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Slumbering Tsar: The Desolation, Part 2 -The Ghosts of Victory - Copyright 2010 ; Bill Webb and Greg Vaughan, Frog God Games
+1	Kathlin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Galactic Tech: Mech Guide
+1	Land Lamprey from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Landwalker Shark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Lion Beast of Chaos from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Mantari from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Mantidrake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Marble Snake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Nazalor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Oil Shark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Ecology from Pathfinder Campaign Setting: Distant Worlds
+1	Onyx Deer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Monster Lore from WOTC Community Forums – Monsters and Races – Monster Lore Compendium
+1	Owlephant this creature> from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Phase Flea from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Pyrolisk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Raggoth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Rakklethorn Toad from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Ecology from Pathfinder Adventure Path #49: The Brinewall Legacy
+1	Reigon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Renzer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Retch Hound from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Riptide Horror from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Rock Reptile from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ronus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Sand Kraken from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Sand Stalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Screaming Devilkin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Scylla from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Additional Ecology information from Pathfinder Adventure Path #56: Raiders of the Fever Sea
+1	Sea Spider from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Pelagos Sea Spider from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Sepia Snake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Shedu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Greater Shedu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Pathfinder Adventure Path #36: Sound of a Thousand Screams
+1	Slorath from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Sloth Viper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Soul Nibbler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Spider Collective from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Squealer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Stench Kow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Stygian Leviathan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Stymphalian Bird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Tangtal from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Creatures of Freeport, Copyright 2004, Green Ronin Publishing; Authors Keith Baker and Graeme Davis
+1	Tazelwurm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Temporal Crawler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Asswere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Foxwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Jackalwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Lionwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Owlwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Wolfwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Dire Wolfwere from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	The Sea of Stars RPG Design Journal, http://seaofstarsrpg.wordpress.com/ Copyright 2009-2010 Sea of Stars RPG; Authors: Sean Holland and oth
+1	Thunder Beast from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Thundershrike from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Tigrilla from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Er
+1	Tunnel Worm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Turtle-Shark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Stygian Turtle-Shark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Vapor Dire Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Vapor Wasp from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Vulchling from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Witherstench from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Wizard’s Shackle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Wolf-Spider from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Arach from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Banderlog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Bog Beast from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Churr from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Crabman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Dakon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Dire Corby from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Fen Witch from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Four-Armed Gargoyle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Fungus Gargoyle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Green Guardian Gargoyle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Margoyle Gargoyle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Gronk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Pit Hag from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Cobra-Back Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Common Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Dancer Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Night Added Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Rattler Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Kech from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Greater Medusa from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Mongrelman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Ecology from Pathfinder Adventure Path #51: The Hungry Storm
+1	Ryven from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Section 15: Copyright Notice System Reference Document
+1	Additional Ecology information from Pathfinder Adventure Path #50: Night of Frozen Shadows
+1	Slaughterford from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Taer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Tsathar from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Cla
+1	Tsathar Scourge from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Yeti from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Diger from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scott
+1	Ectoplasm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Er
+1	Mustard Jelly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Stun Jelly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Whip Jelly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Livestone from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Er
+1	Living Lake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Slime Mold from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Tome of Horrors II
+1	Mudbog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	Amber Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Crystal Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Entropic Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Dark Matter Entropic Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Glacial Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Magma Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Mercury Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Metallic Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Undead Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Vampiric Ooze from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Quid Novi? Issue XIII, Volume I
+1	Blood Pudding from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Brown Pudding from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Dun Pudding from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Stone Pudding from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	White Pudding from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Slithering Tracker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Abyssal Larva from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Wayfinder #8
+1	Wayfinder #9
+1	Chalkydri from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Empyreal from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Monadic Deva from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Movanic Deva from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	The Fisherking
+1	The Bleak Harvest
+1	Astral Shark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Burning Dervish from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Pathfinder #106: For Queen and Empire
+1	Cacodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Charon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Charonodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Derahodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Guardian Daemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Hydrodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Piscodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	The Oinodaemon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Shaggy Demodand from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Slime Demodand from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Tarry Demodand from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Cambion from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Aeshma Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Alu-Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Balban from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Chaaor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Chonozon Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Daraka from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Gallu-demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Gharros Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Greruor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Baphomet from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Beluiri from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Caizel from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Fraz-Urb’luu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Jubilex from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Kostchtchie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Maphistal from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Pazuzu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Sonechard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Tsathogga from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors S
+1	Vepar from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Mallor Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Mehrim Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Mezzalorn Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Nerizo Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Nysrock Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Ooze Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Greater Ooze Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Lesser Ooze Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Shadow Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Shrroth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Skitterdark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Stirge Demon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Demons of Corruption from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Azizou from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Scot
+1	Barizou from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Geruzou from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Spells & Spellcraft Copyright 2002, Fantasy Flight, Inc
+1	Monsters: Demons (monsters-2.d.2011) Copyright
+1	Demonic Knight from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Deathleech Horned Devil from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Amaimon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	The Book of Fiends, Copyright 2003, Green Ronin Publishing; Authors Aaron Loeb, Erik Mona, Chris Pramas, and Robert. J. Schwalb
+1	Blood Reaver from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ghaddar from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Lilin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Hellstoker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Flayer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Nupperibo from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Tormentor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors C
+1	Alastor from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Amon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Baal from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Baaphel from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Caasimolar from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Demoriel from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Geryon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Gorson from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Hutijin from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Lilith from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Lucifer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Moloch from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Titivilus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Xaphan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Seankreynolds.com
+1	Drelb from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Aerial Servant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Caterprism from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Crystallis from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Elemental Air Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Elemental Earth Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Elemental Fire Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Elemental Water Dragon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Firefiend from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Er
+1	Waterfiend from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Elder Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Greater Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Huge Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Large Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Medium Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Small Gravity Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Elder Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Greater Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by F
+1	Large Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Medium Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fr
+1	Small Negative Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Elder Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Greater Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by F
+1	Huge Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog
+1	Large Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Medium Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fr
+1	Small Positive Energy Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Fro
+1	Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Elder Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Greater Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Huge Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Large Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Medium Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Small Psionic Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Time Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Common Time Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Noble Time Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Royal Time Elemental from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Flame-Spawned Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Lythic from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Mihstu from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Mudman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Pathfinder 33: The Varnhold Vanishing
+1	Niln from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Phantom Stalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Sandling from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Sandman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Tumblespark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Wind Walker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Fire Nymph from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Fire Snake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Foo Dog from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Pathfinder Module: Academy of Secrets
+1	Cheitan Djinni from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Abasheen Genie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Hawanar Genie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Marid Genie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cheitan Jann from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Geon from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott G
+1	Gloomwing from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Pathfinder Adventure Path #42
+1	Pathfinder Adventure Path #64 Beyond the Doomsday Door
+1	Pathfinder Adventure Path #65: Into the Nightmare Rift
+1	Herald of Tsathogga from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Pathfinder Society Scenario #8–25: Unleashing the Untouchable
+1	Magmoid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Magnesium Spirit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Memory Child from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Lightning Mephit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Smoke Mephit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Midnight Peddler from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Netherspark from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Proscriber from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Protector from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors S
+1	Ecology from Pathfinder Adventure Path #48: Shadows of Gallowspire
+1	Ecology from Pathfinder Adventure Path #47: Ashes at Dawn
+1	Sabrewing from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Flamebrother Salamander
+1	The Way of the Samurai copyright 2012, Steven D. Russell and Michael Tumey, all rights reserved; Author Jonathan McAnulty
+1	Slaad Lord Of Entropy from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Slaad Lord Of The Insane from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Slag Worm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Stone Maiden from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Heat Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Tenebrous Purple Worm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Time Flayer from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	True Gorgon (Euryale) from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	True Gorgon (Sthenno) from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Wang Liang from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author C
+1	Weird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Blood Weird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Lava Weird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Lightning Weird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Algoid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Autho
+1	Archer Bush from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ascomoids from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Basidirond from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Blood Bush from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Bloodsuckle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Bog Creeper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cobra Flower from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Splinter Drake from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Forester’s Bane from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Fungoid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Sheet Fungus from the Tome of Horrors Complete Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Gallows Tree from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Gallows Tree Zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Gnarlwood from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Er
+1	Hangman Tree from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Jack-O-Lantern from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Jupiter Bloodsucker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Kampfult from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Ecology from Pathfinder Adventure Path #58: Island of Empty Eyes
+1	Kelp Devil from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Kelpie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Kaiju Codex
+1	Ecology & Creation/Customizing information from Pathfinder Adventure Path #47: Ashes at Dawn
+1	Mandragora from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Phlogiston from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Phycomid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Plant-Imbued Ape from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Quickwood from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Scythe Tree from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Sleeping Willow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Spore Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Strangle Weed from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Thorny Advanced Tyrannosaurus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog
+1	Thorny from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Pathfinder Campaign Setting: Darklands Revisited
+1	Tri-Flower Frond from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Vampire Rose from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Vegepygmy from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Vegepygmy Bodyguard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Vegepygmy Chief from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Vegepygmy Commoner from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Vegepygmy Guard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Vegepygmy Subchief from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Vegepygmy Worker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Fungus Weird from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Widow Creeper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Willow Dusk from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Witch Tree from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Witherweed from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Yellow Musk Creeper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Yellow Musk Zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Abomination from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	The Antipaladin’s Almanac
+1	Pathfinder Society Scenario #2–26: The Mantis’s Prey
+1	Amphisbaena Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Kobold Quarterly issue 13, Copyright 2010, Open Design LLC, www.koboldquarterly. com. All rights reserved
+1	The Genius Guide To: Ice Magic
+1	Beast of Chaos from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Pathfinder Society Scenario #3–05: Tide of Twilight
+1	Bleeding Horror from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Cheitan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Clockwork Creature Template from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog Go
+1	Collective Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	The Construct Companion
+1	The Tome of Horrors IV, Copyright 2013, Frog God Games, LLC; Authors: Erica Balsley, Casey Christofferson, Jim Collura, Lance Hawvermale, Pa
+1	Deathleech from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Debased Fey from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Dire creature template from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Flame-Spawned Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Foo Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Copyright 2008 – Rocks Fall, Everyone Dies
+1	The Ossuarite
+1	The Secrets of Adventuring Copyright 2013 Rite Publishing Author Steven D. Russell
+1	Sentence of the Sinlords
+1	The Genius Guide To: Ice Magic The Genius Guide To: Ice Magic
+1	Adventurer’s Handbook: Genius Guide Volume 1 Adventurer’s Handbook: Genius Guide Volume 1
+1	Landwalker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Pathfinder GameMastery Module – J1 – Entombed With The Pharaohs
+1	Mythical Animal Template from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Paleoskeleton Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Phase Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Plant-Imbued Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Ravenous Creature Template from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	The Pale Theologian – Lord of Life and Death
+1	Spectral Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Spellgorged Zombie Template from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog Go
+1	Tome of Tomes
+1	Tenebrous Creature from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Therianthrope from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Thessalmonster from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Thorny from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Erica
+1	N’gathau from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sc
+1	The Book of Divine Magic
+1	Undead Lord from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Undead Lord from Tome of Horrors II, Copyright 2004, Necromancer Games, Inc.; Author Scott Greene; Additional Authors: Erica Balsley, Kevin
+1	Pathfinder Adventure Path #67: The Snows of Summer
+1	Yellow musk creeper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Juju Zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Slime Zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Apparition from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Bhuta from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Bleeding Horror Minotaur from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Bogeyman from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Brykolakas from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Cadaver Lord from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cadaver from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Quid Novi? Issue X, Volume I
+1	Coffer Corpse from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Corpse Candle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Crucifixion Spirit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Crypt Thing from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Darnoc from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Demi-Lich from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Demiurge from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Draug from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	PF 31: Stolen Land
+1	Fear Guard from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Fetch from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Fire Phantom from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Fye from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott Gr
+1	Ghoul-Stirge from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cinder Ghoul from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Dust Ghoul from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Ghoul Dire Wolf from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Ghoul Wolf from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Grave Risen from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Groaning Spirit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Hanged Man from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author E
+1	Haunt from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Hoar Spirit from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Huecuva from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scot
+1	Lantern Goat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Gruff Lantern Goat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Lich Shade from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Mortuary Cyclone from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Bog Mummy from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Mummy Of The Deep from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Murder-Born from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Murder Crow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Paleoskeleton Triceratops from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God
+1	Phantasm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Pathfinder 47: Ashes at Dawn
+1	Phasma from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Scott
+1	Poltergeist from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Rawbones from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Red Jester from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Lesser Shadow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Autho
+1	Shadow Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors
+1	Dire Shadow Rat from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Shadow Rat Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Shadow Wolf from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Pathfinder Module: The Ruby Phoenix Tournament
+1	Pathfinder Chronicles: Classic Horrors Revisited
+1	Skulleton from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sc
+1	Section 15 Copyright Notice Pathfinder 3: The Hook Mountain Massacre
+1	Soul Reaper from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Spectral Rock Troll from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Undead Raven Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Pathfinder 29: Mother of Flies, Copyright 2010, Paizo Publishing, LLC; Author: Greg A . Vaughan
+1	Ecology from Pathfinder Adventure Path #35: War of the River Kings
+1	Remarkable Races
+1	Barrow Wight from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Blood Wight from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	AndyCollins.net
+1	Rocks Fall, Everyone Dies Blog
+1	Spellgorged zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Brine Zombie from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Ant Lion from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author Sco
+1	Bumblebee, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Giant Bumblebee Queen from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Giant Bumblebee Worker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Giant Hornet from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Giant Yellowjacket from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Giant Blister Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Giant Boring Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Giant Death Watch Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Giant Rhinoceros Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Giant Saw-Toothed Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God G
+1	Giant Slicer Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Giant Water Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Requiem Beetle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Cave Cricket from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Cave Fisher from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Chain Worm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Giant Clam from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Monstrous Crab from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Monstrous Crayfish from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Giant Dragonfly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	False Spider, Pedipalp from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	False Spider, Solifugid from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Ga
+1	Fire Crab, Greater from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Fire Crab, Lesser from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Flea, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Fly, Giant from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Helix Moth Larva from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Mature Helix Moth from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Giant Horsefly from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Monstrous Jellyfish from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Into the Wilds: Mountains and Volcanoes, Copyright 2024, Bloodstone Press; author Beth Jones
+1	Giant Leech from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Giant Mosquito from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Great Sea Anemone from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Giant Sea Slug from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Deadly Delves: Along Came a Spider
+1	Skull Spider from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Scarlet Spider Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games
+1	Stegocentipede from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Velvet Ant Swarm from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Au
+1	Giant Tick from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author S
+1	Game Mastery Guide
+1	Cheitan Fighter from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Legendary Classes: Defenders of the Faith
+1	Cheitan Drow from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Elicia Stormraven, Copyright 2011, R. Hyrum Savage
+1	Pathfinder 3: The Hook Mountain
+1	Legendary Races: Wyrmtouched
+1	Pathfinder Module: Realm of the Fellnight Queen
+1	Ravenous Human from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Auth
+1	Section 15: Copyright Notice – Pathfinder 3: The Hook Mountain Massacre Pathfinder 3: The Hook Mountain Massacre
+1	Legendary Hunters
+1	Legendary Investigators
+1	Legendary Ninjas
+1	Legendary Samurai
+1	Breath of Life: The Lathspell
+1	Legendary Wizards
+1	Breath of Life: The Warmage
+1	Baur, Jason Bulmahn, Adam Daigle, Graeme Davis, Crystal Frasier, Joshua J. Frost, Tim Hitchcock, Brandon Hodge, James Jacobs, Steve Kenson,
+1	Arach Spellbinder from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Corpsespun Fighter from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Pathfinder Module: Hungry Are the Dead
+1	Donlaan from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Authors Sco
+1	Sins of the Saviors
+1	Biclops Hero from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Author
+1	Splinter Drake Tracker from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Gam
+1	Aagash “The Broken” from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Dungeonaday.com: Dragon’s Delve Level 20: Metterak, the Dragon Prince
+1	Juju Zombie Fighter from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Pathfinder 7: Edge of Anarchy Pathfinder 7: Edge of Anarchy
+1	Pathfinder Chronicles: NPC Guide
+1	Slime Zombie Gargoyle from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Game
+1	Corpsespun Minotaur from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games;
+1	Gremlin Filcher from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; Aut
+1	Paizo Blog. Written by James Jacobs
+1	Pathfinder 8: Seven Days to the Grave Pathfinder 8: Seven Days to the Grave
+1	Night Adder Priest Inphidian from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog G
+1	Section 15 Copyright Notice – Pathfinder 3: The Hook Mountain Massacre Pathfinder 3: The Hook Mountain Massacre
+1	Pathfinder Adventure Path #48: Shadows of Gallowspire Pathfinder Adventure Path #48: Shadows of Gallowspire
+1	Stegocentipede from the Tome of Horrors
+1	Wang Liang Master from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog God Games; A
+1	Black Orc High Priest of Orcus from the Tome of Horrors Complete, Copyright 2011, Necromancer Games, Inc., published and distributed by Frog
+1	The Secrets of Tactical Archetypes
+1	Ultimate Options: Power of the Ninja
+1	Pathfinder Adventure Path #39: City of Seven Spears
+1	The Four Horsemen Present: Character Options – Gods in the Void
+1	Legendary Cavaliers
+1	Pathfinder Campaign Setting: Qadira, Jewwl of the East
+1	Pathfinder Roleplaying Game Advanced Class Guide
+1	Pathfinder Roleplaying Game ACG
+1	Pathfinder Player Companion: Healer's Handbook
+1	Monster Classes
+1	Legendary Oracles
+1	Pathfinder Companion: Elves of Golarion, Copyright 2008, Paizo Publishing, LLC; Authors Jeff Quick and Hal Maclean
+1	Ironfang Invasion, Book 2: Fangs of War
+1	Pathfinder Campaign Setting Book of the Damned vol 3
+1	The Genius Guide To: The Armiger
+1	#30 Evocative Vehicles Copyright 2012 Steven D. Russell; Author Liz Smith
+1	Book of Multifarious Munitions: Vehicles of War
+1	Pathfinder GameMastery Module – W1 – Conquest Of Bloodsworn Vale
+1	Pathfinder #14 Second Darkness: Children of the Void
+1	Pathfinder #10 Curse of the Crimson Throne: A History of Ashes
+1	Pathfinder Adventure Path #69: Maiden, Mother, Crone
+1	PPC:BoF Pathfinder Player Companion: Blood of Fiends
+1	Pathfinder Roleplaying Game Feats Database
+1	PRG:UM Pathfinder Roleplaying Game: Ultimate Magic
+1	Pathfinder 16: Endless Night
+1	The Pathfinder Chronicles Campaign Setting
+1	Pathfinder Campaign Setting: Sandpoint, Light of the Lost Coast
+1	Tome of Horrors, Copyright 2002, Necromancer Games, Inc.; Author Scott Greene, based on original material by Gary Gygax
+1	Space and Reach Templates
+1	Pathfinder Campaign Setting: Castles of the Inner Sea
+1	Cerulean Seas Undersea Campaign Setting
+1	Pathfinder Carrion Crown Adventure Path
+1	Paizo Blog
+1	Cityscapes: New Settlement Options for the Pathfinder RPG
+1	Pirates! Copyright 2003, Living Imagination, Inc
+1	Ultimate Ships
+1	Spring of Disorder
+1	The Woe in Wealwood
+1	Pathfinder Roleplaying Game: Ultimate Wilderness (OGL)
+1	Pathfinder Campaign Setting: Hell Unleashed
+1	Pathfinder Adventure Path #106: For Queen & Empire
+1	Pathfinder Adventure Path volume #23: The Impossible Eye
+1	Pathfinder Adventure Path #73: The Worldwound Incursion
+1	Pathfinder Campaign Setting: Tombs of Golarion
+1	Pathfinder Adventure Path #101: The Kintargo Contract
+1	Pathfinder Module: Daughters of Fury
+1	Pathfinder #113: What Grows Within
+1	Pathfinder Adventure Path volume #22: The End of Eternity
+1	Pathfinder Adventure Path volume #27: What Lies in Dust
+1	Pathfinder Chronicles: Seekers of Secrets Paizo Publishing, LLC
+1	Pathfinder Module: Cult of the Ebon Destroyers
+1	Pathfinder: Runescars #1 Copyright 2018 Paizo, Inc. Author: Crystal Frasier
+1	Pathfinder Module: Murder’s Mark
+1	Pathfinder: Runescars #4 Copyright 2018 Paizo, Inc. Author: Crystal Frasier
+1	Pathfinder Adventure Path #134: It Came from Hollow Mountain
+1	Section 15 Copyright Notice – Dwarves of Golarion Pathfinder Companion: Dwarves of Golarion
+1	Section 15 Copyright Notice – Dwarves of Golarion
+1	GameMastery Module J2: Guardians of Dragonfall, Copyright 2007, Paizo Publishing, LLC. Author: Anson Caralya
+1	Pathfinder Adventure Path #71: Rasputin Must Die! (Reign of Winter 5 of 6)
+1	Pathfinder Companion: Cheliax, Empire of Devils>
+1	Section 15 Copyright Notice Pathfinder Chronicles: Dungeon Denizens Revisited
+1	Pathfinder Adventure Path volume #30: The Twice-Damned Prince
+1	Pathfinder Player Companion: Mythic Origins
+1	Pathfinder Adventure Path #143: Borne by the Sun’s Grace
+1	Pathfinder Roleplaying Game Ultimate Magic
+1	Section 15 Copyright Notice Pathfinder Companion: Dwarves of Golarion
+1	Pathfinder Adventure Path #86: Lords of Rust
+1	Pathfinder Adventure Path: Curse of the Crimson Throne (PFRPG)
+1	Arcforge: Technology Expanded
+1	Houserule Handbooks: Spellpoints Compilation
+1	Sutra magic copyright 2010 Frank Car, All rights reserved, Author Frank Carr
+1	Binding Seal Obscure Sutra Copyright
+1	Infernal Mark Obscure Sutra Copyright
+1	Repelling Ward Obscure Sutra Copyright
+1	Boost: A living creature that takes damage from this wordspell takes 1d8 points of damage per two caster levels (maximum 7d8). An undead cre
+1	Book of Magic: The Lost Spell Words
+1	A wordspell containing this effect word causes the light within 10 feet to increase by 1 step (darkness becomes dim light, dim light becomes
+1	Boost: The light increases by 2 levels instead of 1. Additionally, in the 20 feet surrounding the area where the light is increased by 2 lev
+1	Wayfinder #13
+1	Book of Heroic Races: Advanced Changelings
+1	Villains: Rebirth
+1	Skill Challenge Handbook
+1	Source: Wayfinder #1 (“Tools of the Trade: Hunters of the Dead” By Ernesto “Montalve” Ramírez)
+1	Pathfinder Chronicles: Qadira – Gateway to the East: Author: Brian Cortijo
+1	Ultimate Campaign –

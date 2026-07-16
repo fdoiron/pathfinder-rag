@@ -7,6 +7,7 @@ from google import genai
 from google.genai import errors, types
 
 from rag.config import Settings
+from rag.models import TaskType
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ class VertexEmbedder:
         self._dim = settings.embedding_dim
         self._batch_size = settings.embedding_batch_size
 
-    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:
+    def embed(self, texts: list[str], task_type: TaskType = 'RETRIEVAL_DOCUMENT') -> np.ndarray:
         """embeds text, returns float32 array (N, dim) in input order"""
 
         vectors: list[list[float]] = []
@@ -42,7 +43,7 @@ class VertexEmbedder:
             logger.info(f'embedded {min(start + self._batch_size, len(texts))}/{len(texts)}')
         return np.array(vectors, dtype=np.float32)
 
-    def _call_api(self, batch: list[str], task_type: str) -> list[list[float]]:
+    def _call_api(self, batch: list[str], task_type: TaskType) -> list[list[float]]:
         response = self._client.models.embed_content(
             model=self._model,
             contents=batch,
@@ -55,7 +56,7 @@ class VertexEmbedder:
             raise RuntimeError(f'embedding returned {len(vectors)} vectors for {len(batch)} inputs')
         return vectors
 
-    def _embed_batch(self, batch: list[str], task_type: str, retries: int = 3) -> list[list[float]]:
+    def _embed_batch(self, batch: list[str], task_type: TaskType, retries: int = 3) -> list[list[float]]:
         for attempt in range(retries):
             try:
                 return self._call_api(batch, task_type)

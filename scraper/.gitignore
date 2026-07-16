@@ -18,7 +18,7 @@ wheels/
 .mypy_cache/
 .ipynb_checkpoints/
 
-# jupyter notebook http cache (requests-cache)
+# requests-cache HTTP cache (discover_urls.py, url_discovery.ipynb)
 *.sqlite
 
 # Scrapy runtime artifacts

@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "google-genai>=2.10.0",
     "httpx>=0.28.1",
+    "lxml>=6.1.1",
     "numpy>=2.5.0",
     "pandas>=3.0.3",
     "pyarrow>=24.0.0",
@@ -25,8 +26,10 @@ package = true
 dev = [
     "mypy>=2.1.0",
     "pandas-stubs>=3.0.3.260530",
+    "poethepoet>=0.30.0",
     "pytest>=9.1.1",
     "ruff>=0.15.20",
+    "types-lxml>=2026.2.16",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -41,8 +44,18 @@ select = ['E', 'F', 'I', 'B', 'A', 'UP', 'SIM', 'RUF']
 [tool.ruff.format]
 quote-style = 'single'
 
+[tool.mypy]
+strict = true
+
 [tool.pytest.ini_options]
 testpaths = ['tests']
 
 [project.scripts]
-rag-cli = 'rag.cli:app'
+rag = 'rag.cli:app'
+
+[tool.poe.tasks]
+lint = 'ruff check .'
+fmt = 'ruff format .'
+typecheck = 'mypy src'
+test = 'pytest -v'
+check = ['lint', 'fmt', 'typecheck', 'test']

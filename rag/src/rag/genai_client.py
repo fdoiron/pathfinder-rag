@@ -21,7 +21,10 @@ def make_genai_client(settings: Settings) -> genai.Client:
     if sa_file and sa_file.exists():
         if not project:
             project = json.loads(sa_file.read_text(encoding='utf-8'))['project_id']
-        credentials = service_account.Credentials.from_service_account_file(str(sa_file), scopes=_SCOPES)
+        # google-auth's from_service_account_file is untyped upstream despite shipping py.typed
+        credentials = service_account.Credentials.from_service_account_file(  # type: ignore[no-untyped-call]
+            str(sa_file), scopes=_SCOPES
+        )
 
     if not project:
         raise ValueError('gcp_project must be set via RAG_GCP_PROJECT or a GCP service account file')

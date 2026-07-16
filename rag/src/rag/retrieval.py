@@ -21,7 +21,7 @@ class Retriever:
 
     def __init__(self, df: pd.DataFrame, embedder: Embedder, manifest: CorpusManifest) -> None:
         self._df = df.reset_index(drop=True)
-        matrix = np.vstack(df['embedding'].to_list()).astype(np.float32)  # vert stack matricies
+        matrix = np.vstack(df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
         if not np.isfinite(matrix).all():
             bad_rows = np.where(~np.isfinite(matrix).all(axis=1))[0]
             raise ValueError(f'non-finite embeddings (NaN/inf) at rows : {bad_rows.tolist()}')
@@ -52,7 +52,7 @@ class ManifestMismatchError(RuntimeError):
 
 
 def load_retriever(embedding_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
-    """Load corpus + manifest, validate compatgibility, return ready Retriever
+    """Load corpus + manifest, validate compatibility, return ready Retriever
     Raises:
         FileNotFoundError if either embedding or manifest file does not exist
         ManifestMismatchError if the manifest is incompatible with the current settings
