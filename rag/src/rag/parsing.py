@@ -148,7 +148,7 @@ _HEADING_TAGS = ('h1', 'h2', 'h3', 'h4', 'h5', 'h6')
 
 
 def _retag_pseudo_headings(content: lxml.html.HtmlElement) -> None:
-    """tranforms heading markup into h* tags before conversion
+    """transforms heading markup into h* tags before conversion
 
     - info-box titles (editor notes, content-sidebar) -> h5
     - p.divider  -> one level below the nearest preceding heading because the same divider sits under
@@ -289,7 +289,7 @@ def render_div(element: lxml.html.HtmlElement, content: str) -> str:
     return content
 
 
-# special cases f or p.title,  p.divider in bestiary
+# special cases for p.title, p.divider in bestiary
 @register('p', is_block=True)
 def render_p(element: lxml.html.HtmlElement, content: str) -> str:
     classes = element.get('class', '').split()
@@ -410,7 +410,7 @@ def render_th(element: lxml.html.HtmlElement, content: str) -> str:
 
 @register('table', is_block=True)
 def render_table(element: lxml.html.HtmlElement, content: str) -> str:
-    # table containing another table is layout wrapper (site-wide, nested tables only ahppen as borderless containers
+    # table containing another table is layout wrapper (site-wide, nested tables only happen as borderless containers
     # around real data tables): render cells as normal block flow instead of a pipe table
     if element.find('.//table') is not None:
         return content

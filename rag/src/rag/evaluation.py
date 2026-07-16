@@ -69,7 +69,7 @@ class EvalRun(BaseModel):
     results: list[QueryResult]
 
 
-# laod source of truth
+# load source of truth
 
 
 def load_queries(path: Path) -> list[EvalQuery]:
