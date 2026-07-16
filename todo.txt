@@ -1,4 +1,0 @@
-TODO write license third party
-TODO write readme
-
-TODO implement scrapper tests option for multiple? cli + containerized job
