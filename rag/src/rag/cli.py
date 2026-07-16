@@ -27,7 +27,7 @@ def build_corpus(
         Path,
         typer.Option(help='Path to the output parquet file', writable=True),
     ] = Path('data/corpus.parquet'),
-):
+) -> None:
     """
     Build a corpus from a directory of scraped HTML files and save it as a parquet file.
     """

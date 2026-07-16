@@ -44,6 +44,9 @@ select = ['E', 'F', 'I', 'B', 'A', 'UP', 'SIM', 'RUF']
 [tool.ruff.format]
 quote-style = 'single'
 
+[tool.mypy]
+strict = true
+
 [tool.pytest.ini_options]
 testpaths = ['tests']
 

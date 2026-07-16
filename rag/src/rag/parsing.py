@@ -1,6 +1,6 @@
 import logging
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -27,8 +27,11 @@ class TagSpec:
 TAGS: dict[str, TagSpec] = {}
 
 
-def register(name: str, is_block: bool):
-    def wrapper(fn: Callable[[lxml.html.HtmlElement, str], str]):
+RenderFn = Callable[[lxml.html.HtmlElement, str], str]
+
+
+def register(name: str, is_block: bool) -> Callable[[RenderFn], RenderFn]:
+    def wrapper(fn: RenderFn) -> RenderFn:
         TAGS[name] = TagSpec(is_block=is_block, render=fn)
         return fn
 
@@ -66,7 +69,7 @@ def _render_li(li: lxml.html.HtmlElement, marker: str) -> str:
     return ''.join(text_parts).strip()
 
 
-def _direct_rows(table: lxml.html.HtmlElement):
+def _direct_rows(table: lxml.html.HtmlElement) -> Iterator[lxml.html.HtmlElement]:
     """Yield table's own <tr> rows.
     Not rows from any table nested inside a cell
 
