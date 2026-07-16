@@ -105,6 +105,20 @@ def test_non_finite_embedding_raises_at_construction():
         Retriever(df, FakeEmbedder([1.0, 0.0]), _make_manifest())
 
 
+def test_search_non_finite_query_vector_raises():
+    """NaN query vector fails at search"""
+    retriever = Retriever(_make_corpus_df(), FakeEmbedder([np.nan, 0.0]), _make_manifest())
+    with pytest.raises(ValueError, match='non finite'):
+        retriever.search('anything', k=3)
+
+
+def test_search_zero_norm_query_vector_raises():
+    """zero vector fails at search"""
+    retriever = Retriever(_make_corpus_df(), FakeEmbedder([0.0, 0.0]), _make_manifest())
+    with pytest.raises(ValueError, match='zero-norm'):
+        retriever.search('anything', k=3)
+
+
 def test_search_always_returns_k_results():
     """valid corpus returns exactly k results never silently fewer"""
     retriever = Retriever(_make_corpus_df(), FakeEmbedder([1.0, 0.01]), _make_manifest())

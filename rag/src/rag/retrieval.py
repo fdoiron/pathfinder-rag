@@ -38,7 +38,12 @@ class Retriever:
             [query],
             task_type='RETRIEVAL_QUERY',
         )[0]  # embed search query
-        q = q / np.linalg.norm(q)  # normalize to length 1.0
+        if not np.isfinite(q).all():
+            raise ValueError(f'embedder returned a non finite (NaN/inf) vector for query {query!r}')
+        q_norm = np.linalg.norm(q)
+        if q_norm == 0:
+            raise ValueError(f'embedder returned a zero-norm vector for query {query!r}')
+        q = q / q_norm  # normalize to length 1.0
         scores = self._matrix @ q  # dot product normalize = cosine similarity
         top_results = np.argsort(scores)[::-1][:k]
         return [
