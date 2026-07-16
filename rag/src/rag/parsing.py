@@ -444,6 +444,8 @@ def render_table(element: lxml.html.HtmlElement, content: str) -> str:
     # Ragged rows happen even after span padding. Normalize every row to the widest row
     width = max((len(cells) for cells in cell_rows), default=0)
     rows = []
+    # known limitation: a literal '|' in cell text is not escaped, so it would split into extra pipe-table columns.
+    # Not observed in the corpus so far.
     for cells in cell_rows:
         padded = cells + [''] * (width - len(cells))
         rows.append('| ' + ' | '.join(padded) + ' |')

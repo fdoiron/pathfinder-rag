@@ -51,7 +51,9 @@ class CorpusManifest(BaseModel):
     created_at: datetime
 
     @classmethod
-    def build(cls, settings: Settings, df: pd.DataFrame, source_file, text_columns: list[str]) -> 'CorpusManifest':
+    def build(
+        cls, settings: Settings, df: pd.DataFrame, source_file: str | Path, text_columns: list[str]
+    ) -> 'CorpusManifest':
         return cls(
             source_file=str(source_file),
             source_sha256=hashlib.sha256(Path(source_file).read_bytes()).hexdigest(),
