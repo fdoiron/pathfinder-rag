@@ -48,7 +48,7 @@ quote-style = 'single'
 testpaths = ['tests']
 
 [project.scripts]
-rag-cli = 'rag.cli:app'
+rag = 'rag.cli:app'
 
 [tool.poe.tasks]
 lint = 'ruff check .'

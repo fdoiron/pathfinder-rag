@@ -1,7 +1,7 @@
 """
 Prototype CLI for the embed/search/eval pipeline (M2-M5, not yet built).
 
-Not part of the installed `rag-cli` entry point (see pyproject.toml). Runs
+Not part of the installed `rag` entry point (see pyproject.toml). Runs
 against the current Vertex-only embedder, which M3 replaces with a local
 in-process embedder. Run directly with:
 

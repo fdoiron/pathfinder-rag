@@ -2,7 +2,7 @@ A retrieval augmented question/answering pipeline over the Pathfinder 1e tableto
 
 ## What works right now
 
-Scraping and parsing is done and tested, run over the full corpus. Chunking, embedding, search and generation is not yet built (see [Roadmap](#roadmap)). This README describes the current state of the repo.
+Scraping and parsing are done and tested, run over the full corpus. Chunking, embedding, search and generation are not yet built (see [Roadmap](#roadmap)). This README describes the current state of the repo.
 
 24,080 HTML files in, 23,863 cleaned articles out. Run time is ~43s single-threaded. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with 1s delay per page.
 Dropped pages :
@@ -12,7 +12,7 @@ Dropped pages :
 
 ```
 $ cd rag
-$ uv run rag-cli build-corpus ../scraper/data/html
+$ uv run rag build-corpus ../scraper/data/html
 INFO:root:Parsing HTML files from ../scraper/data/html
 WARNING:rag.parsing:dropped 'bestiary__monster-listings__aberrations__dark-young': body too short (19 < 100 chars)
 WARNING:rag.parsing:dropped 'bestiary__monster-listings__aberrations__naga': body too short (7 < 100 chars)
@@ -24,7 +24,7 @@ WARNING:rag.parsing:dropped 'classes__core-classes__sorcerer__archetypes__paizo-
 wrote 23863 articles to data/corpus.parquet
 ```
 
-A rough Vertex based prototype of embed/search/eval exists at [`rag/scripts/prototype_cli.py`](rag/scripts/prototype_cli.py), with tests over its `embedding.py`/`retrieval.py`/`evaluation.py` modules, but it is not installed as part of `rag-cli` and will be replaced by the local-embedding pipeline described in the roadmap below.
+A rough Vertex based prototype of embed/search/eval exists at [`rag/scripts/prototype_cli.py`](rag/scripts/prototype_cli.py), with tests over its `embedding.py`/`retrieval.py`/`evaluation.py` modules, but it is not installed as part of `rag` and will be replaced by the local-embedding pipeline described in the roadmap below.
 
 ## Quickstart
 
@@ -44,7 +44,7 @@ uv run scrapy crawl d20pfsrd
 # 2. parse into a cleaned corpus
 cd ../rag
 uv sync
-uv run rag-cli build-corpus ../scraper/data/html
+uv run rag build-corpus ../scraper/data/html
 
 # 3. run the test suite (doesn't require the scraped corpus)
 uv run pytest
@@ -101,11 +101,11 @@ scraper/data/html/ ──▶ parse ──▶ chunk ──▶ embed ──▶ chu
 - **`doc_id` = filename slug** which is stable. The `url` is reconstructed from the slug (`__` → `/`) rather than stored twice to avoid drift. See `_slug_to_url`.
 - **Drop filters log why a page was dropped**. `parse_corpus_dir` splits drops into three distinguishable reasons (hub page / too short / parse error) at different log levels. This ensures that if the final article count looks wrong the cause can be established with a `grep` instead of re-running with print statements.
 - **Golden-file testing**. The 15 fixtures are hand picked pages and have a committed expected output file (`rag/tests/fixtures/goldens/*.golden.md`). When the parser changes, the golden file diffs documents the behavior change line by line. A silent regression shows up as an unintended diff instead of passing quietly.
-- **Thin CLI over plain functions**. `rag-cli build-corpus` calls `parse_corpus_dir` and writes parquet with no logic in the typer layer. The same function is what the planned API handler would call.
+- **Thin CLI over plain functions**. `rag build-corpus` calls `parse_corpus_dir` and writes parquet with no logic in the typer layer. The same function is what the planned API handler would call.
 
 ## Testing
 
-Currently 210 tests, `ruff check`, `ruff format --check`, and `mypy`. The parsing suite covers: golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason.
+`ruff check`, `ruff format --check`, and `mypy`. The parsing suite covers: golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason.
 
 ```bash
 cd rag
