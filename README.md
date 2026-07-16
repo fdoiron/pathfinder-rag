@@ -24,6 +24,8 @@ WARNING:rag.parsing:dropped 'classes__core-classes__sorcerer__archetypes__paizo-
 wrote 23863 articles to data/corpus.parquet
 ```
 
+A rough Vertex based prototype of embed/search/eval exists at [`rag/scripts/prototype_cli.py`](rag/scripts/prototype_cli.py), with tests over its `embedding.py`/`retrieval.py`/`evaluation.py` modules, but it is not installed as part of `rag-cli` and will be replaced by the local-embedding pipeline described in the roadmap below.
+
 ## Quickstart
 
 The scraped HTML corpus is not included in the repo (24k files). You need to run the scraper first, or point `build-corpus` at your own directory of d20pfsrd.com HTML pages.
