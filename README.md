@@ -38,6 +38,7 @@ cd pathfinder-rag
 cd scraper
 uv sync
 cp .env.example .env # fill in a contact email for the User-Agent
+uv run python discover_urls.py # discovers and filters the URL list to scrape, writes d20pfsrd_links.parquet
 uv run scrapy crawl d20pfsrd
 
 # 2. parse into a cleaned corpus
