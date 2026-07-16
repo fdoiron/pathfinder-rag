@@ -26,6 +26,11 @@ from lxml import etree
 load_dotenv()
 
 UA = os.getenv('SCRAPER_CONTACT_UA')
+if not UA:
+    raise RuntimeError(
+        'SCRAPER_CONTACT_UA is not set. Copy .env.example to .env and fill in a contact '
+        'User-Agent before running discover_urls.py.'
+    )
 HEADERS = {'User-Agent': UA}
 DELAY = 1.0
 
@@ -234,7 +239,10 @@ def fetch_sitemap_urls(session: requests_cache.CachedSession) -> pd.DataFrame:
 
     rows = []
     for url in page_sitemaps:
-        page_num = int(re.search(r'page-(\d+)\.xml', url).group(1))
+        match = re.search(r'page-(\d+)\.xml', url)
+        if match is None:
+            raise ValueError(f'sitemap URL {url!r} does not match the expected ...page-N.xml pattern')
+        page_num = int(match.group(1))
         locs = get_locs(session, url)
         print(f'sitemap page {page_num}: {len(locs)} urls')
         rows.extend({'sitemap_page': page_num, 'url': loc} for loc in locs)

@@ -449,6 +449,8 @@ def render_table(element: lxml.html.HtmlElement, content: str) -> str:
     rows = []
     # known limitation: a literal '|' in cell text is not escaped, so it would split into extra pipe-table columns.
     # Not observed in the corpus so far.
+    # known limitation: a table with no <th> row gets no '---' separator, so GFM viewers (ex: GitHub) render it
+    # as plain text instead of a table. Harmless for embedding/retrieval.
     for cells in cell_rows:
         padded = cells + [''] * (width - len(cells))
         rows.append('| ' + ' | '.join(padded) + ' |')
