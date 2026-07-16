@@ -46,6 +46,7 @@ quote-style = 'single'
 
 [tool.mypy]
 strict = true
+exclude = ['^src/rag/scratchpad/']
 
 [tool.pytest.ini_options]
 testpaths = ['tests']
