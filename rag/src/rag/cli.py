@@ -12,6 +12,11 @@ app = typer.Typer()
 logging.basicConfig(level=logging.INFO)
 
 
+@app.callback()
+def _callback() -> None:
+    """Pathfinder 1e RAG pipeline CLI."""
+
+
 @app.command()
 def build_corpus(
     html_dir: Annotated[
