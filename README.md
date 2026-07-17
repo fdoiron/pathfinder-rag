@@ -102,6 +102,7 @@ scraper/data/html/ ──▶ parse ──▶ chunk ──▶ embed ──▶ chu
 - **Drop filters log why a page was dropped**. `parse_corpus_dir` splits drops into three distinguishable reasons (hub page / too short / parse error) at different log levels. This ensures that if the final article count looks wrong the cause can be established with a `grep` instead of re-running with print statements.
 - **Golden-file testing**. The 15 fixtures are hand picked pages and have a committed expected output file (`rag/tests/fixtures/goldens/*.golden.md`). When the parser changes, the golden file diffs documents the behavior change line by line. A silent regression shows up as an unintended diff instead of passing quietly.
 - **Thin CLI over plain functions**. `rag build-corpus` calls `parse_corpus_dir` and writes parquet with no logic in the typer layer. The same function is what the planned API handler would call.
+- **`max_tokens` is a target with small token slack**. The packer counts tokens by summing each piece's token counts to decide if a window is full. However, the tokenizer does it across one string, which can cause the total to be more than the sum of its parts. On the 24k pages corpus, the drift happens 8 times out of ~128k chunks, with a total of 451 vs. a target of 450. I deemed the small loss of retrieval precision acceptable, but something to be aware of. At max_tokens = 1000, there were zero chunks over the limit.
 
 ## Testing
 

@@ -12,6 +12,7 @@ dependencies = [
     "pyarrow>=24.0.0",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.2",
+    "transformers>=5.14.1",
     "typer>=0.26.8",
 ]
 

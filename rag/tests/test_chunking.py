@@ -3,12 +3,38 @@ from pathlib import Path
 
 import pytest
 
-from rag.chunking import _HEADING_RE, Section, _split_by_markdown_heading
+from rag.chunking import (
+    _HEADING_RE,
+    Section,
+    _pack_lines,
+    _pack_sentences,
+    _pack_table_rows,
+    _split_body,
+    _split_by_markdown_heading,
+    _split_sentences,
+    chunk_article,
+)
 from rag.models import Article
 
 # ---------------------------------------------------------------
 # helpers
 # ---------------------------------------------------------------
+
+
+class _WordTokenizer:
+    """Stand-in tokenizer. One token per whitespaced elimited word"""
+
+    def __call__(self, text: str, add_special_tokens: bool = True) -> dict[str, list[str]]:
+        ids = text.split()
+        if add_special_tokens:
+            ids = [*ids, '<eos>']  # emulates Qwen3-Embedding appending EOS. _calc_tokens must not count EOS
+        return {'input_ids': ids}
+
+    def decode(self, ids: list[str]) -> str:
+        return ' '.join(ids)
+
+
+_tok = _WordTokenizer()
 
 
 def _make_article(body_md: str) -> Article:
@@ -201,3 +227,240 @@ _GOLDEN_SECTION_COUNTS = {
 def test_split_golden_section_count_is_stable(slug):
     _, sections = _split_golden(slug)
     assert len(sections) == _GOLDEN_SECTION_COUNTS[slug]
+
+
+# ---------------------------------------------------------------
+# _split_sentences
+# ---------------------------------------------------------------
+
+
+def test_split_sentences_breaks_after_punctuation():
+    assert _split_sentences('First one. Second one! Third one?') == ['First one.', 'Second one!', 'Third one?']
+
+
+def test_split_sentences_does_not_break_on_missing_whitespace():
+    assert _split_sentences('3.14 is pi.') == ['3.14 is pi.']
+
+
+def test_split_sentences_drops_empty_and_strips():
+    assert _split_sentences('  Only one.  ') == ['Only one.']
+    assert _split_sentences('') == []
+
+
+# ---------------------------------------------------------------
+# _pack_lines
+# ---------------------------------------------------------------
+
+
+def test_pack_lines_greedily_fills_to_budget():
+    lines = ['a a', 'b b', 'c c']  # two tokens each
+    assert _pack_lines(lines, _tok, budget=4) == ['a a\nb b', 'c c']
+
+
+def test_pack_lines_hard_splits_oversized_line_by_tokens():
+    assert _pack_lines(['a b c d'], _tok, budget=2) == ['a b', 'c d']
+
+
+def test_pack_lines_empty_input_returns_empty():
+    assert _pack_lines([], _tok, budget=10) == []
+
+
+# ---------------------------------------------------------------
+# _pack_sentences
+# ---------------------------------------------------------------
+
+
+def test_pack_sentences_carries_overlap_into_next_window():
+    sentences = ['Aa.', 'Bb.', 'Cc.', 'Dd.']
+    assert _pack_sentences(sentences, _tok, budget=2, overlap=1) == ['Aa. Bb.', 'Bb. Cc.', 'Cc. Dd.']
+
+
+def test_pack_sentences_no_overlap_does_not_repeat():
+    sentences = ['Aa.', 'Bb.', 'Cc.', 'Dd.']
+    assert _pack_sentences(sentences, _tok, budget=2, overlap=0) == ['Aa. Bb.', 'Cc. Dd.']
+
+
+def test_pack_sentences_oversized_single_line_sentence_hard_splits():
+    assert _pack_sentences(['one two three four'], _tok, budget=2, overlap=0) == ['one two', 'three four']
+
+
+def test_pack_sentences_overlap_carry_respects_budget():
+    # 9-token sentence leaves only 1 token of room: the 3-token carry candidate must be dropped
+    sentences = ['a1 a2 a3.', 'b1 b2 b3.', 'c1 c2 c3 c4 c5 c6 c7 c8 c9.']
+    windows = _pack_sentences(sentences, _tok, budget=10, overlap=4)
+    assert windows == ['a1 a2 a3. b1 b2 b3.', 'c1 c2 c3 c4 c5 c6 c7 c8 c9.']
+
+
+def test_pack_sentences_oversized_multiline_sentence_falls_back_to_lines():
+    sentence = 'line aa\nline bb'
+    assert _pack_sentences([sentence], _tok, budget=2, overlap=0) == ['line aa', 'line bb']
+
+
+def test_pack_sentences_flushes_current_before_oversized_sentence():
+    sentences = ['Short.', 'one two three four']
+    assert _pack_sentences(sentences, _tok, budget=3, overlap=0) == ['Short.', 'one two three', 'four']
+
+
+# ---------------------------------------------------------------
+# _pack_table_rows
+# ---------------------------------------------------------------
+
+
+def test_pack_table_rows_repeats_header_on_each_split():
+    block = '| a | b |\n| --- | --- |\n| r1 | r1 |\n| r2 | r2 |'
+    splits = _pack_table_rows(block, _tok, budget=15)  # header is 10 tokens, each row 5. One row per split
+    assert len(splits) == 2
+    assert all(s.startswith('| a | b |\n| --- | --- |') for s in splits)
+    assert '| r1 | r1 |' in splits[0]
+    assert '| r2 | r2 |' in splits[1]
+
+
+def test_pack_table_rows_header_only_block_returned_as_is():
+    block = '| a | b |\n| --- | --- |'
+    assert _pack_table_rows(block, _tok, budget=100) == [block]
+
+
+def test_pack_table_rows_headerless_table_packs_rows_without_fake_header():
+    # render_table produces no | --- | separator for tables without a <th> row
+    # The first two data rows cannot be treated as a repeatable header
+    block = '| r1 | r1 |\n| r2 | r2 |\n| r3 | r3 |\n| r4 | r4 |'
+    splits = _pack_table_rows(block, _tok, budget=10)
+    assert splits == ['| r1 | r1 |\n| r2 | r2 |', '| r3 | r3 |\n| r4 | r4 |']
+
+
+def test_pack_table_rows_header_at_budget_falls_back_to_plain_line_packing():
+    # header is 10 tokens -> whole budget. Repeating the header would double every split
+    block = '| a | b |\n| --- | --- |\n| r1 | r1 |\n| r2 | r2 |'
+    splits = _pack_table_rows(block, _tok, budget=10)
+    assert splits == ['| a | b |\n| --- | --- |', '| r1 | r1 |\n| r2 | r2 |']
+
+
+# ---------------------------------------------------------------
+# _split_body
+# ---------------------------------------------------------------
+
+
+def test_split_body_routes_prose_and_table_and_preserves_order():
+    text = 'Intro prose one.\n\n| h1 | h2 |\n| --- | --- |\n| a | b |\n\nOutro prose two.'
+    bodies = _split_body(text, _tok, budget=50, overlap=0)
+    assert bodies == [
+        'Intro prose one.',
+        '| h1 | h2 |\n| --- | --- |\n| a | b |',
+        'Outro prose two.',
+    ]
+
+
+def test_split_body_processes_every_block_not_just_the_first():
+    text = 'Block one.\n\nBlock two.\n\nBlock three.'
+    bodies = _split_body(text, _tok, budget=100, overlap=0)
+    assert bodies == ['Block one. Block two. Block three.']
+
+
+def test_split_body_skips_blank_blocks():
+    text = 'Only prose.\n\n\n\n   \n\n'
+    assert _split_body(text, _tok, budget=100, overlap=0) == ['Only prose.']
+
+
+# ---------------------------------------------------------------
+# chunk_article
+# ---------------------------------------------------------------
+
+
+def test_chunk_article_one_chunk_per_small_section():
+    article = _make_article('# Alpha\n\nOne two three.\n\n# Beta\n\nFour five.')
+    chunks = chunk_article(article, _tok, max_tokens=50)
+
+    assert [c.chunk_id for c in chunks] == ['bestiary__x__y#000', 'bestiary__x__y#001']
+    assert chunks[0].text == 'Alpha\nOne two three.'
+    assert chunks[1].text == 'Beta\nFour five.'
+    assert chunks[0].heading_path == ['Alpha']
+    assert chunks[0].n_tokens == 4
+
+
+def test_chunk_article_splits_oversized_section_and_keeps_prefix():
+    article = _make_article('# H\n\nAa bb. Cc dd. Ee ff.')
+    chunks = chunk_article(article, _tok, max_tokens=6, overlap=0)
+
+    assert len(chunks) == 2
+    assert all(c.text.startswith('H\n') for c in chunks)
+    assert [c.chunk_id for c in chunks] == ['bestiary__x__y#000', 'bestiary__x__y#001']
+
+
+def test_chunk_article_ids_are_sequential_across_sections():
+    article = _make_article('# H\n\nAa bb. Cc dd. Ee ff.\n\n# Tail\n\nDone.')
+    chunks = chunk_article(article, _tok, max_tokens=6, overlap=0)
+
+    assert [c.chunk_id for c in chunks] == [
+        'bestiary__x__y#000',
+        'bestiary__x__y#001',
+        'bestiary__x__y#002',
+    ]
+    assert chunks[-1].text == 'Tail\nDone.'
+
+
+def test_chunk_article_skips_empty_sections():
+    article = _make_article('# Alpha\n\n## Beta\n\nBody here.')
+    chunks = chunk_article(article, _tok, max_tokens=50)
+
+    assert len(chunks) == 1
+    assert chunks[0].text == 'Alpha > Beta\nBody here.'
+    assert chunks[0].chunk_id == 'bestiary__x__y#000'
+
+
+def test_chunk_article_empty_article_yields_no_chunks():
+    assert chunk_article(_make_article(''), _tok, max_tokens=50) == []
+
+
+def test_chunk_article_headingless_section_prefixed_with_article_title():
+    article = _make_article('Preamble text here.\n\n# Alpha\n\nBody.')
+    chunks = chunk_article(article, _tok, max_tokens=50)
+
+    assert chunks[0].text == 'XY Title\nPreamble text here.'
+    assert chunks[0].heading_path == []
+    assert chunks[1].text == 'Alpha\nBody.'
+
+
+def test_chunk_article_raises_when_heading_prefix_fills_max_tokens():
+    article = _make_article('# one two three four five six seven eight\n\nBody text.')
+    with pytest.raises(ValueError, match='heading prefix'):
+        chunk_article(article, _tok, max_tokens=6)
+
+
+# ---------------------------------------------------------------
+# golden hard token limit + no text lost
+# ---------------------------------------------------------------
+
+_GOLDEN_MAX_TOKENS = 80
+_GOLDEN_OVERLAP = 10
+# BPE token counts are not additive across joins. The packer sums counts per piece but the embedder tokenizes as one
+# string. The merges can push a window a token or two over budget which is deemed acceptable. see README design notes.
+_TOKEN_DRIFT_SLACK = 2
+
+
+@functools.cache
+def _chunk_golden(slug: str):
+    body, _ = _split_golden(slug)
+    return chunk_article(_make_article(body), _tok, max_tokens=_GOLDEN_MAX_TOKENS, overlap=_GOLDEN_OVERLAP)
+
+
+@pytest.mark.parametrize('slug', GOLDEN_SLUGS)
+def test_chunk_golden_every_chunk_within_max_tokens(slug):
+    chunks = _chunk_golden(slug)
+    assert chunks
+    assert all(c.n_tokens <= _GOLDEN_MAX_TOKENS + _TOKEN_DRIFT_SLACK for c in chunks)
+
+
+@pytest.mark.parametrize('slug', GOLDEN_SLUGS)
+def test_chunk_golden_chunks_reproduce_section_text_minus_overlaps(slug):
+    """Section words must appear in order in the concatenated chunk bodies.
+    Overlap carry and repeated table headers inserts duplicates -> order preserving subsequence check must detects
+    any dropped text
+    """
+    _, sections = _split_golden(slug)
+    chunks = _chunk_golden(slug)
+
+    expected = [word for section in sections for word in section.text.split()]
+    emitted = iter(word for chunk in chunks for word in chunk.text.split('\n', 1)[1].split())
+
+    for word in expected:
+        assert word in emitted, f'{slug}: lost text at {word!r}'
