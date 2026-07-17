@@ -117,7 +117,14 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
             has_content = True
 
     assembled = _wrap(element, ''.join(parts))
-    return assembled + _normalize_whitespace(element.tail)
+
+    tail = _normalize_whitespace(element.tail)
+    spec = TAGS.get(element.tag) if isinstance(element.tag, str) else None
+    if spec is not None and spec.is_block and tail.strip():
+        # Separate block element from trailing text so heading's tail does not merge onto the heading line
+        # (## TitleText -> ## Title\n\nText).
+        return assembled.rstrip() + '\n\n' + tail.lstrip()
+    return assembled + tail
 
 
 BASE_URL = 'https://www.d20pfsrd.com'
