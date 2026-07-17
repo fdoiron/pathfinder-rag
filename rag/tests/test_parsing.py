@@ -129,6 +129,11 @@ def test_element_to_markdown_sibling_paragraphs_separated_by_blank_line():
     assert _element_to_markdown(html_fragment(html)) == 'First\n\nSecond'
 
 
+def test_element_to_markdown_block_tail_does_not_merge_onto_block_line():
+    html = '<div><h2>Special Abilities</h2>Text after</div>'
+    assert _element_to_markdown(html_fragment(html)) == '## Special Abilities\n\nText after'
+
+
 def test_element_to_markdown_empty_paragraph_produces_empty_string():
     assert _element_to_markdown(html_fragment('<div><p></p></div>')) == ''
 
@@ -284,8 +289,8 @@ def test_element_to_markdown_garbage_colspan_falls_back_to_one():
 
 
 def test_element_to_markdown_malformed_table_unclosed_tbody_keeps_all_rows():
-    # source HTML has an unclosed <tbody>; lxml's error recovery nests a second
-    # <thead> inside the first <tbody> instead of dropping the row
+    # source HTML has an unclosed <tbody> -> lxml error recovery nests a second <thead>
+    # inside the first <tbody> instead of dropping the row
     html = (
         '<table><thead><tr><th>H1</th><th>H2</th></tr></thead>'
         '<tbody><thead><tr><td>a</td><td>b</td></tr></thead>'
@@ -324,7 +329,7 @@ def test_parse_page_title_from_h1_text_content_with_nested_markup_and_whitespace
     assert article.title == 'Red Dragon, Adult'
 
 
-JUNK_CLASSES = (
+REMOVED_CLASSES = (
     'section15',
     'toc_light_blue',
     'goog-toc',
@@ -340,18 +345,18 @@ JUNK_CLASSES = (
 )
 
 
-@pytest.mark.parametrize('junk_class', JUNK_CLASSES)
-def test_parse_page_strips_junk_class(junk_class):
-    html = _page(f'<p>Keep me</p><div class="{junk_class}">JUNK_MARKER</div>')
+@pytest.mark.parametrize('remove_class', REMOVED_CLASSES)
+def test_parse_page_strips_remove_class(remove_class):
+    html = _page(f'<p>Keep me</p><div class="{remove_class}">REMOVED_MARKER</div>')
     article = parse_page(html, 'x')
-    assert 'JUNK_MARKER' not in article.body_md
+    assert 'REMOVED_MARKER' not in article.body_md
     assert 'Keep me' in article.body_md
 
 
 def test_parse_page_removes_script_tags():
-    html = _page('<p>Keep me</p><script>var evil = "JUNK_MARKER";</script>')
+    html = _page('<p>Keep me</p><script>var evil = "REMOVED_MARKER";</script>')
     article = parse_page(html, 'x')
-    assert 'JUNK_MARKER' not in article.body_md
+    assert 'REMOVED_MARKER' not in article.body_md
 
 
 def test_parse_page_raises_value_error_with_slug_for_malformed_html():
