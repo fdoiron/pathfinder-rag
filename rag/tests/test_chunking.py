@@ -432,9 +432,6 @@ def test_chunk_article_raises_when_heading_prefix_fills_max_tokens():
 
 _GOLDEN_MAX_TOKENS = 80
 _GOLDEN_OVERLAP = 10
-# BPE token counts are not additive across joins. The packer sums counts per piece but the embedder tokenizes as one
-# string. The merges can push a window a token or two over budget which is deemed acceptable. see README design notes.
-_TOKEN_DRIFT_SLACK = 2
 
 
 @functools.cache
@@ -447,7 +444,7 @@ def _chunk_golden(slug: str):
 def test_chunk_golden_every_chunk_within_max_tokens(slug):
     chunks = _chunk_golden(slug)
     assert chunks
-    assert all(c.n_tokens <= _GOLDEN_MAX_TOKENS + _TOKEN_DRIFT_SLACK for c in chunks)
+    assert all(c.n_tokens <= _GOLDEN_MAX_TOKENS for c in chunks)
 
 
 @pytest.mark.parametrize('slug', GOLDEN_SLUGS)

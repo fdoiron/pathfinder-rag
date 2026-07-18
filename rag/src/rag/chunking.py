@@ -1,12 +1,25 @@
 import re
 from dataclasses import dataclass
+from functools import lru_cache
+from math import ceil
 from typing import cast
 
-from transformers import PreTrainedTokenizerBase
+from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
 from rag.models import Article, Chunk
 
 _HEADING_RE = re.compile(r'^(#{1,6})[ \t]+(.*)$', re.MULTILINE)
+
+# The packer counts tokens by summing each piece's token counts to decide if a window is full.
+# However, the tokenizer does it across one string, which can cause the total to be more than the sum of its parts.
+# Reserve that headroom in the body budget up front so the assembled chunk stays within max_tokens
+
+_DRIFT_MARGIN = 0.02
+
+
+@lru_cache
+def load_tokenizer(name: str) -> PreTrainedTokenizerBase:
+    return cast(PreTrainedTokenizerBase, AutoTokenizer.from_pretrained(name))
 
 
 @dataclass(frozen=True)
@@ -232,7 +245,7 @@ def chunk_article(
         if full_tokens <= max_tokens:
             sized_bodies = [(full_text, full_tokens)]
         else:
-            budget = max_tokens - _calc_tokens(f'{prefix}\n', tokenizer)
+            budget = max_tokens - _calc_tokens(f'{prefix}\n', tokenizer) - ceil(max_tokens * _DRIFT_MARGIN)
             if budget <= 0:
                 raise ValueError(
                     f'{article.doc_id}: heading prefix {prefix!r} alone reaches max_tokens={max_tokens}, '
