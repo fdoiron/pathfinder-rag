@@ -66,5 +66,34 @@ class CorpusManifest(BaseModel):
         )
 
 
+class ChunksManifest(BaseModel):
+    """Provenance for chunks.parquet: parameters and source parsed data"""
+
+    model_config = ConfigDict(extra='forbid')
+    source_file: str  # the documents parquet the chunks were cut from
+    source_sha256: str
+    n_articles: int
+    n_chunks: int
+    min_body_length: int
+    tokenizer_model: str
+    max_tokens: int
+    overlap: int
+    created_at: datetime
+
+    @classmethod
+    def build(cls, settings: Settings, source_file: str | Path, n_articles: int, n_chunks: int) -> 'ChunksManifest':
+        return cls(
+            source_file=str(source_file),
+            source_sha256=hashlib.sha256(Path(source_file).read_bytes()).hexdigest(),
+            n_articles=n_articles,
+            n_chunks=n_chunks,
+            min_body_length=settings.min_body_length,
+            tokenizer_model=settings.tokenizer_model,
+            max_tokens=settings.chunk_max_tokens,
+            overlap=settings.chunk_overlap,
+            created_at=datetime.now(UTC),
+        )
+
+
 class Embedder(Protocol):
     def embed(self, texts: list[str], task_type: TaskType = ...) -> np.ndarray: ...

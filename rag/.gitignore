@@ -25,3 +25,6 @@ cache/
 # Data corpus, embeddings
 data/
 *.parquet
+
+# Scratch files
+scratchpad/
