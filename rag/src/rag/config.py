@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     corpus_path: Path = Path('data/corpus.parquet')
     embedded_corpus_path: Path = Path('data/corpus_embedded.parquet')
     min_body_length: int = 100
+    tokenizer_model: str = 'Qwen/Qwen3-Embedding-0.6B'
+    chunk_max_tokens: int = 450
+    chunk_overlap: int = 50
 
 
 @lru_cache

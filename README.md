@@ -2,7 +2,7 @@ A retrieval augmented question/answering pipeline over the Pathfinder 1e tableto
 
 ## What works right now
 
-Scraping and parsing are done and tested, run over the full corpus. Chunking, embedding, search and generation are not yet built (see [Roadmap](#roadmap)). This README describes the current state of the repo.
+Scraping, parsing and chunking are done and tested, run over the full corpus. Embedding, search and generation are not yet built (see [Roadmap](#roadmap)). This README describes the current state of the repo.
 
 24,080 HTML files in, 23,863 cleaned articles out. Run time is ~43s single-threaded. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with 1s delay per page.
 Dropped pages :
@@ -21,7 +21,15 @@ INFO:rag.parsing:dropped 'equipment': hub page
 INFO:rag.parsing:dropped 'feats': hub page
 WARNING:rag.parsing:dropped 'classes__core-classes__sorcerer__archetypes__paizo-sorcerer-archetypes__wildblooded__mutated-bloodlines-legendary-games__new-wildblooded-sor__c35fd7cde8': parse error: Slug '...' was truncated and hashed by url_to_filename
 ...
+INFO:root:Loading tokenizer Qwen/Qwen3-Embedding-0.6B
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+INFO:httpx:HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-Embedding-0.6B/97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3/tokenizer_config.json "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-Embedding-0.6B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+INFO:httpx:HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-Embedding-0.6B "HTTP/1.1 200 OK"
+INFO:root:Chunking articles
 wrote 23863 articles to data/corpus.parquet
+wrote 128569 chunks to data/chunks.parquet
+wrote manifest to data/chunks.manifest.json
 ```
 
 A rough Vertex based prototype of embed/search/eval exists at [`rag/scripts/prototype_cli.py`](rag/scripts/prototype_cli.py), with tests over its `embedding.py`/`retrieval.py`/`evaluation.py` modules, but it is not installed as part of `rag` and will be replaced by the local-embedding pipeline described in the roadmap below.
@@ -102,7 +110,7 @@ scraper/data/html/ ──▶ parse ──▶ chunk ──▶ embed ──▶ chu
 - **Drop filters log why a page was dropped**. `parse_corpus_dir` splits drops into three distinguishable reasons (hub page / too short / parse error) at different log levels. This ensures that if the final article count looks wrong the cause can be established with a `grep` instead of re-running with print statements.
 - **Golden-file testing**. The 15 fixtures are hand picked pages and have a committed expected output file (`rag/tests/fixtures/goldens/*.golden.md`). When the parser changes, the golden file diffs documents the behavior change line by line. A silent regression shows up as an unintended diff instead of passing quietly.
 - **Thin CLI over plain functions**. `rag build-corpus` calls `parse_corpus_dir` and writes parquet with no logic in the typer layer. The same function is what the planned API handler would call.
-- **`max_tokens` is a target with small token slack**. The packer counts tokens by summing each piece's token counts to decide if a window is full. However, the tokenizer does it across one string, which can cause the total to be more than the sum of its parts. On the 24k pages corpus, the drift happens 8 times out of ~128k chunks, with a total of 451 vs. a target of 450. I deemed the small loss of retrieval precision acceptable, but something to be aware of. At max_tokens = 1000, there were zero chunks over the limit.
+- **`max_tokens` is a target with small token slack**. The packer counts tokens by summing each piece's token counts to decide if a window is full. However, the tokenizer does it across one string, which can cause the total to be more than the sum of its parts. On the 24k pages corpus, the drift never happened on a target of 450 or 1000. I deemed the small loss of retrieval precision acceptable, but something to be aware of. A `hard_limit = int(max_tokens * 1.02)` will raise in corpus.py.
 
 ## Testing
 

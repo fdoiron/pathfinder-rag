@@ -5,7 +5,10 @@ from typing import Annotated
 import pandas as pd
 import typer
 
+from rag.chunking import load_tokenizer
 from rag.config import get_settings
+from rag.corpus import chunk_corpus
+from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 
 app = typer.Typer()
@@ -39,10 +42,32 @@ def build_corpus(
     settings = get_settings()
     logging.info(f'Parsing HTML files from {html_dir}')
     articles = parse_corpus_dir(html_dir, min_body_length=settings.min_body_length)
-    df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
+    if not articles:
+        logging.warning(f'No articles parsed from {html_dir}. Writing empty corpus and chunks')
+
+    logging.info(f'Loading tokenizer {settings.tokenizer_model}')
+    tokenizer = load_tokenizer(settings.tokenizer_model)
+    logging.info('Chunking articles')
+    chunks = chunk_corpus(articles, tokenizer, settings.chunk_max_tokens, settings.chunk_overlap)
+    if not chunks:
+        logging.warning('No chunks produced. Writing empty chunks file')
+
+    chunks_file = output_file.with_name('chunks.parquet')
+    manifest_path = chunks_file.with_suffix('.manifest.json')
+
+    docs_df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
     output_file.parent.mkdir(parents=True, exist_ok=True)
-    df.to_parquet(output_file, index=False)
+    docs_df.to_parquet(output_file, index=False)
     typer.echo(f'wrote {len(articles)} articles to {output_file}')
+
+    chunks_df = pd.DataFrame([c.model_dump() for c in chunks])
+    chunks_file.parent.mkdir(parents=True, exist_ok=True)
+    chunks_df.to_parquet(chunks_file, index=False)
+    typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
+
+    manifest = ChunksManifest.build(settings, output_file, len(articles), len(chunks))
+    manifest_path.write_text(manifest.model_dump_json(indent=2), encoding='utf-8')
+    typer.echo(f'wrote manifest to {manifest_path}')
 
 
 if __name__ == '__main__':
