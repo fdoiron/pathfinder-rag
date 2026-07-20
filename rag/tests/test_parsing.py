@@ -494,8 +494,8 @@ def test_retag_pseudo_headings_ed_note_header_becomes_h5():
     assert root[0].tag == 'h5'
 
 
-@pytest.mark.parametrize('sidebar_class', ('content-sidebar', 'info-sidebar', 'faq', 'widefaq'))
-@pytest.mark.parametrize('title_tag', ('div', 'p'))
+@pytest.mark.parametrize('sidebar_class', ['content-sidebar', 'info-sidebar', 'faq', 'widefaq'])
+@pytest.mark.parametrize('title_tag', ['div', 'p'])
 def test_retag_pseudo_headings_box_title_becomes_h5(sidebar_class, title_tag):
     html = f'<div><div class="{sidebar_class}"><{title_tag}>Box Title</{title_tag}><p>body</p></div></div>'
     root = html_fragment(html)

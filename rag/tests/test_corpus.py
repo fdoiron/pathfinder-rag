@@ -36,7 +36,7 @@ def _patch_chunk_article(monkeypatch: pytest.MonkeyPatch, n_tokens: int) -> None
     monkeypatch.setattr(
         corpus,
         'chunk_article',
-        lambda article, tokenizer, max_tokens, overlap: [_make_chunk(n_tokens)],
+        lambda *_args, **_kwargs: [_make_chunk(n_tokens)],
     )
 
 

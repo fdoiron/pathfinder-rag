@@ -177,7 +177,7 @@ def test_summary_all_hits_at_1():
 
 
 def test_summary_empty_raises():
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='cannot summarize an empty result list'):
         summarize_results([])
 
 
@@ -210,7 +210,7 @@ def test_load_bad_line_raises_with_line_number(tmp_path: Path):
 def test_load_empty_file_raises(tmp_path: Path):
     f = tmp_path / 'queries.jsonl'
     f.write_text('', encoding='utf-8')
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='no queries found'):
         load_queries(f)
 
 
@@ -218,7 +218,7 @@ def test_load_missing_expected_urls_raises(tmp_path: Path):
     content = '{"query": "q1", "expected_urls": []}\n'
     f = tmp_path / 'queries.jsonl'
     f.write_text(content, encoding='utf-8')
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match='invalid eval query'):
         load_queries(f)
 
 
