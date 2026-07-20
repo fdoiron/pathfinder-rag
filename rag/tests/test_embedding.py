@@ -10,7 +10,7 @@ from rag.embedding import VertexEmbedder
 class FakeEmbedder:
     """vector[0] -> input position, verify order was preserved after batching"""
 
-    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:
+    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:  # noqa: ARG002
         return np.array([[float(i), float(len(t))] for i, t in enumerate(texts)], dtype=np.float32)
 
 
@@ -55,7 +55,7 @@ class ScriptedEmbedder(VertexEmbedder):
         self.attempts = 0
         self.error = error or ConnectionError('Simulated API failure 429')
 
-    def _call_api(self, batch: list[str], task_type: str) -> list[list[float]]:
+    def _call_api(self, batch: list[str], task_type: str) -> list[list[float]]:  # noqa: ARG002
         self.attempts += 1
         if self.failures_left > 0:
             self.failures_left -= 1
@@ -78,7 +78,7 @@ def test_empty_input_returns_empty_nocrash():
 
 
 def test_retry_then_success(monkeypatch):
-    monkeypatch.setattr('rag.embedding.time.sleep', lambda s: None)  # avoid actual sleep
+    monkeypatch.setattr('rag.embedding.time.sleep', lambda _s: None)  # avoid actual sleep
 
     embedder = ScriptedEmbedder(failure_before_success=2)
     vectors = embedder.embed(['hello'])
@@ -87,7 +87,7 @@ def test_retry_then_success(monkeypatch):
 
 
 def test_retries_exhausted_raises(monkeypatch):
-    monkeypatch.setattr('rag.embedding.time.sleep', lambda s: None)  # avoid actual sleep
+    monkeypatch.setattr('rag.embedding.time.sleep', lambda _s: None)  # avoid actual sleep
 
     embedder = ScriptedEmbedder(failure_before_success=99)
     with pytest.raises(ConnectionError):

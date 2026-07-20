@@ -17,7 +17,7 @@ class FakeEmbedder:
     def __init__(self, query_vec: list[float]):
         self._vec = np.array(query_vec, dtype=np.float32)
 
-    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:
+    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:  # noqa: ARG002
         return np.array([self._vec], dtype=np.float32)
 
 
@@ -100,7 +100,7 @@ def test_k_greater_than_corpus_size_no_crash():
 def test_non_finite_embedding_raises_at_construction():
     """corrupt corpus (NaN embedding) fails at load"""
     df = _make_corpus_df()
-    df.at[1, 'embedding'] = np.array([np.nan, 1.0], dtype=np.float32)
+    df.at[1, 'embedding'] = np.array([np.nan, 1.0], dtype=np.float32)  # noqa: PD008
     with pytest.raises(ValueError, match='non-finite'):
         Retriever(df, FakeEmbedder([1.0, 0.0]), _make_manifest())
 
