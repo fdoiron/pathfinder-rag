@@ -7,12 +7,14 @@ import typer
 
 from rag.chunking import load_tokenizer
 from rag.config import get_settings
-from rag.corpus import chunk_corpus
+from rag.corpus import chunk_corpus, embed_corpus
+from rag.embedding import LocalEmbedder
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 
 app = typer.Typer()
 logging.basicConfig(level=logging.INFO)
+logging.getLogger('httpx').setLevel(logging.WARNING)
 
 
 @app.callback()
@@ -61,11 +63,18 @@ def build_corpus(
     typer.echo(f'wrote {len(articles)} articles to {output_file}')
 
     chunks_df = pd.DataFrame([c.model_dump() for c in chunks])
+
+    logging.info(f'Loading embedder {settings.embedding_model}')
+    embedder = LocalEmbedder(settings)
+    if chunks:
+        logging.info(f'Embedding {len(chunks)} chunks')
+        chunks_df = embed_corpus(chunks_df, embedder, text_columns=['text'])
+
     chunks_file.parent.mkdir(parents=True, exist_ok=True)
     chunks_df.to_parquet(chunks_file, index=False)
     typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
 
-    manifest = ChunksManifest.build(settings, output_file, len(articles), len(chunks))
+    manifest = ChunksManifest.build(settings, output_file, len(articles), len(chunks), embedder.query_prompt)
     manifest_path.write_text(manifest.model_dump_json(indent=2), encoding='utf-8')
     typer.echo(f'wrote manifest to {manifest_path}')
 

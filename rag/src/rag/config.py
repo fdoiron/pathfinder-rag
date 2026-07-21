@@ -10,8 +10,8 @@ class Settings(BaseSettings):
     gcp_service_account_file: Path | None = Path('gcp-service-account-file.json')
     gcp_project: str | None = None
     gcp_location: str = 'northamerica-northeast1'
-    embedding_model: str = 'gemini-embedding-001'
-    embedding_dim: int = 768
+    embedding_model: str = 'Qwen/Qwen3-Embedding-0.6B'
+    embedding_dim: int = 1024
     embedding_batch_size: int = 32
     corpus_path: Path = Path('data/corpus.parquet')
     embedded_corpus_path: Path = Path('data/corpus_embedded.parquet')
