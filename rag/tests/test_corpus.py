@@ -7,6 +7,7 @@ from rag import corpus
 from rag.config import Settings
 from rag.corpus import chunk_corpus
 from rag.models import Article, Chunk, ChunksManifest
+from rag.parsing import PARSER_VERSION
 
 
 def _make_article(doc_id: str = 'bestiary__x__y') -> Article:
@@ -73,7 +74,9 @@ def test_chunks_manifest_build_records_params_and_source_hash(tmp_path):
     source.write_bytes(b'parquet-bytes')
     settings = Settings()
 
-    manifest = ChunksManifest.build(settings, source, n_articles=12, n_chunks=34)
+    manifest = ChunksManifest.build(
+        settings, source, n_articles=12, n_chunks=34, query_prompt='Instruct: retrieve\nQuery: '
+    )
 
     assert manifest.source_file == str(source)
     assert manifest.source_sha256 == hashlib.sha256(b'parquet-bytes').hexdigest()
@@ -83,4 +86,8 @@ def test_chunks_manifest_build_records_params_and_source_hash(tmp_path):
     assert manifest.tokenizer_model == settings.tokenizer_model
     assert manifest.max_tokens == settings.chunk_max_tokens
     assert manifest.overlap == settings.chunk_overlap
+    assert manifest.parser_version == PARSER_VERSION
+    assert manifest.embedding_model == settings.embedding_model
+    assert manifest.embedding_dim == settings.embedding_dim
+    assert manifest.query_prompt == 'Instruct: retrieve\nQuery: '
     assert manifest.created_at.tzinfo is not None
