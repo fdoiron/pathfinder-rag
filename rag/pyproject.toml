@@ -57,6 +57,8 @@ exclude = ['^src/rag/scratchpad/']
 
 [tool.pytest.ini_options]
 testpaths = ['tests']
+markers = ['gpu: needs a GPU and downloaded model weights']
+addopts = '-m "not gpu"'
 
 [project.scripts]
 rag = 'rag.cli:app'
