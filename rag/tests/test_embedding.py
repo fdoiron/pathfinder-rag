@@ -193,6 +193,18 @@ def test_embed_returns_float32(monkeypatch):
     assert vectors.dtype == np.float32
 
 
+def test_embed_empty_returns_empty_no_encode(monkeypatch):
+    calls: dict = {}
+    monkeypatch.setattr(
+        'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
+    )
+    embedder = LocalEmbedder(_settings(dim=4))
+    vectors = embedder.embed([])
+    assert vectors.shape == (0, 4)
+    assert vectors.dtype == np.float32
+    assert 'encode' not in calls
+
+
 def test_embed_dim_mismatch_raises(monkeypatch):
     monkeypatch.setattr('rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=8))
     embedder = LocalEmbedder(_settings(dim=4))
