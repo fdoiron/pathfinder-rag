@@ -74,7 +74,9 @@ def build_corpus(
     chunks_df.to_parquet(chunks_file, index=False)
     typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
 
-    manifest = ChunksManifest.build(settings, output_file, len(articles), len(chunks), embedder.query_prompt)
+    manifest = ChunksManifest.build(
+        settings, output_file, len(articles), len(chunks), embedder.torch_dtype, embedder.query_prompt
+    )
     manifest_path.write_text(manifest.model_dump_json(indent=2), encoding='utf-8')
     typer.echo(f'wrote manifest to {manifest_path}')
 

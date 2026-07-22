@@ -75,7 +75,12 @@ def test_chunks_manifest_build_records_params_and_source_hash(tmp_path):
     settings = Settings()
 
     manifest = ChunksManifest.build(
-        settings, source, n_articles=12, n_chunks=34, query_prompt='Instruct: retrieve\nQuery: '
+        settings,
+        source,
+        n_articles=12,
+        n_chunks=34,
+        embedding_dtype='torch.bfloat16',
+        query_prompt='Instruct: retrieve\nQuery: ',
     )
 
     assert manifest.source_file == str(source)
@@ -89,5 +94,6 @@ def test_chunks_manifest_build_records_params_and_source_hash(tmp_path):
     assert manifest.parser_version == PARSER_VERSION
     assert manifest.embedding_model == settings.embedding_model
     assert manifest.embedding_dim == settings.embedding_dim
+    assert manifest.embedding_dtype == 'torch.bfloat16'
     assert manifest.query_prompt == 'Instruct: retrieve\nQuery: '
     assert manifest.created_at.tzinfo is not None

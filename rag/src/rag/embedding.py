@@ -79,11 +79,12 @@ class LocalEmbedder:
             dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float16
         else:
             dtype = torch.float32
+        self._dtype = str(dtype)
         self._model = SentenceTransformer(settings.embedding_model, model_kwargs={'torch_dtype': dtype})
         if 'query' not in self._model.prompts:
             raise ValueError(
-                f"model {settings.embedding_model!r} has no 'query' prompt defined — "
-                'query embedding will fail at call time'
+                f"model {settings.embedding_model!r} has no 'query' prompt defined."
+                'Query embedding will fail at call time'
             )
         self._batch_size = settings.embedding_batch_size
         self._dim = settings.embedding_dim
@@ -93,7 +94,13 @@ class LocalEmbedder:
         """Instruction text prepended to queries for manifest"""
         return cast(str, self._model.prompts.get('query', ''))
 
+    @property
+    def torch_dtype(self) -> str:
+        return self._dtype
+
     def embed(self, texts: list[str], task_type: TaskType = 'RETRIEVAL_DOCUMENT') -> np.ndarray:
+        if not texts:
+            return np.empty((0, self._dim), dtype=np.float32)
         vectors = self._model.encode(
             texts,
             prompt_name='query' if task_type == 'RETRIEVAL_QUERY' else None,

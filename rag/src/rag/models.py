@@ -81,12 +81,19 @@ class ChunksManifest(BaseModel):
     parser_version: str  # from parsing.PARSER_VERSION
     embedding_model: str
     embedding_dim: int
+    embedding_dtype: str  # compute dtype the weights were loaded in (device-dependent, affects vectors)
     query_prompt: str
     created_at: datetime
 
     @classmethod
     def build(
-        cls, settings: Settings, source_file: str | Path, n_articles: int, n_chunks: int, query_prompt: str
+        cls,
+        settings: Settings,
+        source_file: str | Path,
+        n_articles: int,
+        n_chunks: int,
+        embedding_dtype: str,
+        query_prompt: str,
     ) -> 'ChunksManifest':
         from rag.parsing import PARSER_VERSION  # local import: parsing imports this module
 
@@ -102,6 +109,7 @@ class ChunksManifest(BaseModel):
             parser_version=PARSER_VERSION,
             embedding_model=settings.embedding_model,
             embedding_dim=settings.embedding_dim,
+            embedding_dtype=embedding_dtype,
             query_prompt=query_prompt,
             created_at=datetime.now(UTC),
         )
