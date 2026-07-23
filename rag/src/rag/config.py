@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     embedding_dim: int = 1024
     embedding_batch_size: int = 32
     corpus_path: Path = Path('data/corpus.parquet')
-    embedded_corpus_path: Path = Path('data/corpus_embedded.parquet')
+    chunks_path: Path = Path('data/chunks.parquet')
     min_body_length: int = 100
     tokenizer_model: str = 'Qwen/Qwen3-Embedding-0.6B'
     chunk_max_tokens: int = 450

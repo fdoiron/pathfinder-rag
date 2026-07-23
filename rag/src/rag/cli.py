@@ -11,6 +11,7 @@ from rag.corpus import chunk_corpus, embed_corpus
 from rag.embedding import LocalEmbedder
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
+from rag.retrieval import ManifestMismatchError, load_retriever
 
 app = typer.Typer()
 logging.basicConfig(level=logging.INFO)
@@ -79,6 +80,53 @@ def build_corpus(
     )
     manifest_path.write_text(manifest.model_dump_json(indent=2), encoding='utf-8')
     typer.echo(f'wrote manifest to {manifest_path}')
+
+
+@app.command()
+def search(
+    query: Annotated[str, typer.Argument(help='Specify search query')],
+    k: Annotated[
+        int,
+        typer.Option(
+            help='Maximum number of search results to return',
+        ),
+    ] = 5,
+    embedding_file_path: Annotated[
+        Path | None,
+        typer.Option(
+            help='Path to the embedding parquet file',
+            exists=True,
+            readable=True,
+        ),
+    ] = None,
+    category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+) -> None:
+    """Embeds search query, returns top k results"""
+    settings = get_settings()
+    embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
+    embedder = LocalEmbedder(settings)
+
+    try:
+        retriever = load_retriever(
+            chunks_file=embedding_file_path,
+            embedder=embedder,
+            settings=settings,
+        )
+    except (FileNotFoundError, ManifestMismatchError) as e:
+        typer.echo(f'Error: {e}', err=True)
+        raise typer.Exit(code=1) from e
+
+    chunk_hits = retriever.search(query=query, k=k, category=category)
+
+    if not chunk_hits:
+        typer.echo('No results found.')
+        return
+
+    for i, result in enumerate(chunk_hits):
+        typer.echo(f'--- Result {i + 1} ---')
+        typer.echo(f'Score: {result.score:.3f}')
+        typer.echo(f'Title: {result.title}')
+        typer.echo(f'URL: {result.url}')
 
 
 if __name__ == '__main__':

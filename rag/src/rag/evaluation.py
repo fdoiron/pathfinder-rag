@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field
 
-from rag.models import CorpusManifest, SearchResult
+from rag.models import ChunkHit, ChunksManifest
 
 logger = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class EvalRun(BaseModel):
     """Everything written to the timestamped run file: provenance + results."""
 
     created_at: datetime
-    manifest: CorpusManifest
+    manifest: ChunksManifest
     k: int
     summary: EvalSummary
     results: list[QueryResult]
@@ -101,14 +101,14 @@ def normalize_url(url: str) -> str:
 
 def evaluate_query(
     query: EvalQuery,
-    results: list[SearchResult],
+    results: list[ChunkHit],
 ) -> QueryResult:
     """Score one query's retrieval results against expected URLs"""
     expected = {normalize_url(u) for u in query.expected_urls}
 
     rank: int | None = None
     for position, result in enumerate(results, start=1):
-        if normalize_url(str(result.article.url)) in expected:
+        if normalize_url(str(result.url)) in expected:
             rank = position
             break  # first hit -> all MRR and recall cares about
 
@@ -117,8 +117,8 @@ def evaluate_query(
         expected_urls=query.expected_urls,
         retrieved_items=[
             RetrievedItem(
-                url=str(r.article.url),
-                title=r.article.title,
+                url=str(r.url),
+                title=r.title,
                 score=r.score,
             )
             for r in results
@@ -146,7 +146,7 @@ def summarize_results(results: list[QueryResult], ks: tuple[int, ...] = RECALL_K
 
 def write_run(
     run_dir: Path,
-    manifest: CorpusManifest,
+    manifest: ChunksManifest,
     k: int,
     summary: EvalSummary,
     results: list[QueryResult],
