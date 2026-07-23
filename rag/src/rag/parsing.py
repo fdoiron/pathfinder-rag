@@ -11,6 +11,9 @@ from rag.models import Article
 
 logger = logging.getLogger(__name__)
 
+# ChunksManifest record of changes to parsing
+PARSER_VERSION = '1'
+
 # ---------------------------------------------------------------
 # HTML parsing tag registry
 # ---------------------------------------------------------------

@@ -14,6 +14,8 @@ dependencies = [
     "pydantic-settings>=2.14.2",
     "transformers>=5.14.1",
     "typer>=0.26.8",
+    "sentence-transformers>=2.7.0",
+    "torch>=2.1.0",
 ]
 
 [build-system]
@@ -55,6 +57,8 @@ exclude = ['^src/rag/scratchpad/']
 
 [tool.pytest.ini_options]
 testpaths = ['tests']
+markers = ['gpu: needs a GPU and downloaded model weights']
+addopts = '-m "not gpu"'
 
 [project.scripts]
 rag = 'rag.cli:app'

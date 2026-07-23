@@ -78,10 +78,25 @@ class ChunksManifest(BaseModel):
     tokenizer_model: str
     max_tokens: int
     overlap: int
+    parser_version: str  # from parsing.PARSER_VERSION
+    embedding_model: str
+    embedding_dim: int
+    embedding_dtype: str  # compute dtype the weights were loaded in (device-dependent, affects vectors)
+    query_prompt: str
     created_at: datetime
 
     @classmethod
-    def build(cls, settings: Settings, source_file: str | Path, n_articles: int, n_chunks: int) -> 'ChunksManifest':
+    def build(
+        cls,
+        settings: Settings,
+        source_file: str | Path,
+        n_articles: int,
+        n_chunks: int,
+        embedding_dtype: str,
+        query_prompt: str,
+    ) -> 'ChunksManifest':
+        from rag.parsing import PARSER_VERSION  # local import: parsing imports this module
+
         return cls(
             source_file=str(source_file),
             source_sha256=hashlib.sha256(Path(source_file).read_bytes()).hexdigest(),
@@ -91,6 +106,11 @@ class ChunksManifest(BaseModel):
             tokenizer_model=settings.tokenizer_model,
             max_tokens=settings.chunk_max_tokens,
             overlap=settings.chunk_overlap,
+            parser_version=PARSER_VERSION,
+            embedding_model=settings.embedding_model,
+            embedding_dim=settings.embedding_dim,
+            embedding_dtype=embedding_dtype,
+            query_prompt=query_prompt,
             created_at=datetime.now(UTC),
         )
 
