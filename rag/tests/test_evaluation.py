@@ -13,22 +13,21 @@ from rag.evaluation import (
     summarize_results,
     write_run,
 )
-from rag.models import Article, CorpusManifest, SearchResult
+from rag.models import ChunkHit, ChunksManifest
 
 # helpers
 
 
-def make_result(url: str, title: str = 't', score: float = 0.9) -> SearchResult:
-    return SearchResult(
-        article=Article(
-            doc_id='doc',
-            url=url,
-            title=title,
-            category='bestiary',
-            breadcrumb=[],
-            body_md='body',
-            n_chars=4,
-        ),
+def make_result(url: str, title: str = 't', score: float = 0.9) -> ChunkHit:
+    return ChunkHit(
+        chunk_id='doc#000',
+        doc_id='doc',
+        url=url,
+        title=title,
+        heading_path=[],
+        text='body',
+        category='bestiary',
+        n_tokens=4,
         score=score,
     )
 
@@ -44,15 +43,21 @@ def make_query_result(rank: int | None) -> QueryResult:
     )
 
 
-def make_manifest() -> CorpusManifest:
-    return CorpusManifest(
-        source_file='data/support_content.md',
+def make_manifest() -> ChunksManifest:
+    return ChunksManifest(
+        source_file='data/corpus.parquet',
         source_sha256='abc123',
         n_articles=10,
-        text_columns=['title', 'body_md'],
-        embedding_model='text-embedding-004',
-        embedding_dim=768,
-        task_type='RETRIEVAL_DOCUMENT',
+        n_chunks=15,
+        min_body_length=100,
+        tokenizer_model='Qwen/Qwen3-Embedding-0.6B',
+        max_tokens=450,
+        overlap=50,
+        parser_version='1',
+        embedding_model='Qwen/Qwen3-Embedding-0.6B',
+        embedding_dim=1024,
+        embedding_dtype='float32',
+        query_prompt='',
         created_at=datetime(2026, 1, 1, tzinfo=UTC),
     )
 

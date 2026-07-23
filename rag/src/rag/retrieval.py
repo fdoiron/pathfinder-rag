@@ -5,21 +5,19 @@ import numpy as np
 import pandas as pd
 
 from rag.config import Settings
-from rag.models import Article, CorpusManifest, Embedder, SearchResult
+from rag.models import ChunkHit, ChunksManifest, Embedder
 
 logger = logging.getLogger(__name__)
 
-# TODO: filtering by type of articles type
-
 
 class Retriever:
-    """calc cosine similarity and search over corpus embeddings"""
+    """calc cosine similarity and search over chunk embeddings"""
 
     @property
-    def manifest(self) -> CorpusManifest:
+    def manifest(self) -> ChunksManifest:
         return self._manifest
 
-    def __init__(self, df: pd.DataFrame, embedder: Embedder, manifest: CorpusManifest) -> None:
+    def __init__(self, df: pd.DataFrame, embedder: Embedder, manifest: ChunksManifest) -> None:
         self._df = df.reset_index(drop=True)
         matrix = np.vstack(df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
         if not np.isfinite(matrix).all():
@@ -33,7 +31,7 @@ class Retriever:
         self._embedder = embedder
         self._manifest = manifest
 
-    def search(self, query: str, k: int) -> list[SearchResult]:
+    def search(self, query: str, k: int, category: str | None = None) -> list[ChunkHit]:
         q = self._embedder.embed(
             [query],
             task_type='RETRIEVAL_QUERY',
@@ -45,32 +43,33 @@ class Retriever:
             raise ValueError(f'embedder returned a zero-norm vector for query {query!r}')
         q = q / q_norm  # normalize to length 1.0
         scores = self._matrix @ q  # dot product normalize = cosine similarity
-        top_results = np.argsort(scores)[::-1][:k]
+        if category is not None:
+            scores = np.where(self._df['category'].to_numpy() == category, scores, -np.inf)
+        top_results = [i for i in np.argsort(scores)[::-1][:k] if scores[i] > -np.inf]
         return [
-            SearchResult(article=Article(**self._df.iloc[res].drop('embedding').to_dict()), score=float(scores[res]))
-            for res in top_results
+            ChunkHit(**self._df.iloc[res].drop('embedding').to_dict(), score=float(scores[res])) for res in top_results
         ]
 
 
 class ManifestMismatchError(RuntimeError):
-    """Corpus was embedded with a different model or embedding dimension than the current settings."""
+    """Chunks were embedded with a different model or embedding dimension than the current settings."""
 
 
-def load_retriever(embedding_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
-    """Load corpus + manifest, validate compatibility, return ready Retriever
+def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
+    """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
-        FileNotFoundError if either embedding or manifest file does not exist
+        FileNotFoundError if either the chunks or manifest file does not exist
         ManifestMismatchError if the manifest is incompatible with the current settings
     """
 
-    if not embedding_file.exists():
-        raise FileNotFoundError(f'Embedding file not found: {embedding_file}')
+    if not chunks_file.exists():
+        raise FileNotFoundError(f'Chunks file not found: {chunks_file}')
 
-    manifest_path = embedding_file.with_suffix('.manifest.json')
+    manifest_path = chunks_file.with_suffix('.manifest.json')
     if not manifest_path.exists():
         raise FileNotFoundError(f'Manifest file not found: {manifest_path}')
 
-    manifest = CorpusManifest.model_validate_json(manifest_path.read_text(encoding='utf-8'))
+    manifest = ChunksManifest.model_validate_json(manifest_path.read_text(encoding='utf-8'))
 
     if manifest.embedding_model != settings.embedding_model:
         raise ManifestMismatchError(
@@ -82,12 +81,13 @@ def load_retriever(embedding_file: Path, embedder: Embedder, settings: Settings)
             f'Manifest embedding dim {manifest.embedding_dim} does not match configured dim {settings.embedding_dim}'
         )
 
-    df = pd.read_parquet(embedding_file)
-    # bugfix: save parquet and load turns None into NaN -> breaks pydantic model. rebuild articles excluding embeddings
+    docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
+    df = pd.read_parquet(chunks_file).merge(docs, on='doc_id', how='left', validate='many_to_one')
+    # bugfix: save parquet and load turns None into NaN -> breaks pydantic model. rebuild chunks excluding embeddings
 
     metadata_cols = [c for c in df.columns if c != 'embedding']
     meta = df[metadata_cols].astype(object)
     df[metadata_cols] = meta.where(meta.notna(), None)  # replace NaN with None for pydantic model
-    logger.info(f'Loaded {len(df)} articles from {embedding_file}')
+    logger.info(f'Loaded {len(df)} chunks from {chunks_file}')
 
     return Retriever(df, embedder, manifest)

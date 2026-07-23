@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Literal, Protocol
 
 import numpy as np
-import pandas as pd
 from pydantic import BaseModel, ConfigDict, HttpUrl
 
 from rag.config import Settings
@@ -33,37 +32,17 @@ class Chunk(BaseModel):
     n_tokens: int  # measured by embedding's tokenizer
 
 
-class SearchResult(BaseModel):
+class ChunkHit(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    article: Article
+    chunk_id: str
+    doc_id: str
+    url: HttpUrl
+    title: str
+    heading_path: list[str]
+    text: str
+    category: str
+    n_tokens: int
     score: float
-
-
-class CorpusManifest(BaseModel):
-    model_config = ConfigDict(extra='forbid')
-    source_file: str
-    source_sha256: str
-    n_articles: int
-    text_columns: list[str]
-    embedding_model: str
-    embedding_dim: int
-    task_type: TaskType
-    created_at: datetime
-
-    @classmethod
-    def build(
-        cls, settings: Settings, df: pd.DataFrame, source_file: str | Path, text_columns: list[str]
-    ) -> 'CorpusManifest':
-        return cls(
-            source_file=str(source_file),
-            source_sha256=hashlib.sha256(Path(source_file).read_bytes()).hexdigest(),
-            n_articles=len(df),
-            text_columns=text_columns,
-            embedding_model=settings.embedding_model,
-            embedding_dim=settings.embedding_dim,
-            task_type='RETRIEVAL_DOCUMENT',
-            created_at=datetime.now(UTC),
-        )
 
 
 class ChunksManifest(BaseModel):
