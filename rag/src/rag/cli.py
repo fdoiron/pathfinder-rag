@@ -9,6 +9,7 @@ from rag.chunking import load_tokenizer
 from rag.config import get_settings
 from rag.corpus import chunk_corpus, embed_corpus
 from rag.embedding import LocalEmbedder
+from rag.evaluation import collapse_to_urls, evaluate_query, load_queries, summarize_results, write_run
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, load_retriever
@@ -127,6 +128,74 @@ def search(
         typer.echo(f'Score: {result.score:.3f}')
         typer.echo(f'Title: {result.title}')
         typer.echo(f'URL: {result.url}')
+
+
+@app.command()
+def evaluate(
+    queries_file: Annotated[
+        Path,
+        typer.Argument(
+            help='Path to the input queries JSON file for evaluation',
+            exists=True,
+            readable=True,
+        ),
+    ],
+    embedding_file_path: Annotated[
+        Path | None,
+        typer.Option(
+            help='Path to the embedding parquet file',
+            exists=True,
+            readable=True,
+        ),
+    ] = None,
+    k: Annotated[
+        int,
+        typer.Option(
+            help='Maximum number of search results to return',
+        ),
+    ] = 5,
+    run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
+) -> None:
+    """
+    Evaluate the retrieval performance of the corpus.
+    """
+
+    try:
+        queries = load_queries(queries_file)
+    except ValueError as e:
+        typer.echo(f'Error loading queries: {e}', err=True)
+        raise typer.Exit(1) from e
+
+    settings = get_settings()
+    embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
+    embedder = LocalEmbedder(settings)
+
+    try:
+        retriever = load_retriever(
+            chunks_file=embedding_file_path,
+            embedder=embedder,
+            settings=settings,
+        )
+    except (FileNotFoundError, ManifestMismatchError) as e:
+        typer.echo(f'Error: {e}', err=True)
+        raise typer.Exit(code=1) from e
+
+    results = [evaluate_query(query, collapse_to_urls(retriever.search(query.query, k=k * 5), k)) for query in queries]
+
+    summary = summarize_results(results)
+    typer.echo(summary.format_line())
+
+    misses = [r for r in results if r.is_miss]
+    if misses:
+        typer.echo(f'\n{len(misses)} queries had no hits:')
+        for r in misses:
+            got = f'{r.retrieved_items[0].url} ({r.retrieved_items[0].score:.2f})' if r.retrieved_items else 'nothing'
+            typer.echo(f'  query: {r.query}')
+            typer.echo(f'  expected: {r.expected_urls}')
+            typer.echo(f'  got: {got}')
+
+    run_path = write_run(run_dir, retriever.manifest, k, summary, results)
+    typer.echo(f'\nWrote evaluation run results to {run_path}')
 
 
 if __name__ == '__main__':

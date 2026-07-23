@@ -36,6 +36,7 @@ def make_query_result(rank: int | None) -> QueryResult:
     rr = 0.0 if rank is None else 1.0 / rank
     return QueryResult(
         query='q',
+        type='exact_name',
         expected_urls=['https://example.com/a'],
         retrieved_items=[],
         rank=rank,
@@ -81,7 +82,7 @@ def test_normalize_handles_whitespace():
 
 
 def test_hit_at_rank_1():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/article'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/article'])
     results = [make_result('https://example.com/article')]
     qr = evaluate_query(query, results)
     assert qr.rank == 1
@@ -90,7 +91,7 @@ def test_hit_at_rank_1():
 
 
 def test_hit_at_rank_4():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/d'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/d'])
     results = [
         make_result('https://example.com/a'),
         make_result('https://example.com/b'),
@@ -106,7 +107,7 @@ def test_hit_at_rank_4():
 
 
 def test_miss():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/missing'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/missing'])
     results = [make_result('https://example.com/other')]
     qr = evaluate_query(query, results)
     assert qr.rank is None
@@ -115,7 +116,7 @@ def test_miss():
 
 
 def test_second_expected_url_counts():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/x', 'https://example.com/b'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/x', 'https://example.com/b'])
     results = [
         make_result('https://example.com/a'),
         make_result('https://example.com/b'),
@@ -125,7 +126,7 @@ def test_second_expected_url_counts():
 
 
 def test_first_hit_wins_when_both_present():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/b', 'https://example.com/d'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/b', 'https://example.com/d'])
     results = [
         make_result('https://example.com/a'),
         make_result('https://example.com/b'),
@@ -137,14 +138,14 @@ def test_first_hit_wins_when_both_present():
 
 
 def test_url_normalization_applied_in_matching():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/article/'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/article/'])
     results = [make_result('https://example.com/article')]
     qr = evaluate_query(query, results)
     assert qr.rank == 1
 
 
 def test_empty_results_is_miss():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/article'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/article'])
     qr = evaluate_query(query, [])
     assert qr.rank is None
     assert qr.reciprocal_rank == 0.0
@@ -152,7 +153,7 @@ def test_empty_results_is_miss():
 
 
 def test_retrieved_preserved_in_order():
-    query = EvalQuery(query='q', expected_urls=['https://example.com/a'])
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
     urls = ['https://example.com/a', 'https://example.com/b', 'https://example.com/c']
     results = [make_result(u) for u in urls]
     qr = evaluate_query(query, results)
@@ -191,8 +192,8 @@ def test_summary_empty_raises():
 
 def test_load_valid_jsonl(tmp_path: Path):
     content = (
-        '{"query": "q1", "expected_urls": ["https://example.com/a"]}\n'
-        '{"query": "q2", "expected_urls": ["https://example.com/b"]}\n'
+        '{"query": "q1", "type": "exact_name", "expected_urls": ["https://example.com/a"]}\n'
+        '{"query": "q2", "type": "paraphrase", "expected_urls": ["https://example.com/b"]}\n'
         '\n'
     )
     f = tmp_path / 'queries.jsonl'
@@ -205,7 +206,7 @@ def test_load_valid_jsonl(tmp_path: Path):
 
 
 def test_load_bad_line_raises_with_line_number(tmp_path: Path):
-    content = '{"query": "q1", "expected_urls": ["https://example.com/a"]}\nnot valid json\n'
+    content = '{"query": "q1", "type": "exact_name", "expected_urls": ["https://example.com/a"]}\nnot valid json\n'
     f = tmp_path / 'queries.jsonl'
     f.write_text(content, encoding='utf-8')
     with pytest.raises(ValueError, match='2'):
@@ -220,7 +221,7 @@ def test_load_empty_file_raises(tmp_path: Path):
 
 
 def test_load_missing_expected_urls_raises(tmp_path: Path):
-    content = '{"query": "q1", "expected_urls": []}\n'
+    content = '{"query": "q1", "type": "exact_name", "expected_urls": []}\n'
     f = tmp_path / 'queries.jsonl'
     f.write_text(content, encoding='utf-8')
     with pytest.raises(ValueError, match='invalid eval query'):

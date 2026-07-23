@@ -1,0 +1,33 @@
+{"query": "power attack", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat/"]}
+{"query": "cleave", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/cleave-combat/"]}
+{"query": "vital strike", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/vital-strike-combat/"]}
+{"query": "magic missile", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/m/magic-missile/"]}
+{"query": "haste", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/h/haste/"]}
+{"query": "rage powers", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers"]}
+{"query": "attack of opportunity", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat"]}
+{"query": "grapple combat maneuver", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat"]}
+{"query": "summon monster I", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/s/summon-monster"]}
+{"query": "outsider creature type", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/bestiary/monster-listings/outsiders"]}
+{"query": "polymorph any object", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/p/polymorph-any-object/"]}
+{"query": "spell that throws an exploding ball of fire", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/f/fireball/"]}
+{"query": "feat that lets you hit harder by taking a penalty to accuracy", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"]}
+{"query": "spell that makes someone talk faster and move faster", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/h/haste"]}
+{"query": "ability where a warrior gets furious and stronger but tires out after", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/barbarian"]}
+{"query": "condition where you can't see and miss things around you", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/conditions"]}
+{"query": "spell that turns you invisible", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/i/invisibility"]}
+{"query": "way to heal wounds instantly with magic", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds/"]}
+{"query": "creature type for undead things like zombies and skeletons", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/bestiary/monster-listings/undead/"]}
+{"query": "class feature that lets a rogue deal bonus damage from sneaking", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/rogue/"]}
+{"query": "spell that puts up a wall of stone to block enemies", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/w/wall-of-stone/"]}
+{"query": "ability that lets a wizard cast spells without material components", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/feats/general-feats/eschew-materials"]}
+{"query": "how do you avoid provoking an attack of opportunity when moving", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/skills/acrobatics/", "https://www.d20pfsrd.com/feats/combat-feats/mobility-combat/"]}
+{"query": "how does flanking work and what bonus does it give", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat"]}
+{"query": "what happens if you're grappled and try to cast a spell", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/magic"]}
+{"query": "do two-weapon fighting penalties stack with power attack", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/two-weapon-fighting-combat/"]}
+{"query": "can you full attack after a charge", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat"]}
+{"query": "how do you calculate combat maneuver defense", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat/#Combat_Maneuver_Defense"]}
+{"query": "what saves does a fireball allow and against what", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/f/fireball/"]}
+{"query": "does invisibility end if you attack someone", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/i/invisibility/"]}
+{"query": "can a paladin still smite evil if they fall", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/paladin/"]}
+{"query": "how does spell resistance interact with touch attacks", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/special-abilities"]}
+{"query": "can I move and attack in the same round", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat/"]}
