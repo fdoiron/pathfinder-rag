@@ -134,11 +134,6 @@ BASE_URL = 'https://www.d20pfsrd.com'
 _HASH_SUFFIX_RE = re.compile(r'__[0-9a-f]{10}$')
 
 
-def is_hub_page(slug: str) -> bool:
-    """category/index landing pages (no url path segment) -> link lists. No useful content"""
-    return '__' not in slug
-
-
 def _slug_to_url(slug: str) -> HttpUrl:
     if slug.endswith('.html'):
         slug = slug[: -len('.html')]
@@ -273,10 +268,6 @@ def parse_corpus_dir(html_dir: Path, min_body_length: int) -> list[Article]:
     articles: list[Article] = []
     for html_file in sorted(html_dir.glob('*.html')):
         slug = html_file.stem
-
-        if is_hub_page(slug):
-            logger.info(f'dropped {slug!r}: hub page')
-            continue
 
         try:
             article = parse_page(html_file.read_text(encoding='utf-8'), slug)
