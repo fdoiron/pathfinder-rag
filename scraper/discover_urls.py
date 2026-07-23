@@ -121,20 +121,6 @@ BESTIARY_URL_EXCLUDE = [
     'https://www.d20pfsrd.com/bestiary/unique-monsters/under-cr-1/',  # list
     'https://www.d20pfsrd.com/bestiary/npc-s/npc-db/',  # excel table
     'https://www.d20pfsrd.com/bestiary/monster-listings/',  # list of monsters by type
-    'https://www.d20pfsrd.com/bestiary/monster-listings/aberrations/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/animals/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/constructs/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/dragons/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/fey/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/humanoids/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/magical-beasts/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/monstrous-humanoids/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/oozes/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/outsiders/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/plants/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/undead/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/vermin/',
-    'https://www.d20pfsrd.com/bestiary/monster-listings/templates/',  # template list
     'https://www.d20pfsrd.com/classes/',  # top level
     'https://www.d20pfsrd.com/classes/core-classes/',  # list
 ]
