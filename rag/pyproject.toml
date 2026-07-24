@@ -16,6 +16,7 @@ dependencies = [
     "typer>=0.26.8",
     "sentence-transformers>=2.7.0",
     "torch>=2.1.0",
+    "openai>=2.48.0",
 ]
 
 [build-system]
@@ -27,6 +28,8 @@ package = true
 
 [dependency-groups]
 dev = [
+    "huggingface-hub>=1.23.0",
+    "ipykernel>=7.3.0",
     "mypy>=2.1.0",
     "pandas-stubs>=3.0.3.260530",
     "poethepoet>=0.30.0",
