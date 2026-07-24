@@ -26,7 +26,7 @@ class Chunk(BaseModel):
     model_config = ConfigDict(extra='forbid')
     chunk_id: str  # {doc_id}#{i:03d}
     doc_id: str  # foreign key to documents
-    heading_path: list[str]  # e.g. ['Aboleth','SPECIAL ABILITIES]
+    heading_path: list[str]  # e.g. ['Aboleth', 'SPECIAL ABILITIES']
     text: str  # embedded text = title + heading path + body
     category: str  # copied from the document for filtering
     n_tokens: int  # measured by embedding's tokenizer

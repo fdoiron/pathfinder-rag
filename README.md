@@ -95,9 +95,17 @@ ollama pull qwen3:14b
 ollama serve
 uv run rag ask "can I move and attack in the same round?"
 
-# 5. run the test suite (doesn't require the scraped corpus)
+# 5. evaluate retrieval against the hand verified truth set
+uv run rag evaluate eval/queries.jsonl
+
+# 6. run the test suite (doesn't require the scraped corpus)
 uv run pytest
 ```
+
+## Repo layout
+
+- `scraper/` : Scrapy spider + URL discovery, scrapes d20pfsrd.com into `scraper/data/html/`
+- `rag/` : parsing, chunking, embedding, retrieval, eval and the `rag` CLI; everything downstream of the scraped HTML
 
 ## Architecture
 
@@ -200,11 +208,11 @@ Future expansions:
 
 ## Testing
 
-`ruff check`, `ruff format --check`, and `mypy --strict`, 357 tests. The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
+`ruff check`, `ruff format --check`, and `mypy --strict`, 350+ tests. The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
 
 ```bash
 cd rag
-uv run ruff check . && uv run ruff format --check . && uv run mypy src && uv run pytest
+uv run poe check   #in order:  ruff check, ruff format --check, mypy --strict, pytest
 ```
 
 ## License and attribution

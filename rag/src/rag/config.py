@@ -7,9 +7,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='RAG_', env_file='.env', env_file_encoding='utf-8')
 
-    gcp_service_account_file: Path | None = Path('gcp-service-account-file.json')
-    gcp_project: str | None = None
-    gcp_location: str = 'northamerica-northeast1'
     embedding_model: str = 'Qwen/Qwen3-Embedding-0.6B'
     embedding_dim: int = 1024
     embedding_batch_size: int = 32
