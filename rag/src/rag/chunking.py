@@ -1,8 +1,9 @@
 import re
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from functools import lru_cache
 from math import ceil
-from typing import cast
+from typing import Any, Protocol, cast
 
 from transformers import AutoTokenizer, PreTrainedTokenizerBase
 
@@ -15,6 +16,13 @@ _HEADING_RE = re.compile(r'^(#{1,6})[ \t]+(.*)$', re.MULTILINE)
 # Reserve that headroom in the body budget up front so the assembled chunk stays within max_tokens
 
 _DRIFT_MARGIN = 0.02
+
+
+class Tokenizer(Protocol):
+    """The subset of PreTrainedTokenizerBase the packer needs so tests can use a lightweight fake"""
+
+    def __call__(self, text: str, add_special_tokens: bool = ...) -> Mapping[str, Sequence[Any]]: ...
+    def decode(self, ids: Any, /) -> str | list[str]: ...
 
 
 @lru_cache
@@ -70,7 +78,7 @@ def _split_by_markdown_heading(page: Article) -> list[Section]:
     return sections
 
 
-def _calc_tokens(text: str, tokenizer: PreTrainedTokenizerBase) -> int:
+def _calc_tokens(text: str, tokenizer: Tokenizer) -> int:
     return len(tokenizer(text, add_special_tokens=False)['input_ids'])
 
 
@@ -81,7 +89,7 @@ def _split_sentences(text: str) -> list[str]:
     return [s for s in _SENTENCE_END.split(text.strip()) if s]
 
 
-def _hard_split(text: str, tokenizer: PreTrainedTokenizerBase, budget: int) -> list[str]:
+def _hard_split(text: str, tokenizer: Tokenizer, budget: int) -> list[str]:
     """
     Last resort for text with no sentence or line boundaries left. Slices the token ids into windows (budget size
     and decode back to text. Keeps chunk size limit at the cost of cutting sentences in half (hence last resort)
@@ -90,7 +98,7 @@ def _hard_split(text: str, tokenizer: PreTrainedTokenizerBase, budget: int) -> l
     return [cast(str, tokenizer.decode(ids[i : i + budget])) for i in range(0, len(ids), budget)]
 
 
-def _pack_lines(lines: list[str], tokenizer: PreTrainedTokenizerBase, budget: int) -> list[str]:
+def _pack_lines(lines: list[str], tokenizer: Tokenizer, budget: int) -> list[str]:
     """
     greedy fill windows with full lines up to budget tokens.
     No overlap required as lines that reach here are self contained
@@ -121,7 +129,7 @@ def _pack_lines(lines: list[str], tokenizer: PreTrainedTokenizerBase, budget: in
     return windows
 
 
-def _pack_sentences(sentences: list[str], tokenizer: PreTrainedTokenizerBase, budget: int, overlap: int) -> list[str]:
+def _pack_sentences(sentences: list[str], tokenizer: Tokenizer, budget: int, overlap: int) -> list[str]:
     """
     Greedy fill windows up to the budget of tokens. New window restart with (overlap) number of tokens from the previous
     """
@@ -170,7 +178,7 @@ def _pack_sentences(sentences: list[str], tokenizer: PreTrainedTokenizerBase, bu
 _TABLE_SEPARATOR_RE = re.compile(r'^\|(\s*:?-{3,}:?\s*\|)+\s*$')  # the | --- | --- | divider line
 
 
-def _pack_table_rows(block: str, tokenizer: PreTrainedTokenizerBase, budget: int) -> list[str]:
+def _pack_table_rows(block: str, tokenizer: Tokenizer, budget: int) -> list[str]:
     """Splits markdown pipe table. Each split has the header (col names + | --- | divider) so each split stays labelled
     header ~40 tokens, cheap to duplicate.
     Tables without a <th> row get no separator line from render_table().
@@ -191,7 +199,7 @@ def _pack_table_rows(block: str, tokenizer: PreTrainedTokenizerBase, budget: int
     return [f'{header}\n{window}' for window in _pack_lines(lines[2:], tokenizer, row_budget)]
 
 
-def _split_body(text: str, tokenizer: PreTrainedTokenizerBase, budget: int, overlap: int) -> list[str]:
+def _split_body(text: str, tokenizer: Tokenizer, budget: int, overlap: int) -> list[str]:
     """
     Splits oversized section bodies into the proper path by block type on blank lines
     Tables -> row packer _pack_table_rows()
@@ -223,9 +231,7 @@ def _split_body(text: str, tokenizer: PreTrainedTokenizerBase, budget: int, over
     return bodies
 
 
-def chunk_article(
-    article: Article, tokenizer: PreTrainedTokenizerBase, max_tokens: int = 450, overlap: int = 50
-) -> list[Chunk]:
+def chunk_article(article: Article, tokenizer: Tokenizer, max_tokens: int = 450, overlap: int = 50) -> list[Chunk]:
     sections = _split_by_markdown_heading(article)
 
     chunks: list[Chunk] = []

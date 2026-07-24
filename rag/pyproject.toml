@@ -33,6 +33,7 @@ dev = [
     "pandas-stubs>=3.0.3.260530",
     "poethepoet>=0.30.0",
     "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
     "ruff>=0.15.20",
     "types-lxml>=2026.2.16",
 ]
@@ -55,6 +56,13 @@ quote-style = 'single'
 
 [tool.mypy]
 strict = true
+plugins = ['pydantic.mypy']
+
+# tests use untyped/loosely-typed fixtures and fakes on purpose
+[[tool.mypy.overrides]]
+module = ['test_answer', 'test_chunking', 'test_cli', 'test_corpus', 'test_embedding', 'test_evaluation', 'test_parsing', 'test_retrieval']
+disallow_untyped_defs = false
+disallow_incomplete_defs = false
 
 [tool.pytest.ini_options]
 testpaths = ['tests']
@@ -67,6 +75,6 @@ rag = 'rag.cli:app'
 [tool.poe.tasks]
 lint = 'ruff check .'
 fmt = 'ruff format .'
-typecheck = 'mypy src'
+typecheck = 'mypy src tests'
 test = 'pytest -v'
 check = ['lint', 'fmt', 'typecheck', 'test']
