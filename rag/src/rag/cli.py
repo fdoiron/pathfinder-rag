@@ -9,7 +9,7 @@ from rag.chunking import load_tokenizer
 from rag.config import get_settings
 from rag.corpus import chunk_corpus, embed_corpus
 from rag.embedding import LocalEmbedder
-from rag.evaluation import collapse_to_urls, evaluate_query, load_queries, summarize_results, write_run
+from rag.evaluation import collapse_to_urls, evaluate_query, load_queries, write_run
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, load_retriever
@@ -182,8 +182,16 @@ def evaluate(
 
     results = [evaluate_query(query, collapse_to_urls(retriever.search(query.query, k=k * 5), k)) for query in queries]
 
-    summary = summarize_results(results)
-    typer.echo(summary.format_line())
+    run_path, run = write_run(run_dir, retriever.manifest, k, results)
+    typer.echo(run.summary.format_line())
+
+    typer.echo('\nby type:')
+    for name, group_summary in run.by_type.items():
+        typer.echo(f'  {name}: {group_summary.format_line()}')
+
+    typer.echo('\nby category:')
+    for name, group_summary in run.by_category.items():
+        typer.echo(f'  {name}: {group_summary.format_line()}')
 
     misses = [r for r in results if r.is_miss]
     if misses:
@@ -194,7 +202,6 @@ def evaluate(
             typer.echo(f'  expected: {r.expected_urls}')
             typer.echo(f'  got: {got}')
 
-    run_path = write_run(run_dir, retriever.manifest, k, summary, results)
     typer.echo(f'\nWrote evaluation run results to {run_path}')
 
 

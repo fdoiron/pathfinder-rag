@@ -159,10 +159,9 @@ def write_run(
     run_dir: Path,
     manifest: ChunksManifest,
     k: int,
-    summary: EvalSummary,
     results: list[QueryResult],
-) -> Path:
-    """writes a timestamped run file"""
+) -> tuple[Path, EvalRun]:
+    """Builds the EvalRun (summary + per-type/per-category breakdowns) and writes a timestamped run file."""
     summary = summarize_results(results)
     by_type = summarize_by(results, lambda r: r.type)
     by_category = summarize_by(results, lambda r: urlparse(r.expected_urls[0]).path.split('/')[1])
@@ -181,7 +180,7 @@ def write_run(
     out_path = run_dir / f'{now:%Y-%m-%dT%H-%M-%S}_eval.json'
     out_path.write_text(run.model_dump_json(indent=2), encoding='utf-8')
     logger.info('wrote eval run to %s', out_path)
-    return out_path
+    return out_path, run
 
 
 def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
