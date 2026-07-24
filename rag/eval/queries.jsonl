@@ -11,16 +11,17 @@
 {"query": "polymorph any object", "type": "exact_name", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/p/polymorph-any-object/"]}
 {"query": "spell that throws an exploding ball of fire", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/f/fireball/"]}
 {"query": "feat that lets you hit harder by taking a penalty to accuracy", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"]}
-{"query": "spell that makes someone talk faster and move faster", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/h/haste"]}
+{"query": "spell that makes someone attack faster and move faster", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/h/haste"]}
 {"query": "ability where a warrior gets furious and stronger but tires out after", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/barbarian"]}
 {"query": "condition where you can't see and miss things around you", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/conditions"]}
 {"query": "spell that turns you invisible", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/i/invisibility"]}
-{"query": "way to heal wounds instantly with magic", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds/"]}
+{"query": "the most basic healing spell a cleric starts with", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds/"]}
+{"query": "spell that heals the most damage at once", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/c/cure-critical-wounds/"]}
 {"query": "creature type for undead things like zombies and skeletons", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/bestiary/monster-listings/undead/"]}
 {"query": "class feature that lets a rogue deal bonus damage from sneaking", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/classes/core-classes/rogue/"]}
 {"query": "spell that puts up a wall of stone to block enemies", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/magic/all-spells/w/wall-of-stone/"]}
 {"query": "ability that lets a wizard cast spells without material components", "type": "paraphrase", "expected_urls": ["https://www.d20pfsrd.com/feats/general-feats/eschew-materials"]}
-{"query": "how do you avoid provoking an attack of opportunity when moving", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/skills/acrobatics/", "https://www.d20pfsrd.com/feats/combat-feats/mobility-combat/"]}
+{"query": "how do you avoid provoking an attack of opportunity when moving", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/skills/acrobatics/", "https://www.d20pfsrd.com/feats/combat-feats/mobility-combat/", "https://www.d20pfsrd.com/gamemastering/combat"]}
 {"query": "how does flanking work and what bonus does it give", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/gamemastering/combat"]}
 {"query": "what happens if you're grappled and try to cast a spell", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/magic"]}
 {"query": "do two-weapon fighting penalties stack with power attack", "type": "rules_reasoning", "expected_urls": ["https://www.d20pfsrd.com/feats/combat-feats/two-weapon-fighting-combat/"]}
