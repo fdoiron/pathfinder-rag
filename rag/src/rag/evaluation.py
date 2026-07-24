@@ -1,6 +1,9 @@
 import logging
+from collections import defaultdict
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Literal
 from urllib.parse import urlparse
 
 from pydantic import BaseModel, Field
@@ -15,10 +18,14 @@ RECALL_KS = (1, 3, 5)
 # models
 
 
+QueryType = Literal['exact_name', 'paraphrase', 'rules_reasoning']
+
+
 class EvalQuery(BaseModel):
     """One line JSONL file"""
 
     query: str
+    type: QueryType
     expected_urls: list[str] = Field(min_length=1)
 
 
@@ -34,6 +41,7 @@ class QueryResult(BaseModel):
     """Outcome of evaluating single query"""
 
     query: str
+    type: QueryType
     expected_urls: list[str]
     retrieved_items: list[RetrievedItem]
     rank: int | None  # 1-based rank of 1st expected URL, None = miss
@@ -66,6 +74,8 @@ class EvalRun(BaseModel):
     manifest: ChunksManifest
     k: int
     summary: EvalSummary
+    by_type: dict[str, EvalSummary]
+    by_category: dict[str, EvalSummary]
     results: list[QueryResult]
 
 
@@ -114,6 +124,7 @@ def evaluate_query(
 
     return QueryResult(
         query=query.query,
+        type=query.type,
         expected_urls=query.expected_urls,
         retrieved_items=[
             RetrievedItem(
@@ -148,15 +159,47 @@ def write_run(
     run_dir: Path,
     manifest: ChunksManifest,
     k: int,
-    summary: EvalSummary,
     results: list[QueryResult],
-) -> Path:
-    """writes a timestamped run file"""
+) -> tuple[Path, EvalRun]:
+    """Builds the EvalRun (summary + per-type/per-category breakdowns) and writes a timestamped run file."""
+    summary = summarize_results(results)
+    by_type = summarize_by(results, lambda r: r.type)
+    by_category = summarize_by(results, lambda r: urlparse(r.expected_urls[0]).path.split('/')[1])
     now = datetime.now(UTC)
-    run = EvalRun(created_at=now, manifest=manifest, k=k, summary=summary, results=results)
+    run = EvalRun(
+        created_at=now,
+        manifest=manifest,
+        k=k,
+        summary=summary,
+        by_type=by_type,
+        by_category=by_category,
+        results=results,
+    )
 
     run_dir.mkdir(parents=True, exist_ok=True)
     out_path = run_dir / f'{now:%Y-%m-%dT%H-%M-%S}_eval.json'
     out_path.write_text(run.model_dump_json(indent=2), encoding='utf-8')
     logger.info('wrote eval run to %s', out_path)
-    return out_path
+    return out_path, run
+
+
+def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
+    """turns Ranked chunk hits to ranked unique document hits with max of k
+
+    A document's rank is its best chunk's rank. Following chunks of the same document are dropped
+    """
+    seen: set[str] = set()
+    collapsed: list[ChunkHit] = []
+    for hit in hits:
+        key = normalize_url(str(hit.url))
+        if key not in seen:
+            seen.add(key)
+            collapsed.append(hit)
+    return collapsed[:k]
+
+
+def summarize_by(results: list[QueryResult], key: Callable[[QueryResult], str]) -> dict[str, EvalSummary]:
+    groups: dict[str, list[QueryResult]] = defaultdict(list)
+    for result in results:
+        groups[key(result)].append(result)
+    return {name: summarize_results(group) for name, group in sorted(groups.items())}
