@@ -6,13 +6,23 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlparse
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from rag.models import ChunkHit, ChunksManifest
+from rag.retrieval import Retriever
 
 logger = logging.getLogger(__name__)
 
 RECALL_KS = (1, 3, 5)
+EVAL_OVERFETCH_FACTOR = 5  # Headroom for initial chunks pere document when  collapsing chunk hits to unique pages
+
+
+def url_category(url: str) -> str:
+    """First path segment of a doc URL, ex: .../bestiary/aboleth' -> 'bestiary"""
+    parts = urlparse(url).path.split('/')
+    if len(parts) < 2 or not parts[1]:
+        raise ValueError(f'cannot derive category from url: {url!r}')
+    return parts[1]
 
 
 # models
@@ -27,6 +37,13 @@ class EvalQuery(BaseModel):
     query: str
     type: QueryType
     expected_urls: list[str] = Field(min_length=1)
+
+    @field_validator('expected_urls')
+    @classmethod
+    def _urls_have_category(cls, urls: list[str]) -> list[str]:
+        for url in urls:
+            url_category(url)  # raises ValueError if malformed
+        return urls
 
 
 class RetrievedItem(BaseModel):
@@ -164,7 +181,7 @@ def write_run(
     """Builds the EvalRun (summary + per-type/per-category breakdowns) and writes a timestamped run file."""
     summary = summarize_results(results)
     by_type = summarize_by(results, lambda r: r.type)
-    by_category = summarize_by(results, lambda r: urlparse(r.expected_urls[0]).path.split('/')[1])
+    by_category = summarize_by(results, lambda r: url_category(r.expected_urls[0]))
     now = datetime.now(UTC)
     run = EvalRun(
         created_at=now,
@@ -196,6 +213,22 @@ def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
             seen.add(key)
             collapsed.append(hit)
     return collapsed[:k]
+
+
+def search_top_k_docs(retriever: Retriever, query: str, k: int) -> list[ChunkHit]:
+    """Search and combine to k unique pages. If it falls short of k it widens the chunk fetch.
+
+    One doc can occupy several of the top chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR
+    can still collapse to less than k unique docs. To ensure k results it doubles the fetch until either
+    k docs are found or every chunk in the corpus has been retrieved.
+    """
+    total_chunks = len(retriever)
+    fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
+    while True:
+        collapsed = collapse_to_urls(retriever.search(query, k=fetch_k), k)
+        if len(collapsed) >= k or fetch_k >= total_chunks:
+            return collapsed
+        fetch_k = min(fetch_k * 2, total_chunks)
 
 
 def summarize_by(results: list[QueryResult], key: Callable[[QueryResult], str]) -> dict[str, EvalSummary]:
