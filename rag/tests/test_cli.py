@@ -37,7 +37,7 @@ def _make_hit() -> ChunkHit:
 
 
 def test_search_no_results_prints_message(monkeypatch):
-    monkeypatch.setattr(cli, 'LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     result = runner.invoke(app, ['search', 'nonexistent query'])
     assert result.exit_code == 0
@@ -45,7 +45,7 @@ def test_search_no_results_prints_message(monkeypatch):
 
 
 def test_search_prints_hits(monkeypatch):
-    monkeypatch.setattr(cli, 'LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
     result = runner.invoke(app, ['search', 'aboleth'])
     assert result.exit_code == 0
@@ -60,7 +60,7 @@ def test_search_prints_hits(monkeypatch):
     ],
 )
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
-    monkeypatch.setattr(cli, 'LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
 
     def _raise(**kwargs):  # noqa: ARG001
         raise error
