@@ -1,3 +1,5 @@
+[![CI](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml)
+
 A retrieval augmented question/answering pipeline over the Pathfinder 1e tabletop ruleset. It scrapes ~24k rule pages from [d20pfsrd.com](https://www.d20pfsrd.com/), parses them into markdown with a hand written converter, chunks and embeds them locally, and serves cited answers through a `rag ask` CLI backed by a local LLM. This is a portfolio project to demonstrate a full pipeline: data ingestion, evaluated retrieval, and generation, end to end, with the service/container phases designed and staged as what's next.
 
 ## Demo
@@ -158,7 +160,7 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,080 files)
 | `paraphrase` (n=12) | 0.25 | 0.42 | 0.50 | 0.34 |
 | `rules_reasoning` (n=11) | 0.45 | 0.91 | 0.91 | 0.68 |
 
-Reading these: `exact_name` and `rules_reasoning` both do well, a named feat or a rules question about combat tends to embed close to the page that answers it. `paraphrase` is the weak point, worded around the name rather than using it ("spell that throws an exploding ball of fire" for fireball) is exactly where a vector only search struggles and where lexical/BM25 matching is expected to help, see `E1` below. Per category breakdowns and the full per query results are in the run file itself, `rag evaluate` writes a new timestamped one under `eval/runs/` every time it's run.
+Reading these: `exact_name` and `rules_reasoning` both do well, a named feat or a rules question about combat tends to embed close to the page that answers it. `paraphrase` is the weak point, worded around the name rather than using it ("spell that throws an exploding ball of fire" for fireball) is exactly where a vector only search struggles and where lexical/BM25 matching is expected to help, see `E1` below. Per category breakdowns and the full per query results are in the run file itself: [`rag/eval/runs/2026-07-24T23-25-18_eval.json`](rag/eval/runs/2026-07-24T23-25-18_eval.json), the run this table is generated from. `rag evaluate` writes a new timestamped one under `eval/runs/` every time it's run; that directory is otherwise gitignored so re-runs on other machines/dtypes don't clutter history.
 
 ## Roadmap
 

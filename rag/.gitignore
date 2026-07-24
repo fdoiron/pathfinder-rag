@@ -28,6 +28,3 @@ data/
 
 # Scratch files
 scratchpad/
-
-# Eval run outputs (regenerable)
-eval/runs/
