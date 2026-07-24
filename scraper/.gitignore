@@ -17,6 +17,7 @@ wheels/
 .pytest_cache/
 .mypy_cache/
 .ipynb_checkpoints/
+.coverage
 
 # requests-cache HTTP cache (discover_urls.py, url_discovery.ipynb)
 *.sqlite

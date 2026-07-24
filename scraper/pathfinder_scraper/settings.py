@@ -12,7 +12,7 @@ BOT_NAME = 'pathfinder_scraper'
 SPIDER_MODULES = ['pathfinder_scraper.spiders']
 NEWSPIDER_MODULE = 'pathfinder_scraper.spiders'
 
-ADDONS = {}
+ADDONS: dict[str, int] = {}
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 USER_AGENT = os.environ.get(
@@ -38,7 +38,7 @@ ITEM_PIPELINES = {
 HTTPCACHE_ENABLED = True
 HTTPCACHE_EXPIRATION_SECS = 0
 HTTPCACHE_DIR = 'httpcache'
-HTTPCACHE_IGNORE_HTTP_CODES = []
+HTTPCACHE_IGNORE_HTTP_CODES: list[int] = []
 HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
 # Set settings whose default value is deprecated to a future-proof value
