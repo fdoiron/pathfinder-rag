@@ -7,7 +7,7 @@ import pytest
 
 from rag.config import Settings
 from rag.models import ChunksManifest
-from rag.retrieval import ManifestMismatchError, Retriever, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, load_retriever
 
 
 # helpers
@@ -187,4 +187,18 @@ def test_manifest_dim_mismatch(tmp_path):
     chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=999)
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     with pytest.raises(ManifestMismatchError, match='embedding dim'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_orphan_chunk_fails_at_load(tmp_path):
+    """A chunk with it's doc_id missing from corpus.parquet should fail to load vs causing issues in later search"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    chunks_df = pd.read_parquet(chunks_path)
+    orphan_row = chunks_df.iloc[[0]].copy()
+    orphan_row['chunk_id'] = 'orphan#000'
+    orphan_row['doc_id'] = 'orphan'
+    pd.concat([chunks_df, orphan_row], ignore_index=True).to_parquet(chunks_path, index=False)
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(OrphanChunksError, match='orphan'):
         load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)

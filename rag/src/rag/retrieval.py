@@ -58,11 +58,16 @@ class ManifestMismatchError(RuntimeError):
     """Chunks were embedded with a different model or embedding dimension than the current settings."""
 
 
+class OrphanChunksError(RuntimeError):
+    """Chunks reference a doc_id that is missing from the corpus parquet."""
+
+
 def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
     """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
         FileNotFoundError if either the chunks or manifest file does not exist
         ManifestMismatchError if the manifest is incompatible with the current settings
+        OrphanChunksError if a chunk's doc_id has no match in the corpus parquet
     """
 
     if not chunks_file.exists():
@@ -86,6 +91,16 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
 
     docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
     df = pd.read_parquet(chunks_file).merge(docs, on='doc_id', how='left', validate='many_to_one')
+
+    orphan_doc_ids = sorted(df.loc[df['title'].isna(), 'doc_id'].unique())
+    if orphan_doc_ids:
+        sample = orphan_doc_ids[:10]
+        more = ' ...' if len(orphan_doc_ids) > 10 else ''
+        raise OrphanChunksError(
+            f'{len(orphan_doc_ids)} doc_id(s) in {chunks_file} have no match in '
+            f'{settings.corpus_path}: {sample}{more}. Rebuild chunks against the current corpus.'
+        )
+
     # bugfix: save parquet and load turns None into NaN -> breaks pydantic model. rebuild chunks excluding embeddings
 
     metadata_cols = [c for c in df.columns if c != 'embedding']
