@@ -57,7 +57,7 @@ def build_corpus(
     if not chunks:
         logging.warning('No chunks produced. Writing empty chunks file')
 
-    chunks_file = output_file.with_name('chunks.parquet')
+    chunks_file = settings.chunks_path
     manifest_path = chunks_file.with_suffix('.manifest.json')
 
     docs_df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
