@@ -74,7 +74,7 @@ def _calc_tokens(text: str, tokenizer: PreTrainedTokenizerBase) -> int:
     return len(tokenizer(text, add_special_tokens=False)['input_ids'])
 
 
-_SENTENCE_END = re.compile(r'(?<=[.!?])\s+')  # split after . ! or ? folowed with whitespace
+_SENTENCE_END = re.compile(r'(?<=[.!?])\s+')  # split after . ! or ? followed with whitespace
 
 
 def _split_sentences(text: str) -> list[str]:
@@ -172,7 +172,7 @@ _TABLE_SEPARATOR_RE = re.compile(r'^\|(\s*:?-{3,}:?\s*\|)+\s*$')  # the | --- | 
 
 def _pack_table_rows(block: str, tokenizer: PreTrainedTokenizerBase, budget: int) -> list[str]:
     """Splits markdown pipe table. Each split has the header (col names + | --- | divider) so each split stays labelled
-    header ~40 tokens, cheap to duplibcate.
+    header ~40 tokens, cheap to duplicate.
     Tables without a <th> row get no separator line from render_table().
     These tables have no header to repeat so they pack as plain rows
     Same fallback when the header alone consumes the whole budget
@@ -212,7 +212,7 @@ def _split_body(text: str, tokenizer: PreTrainedTokenizerBase, budget: int, over
         if not block.strip():
             continue
         if block.lstrip().startswith('|'):
-            #  tables are blank line delimited blocks with lines starting with "|". A tabled attached to a prose caption
+            #  tables are blank line delimited blocks with lines starting with "|". A table attached to a prose caption
             # would be wrongly routed to the sentence packer
             flush_prose()  # store the prose before the table
             bodies.extend(_pack_table_rows(block, tokenizer, budget))

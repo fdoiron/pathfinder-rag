@@ -66,8 +66,6 @@ def _make_chunks_df() -> pd.DataFrame:
 
 def _make_settings(model: str = 'Qwen/Qwen3-Embedding-0.6B', dim: int = 2, corpus_path: Path | None = None) -> Settings:
     return Settings(
-        gcp_service_account_file=None,
-        gcp_project='test-proj',
         embedding_model=model,
         embedding_dim=dim,
         corpus_path=corpus_path or Path('data/corpus.parquet'),

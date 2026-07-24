@@ -51,7 +51,7 @@ _WHITESPACE_RE = re.compile(r'\s+')
 def _normalize_whitespace(text: str | None) -> str:
     if text is None:
         return ''
-    # sanitize literal '<' int text
+    # sanitize literal '<' in text
     # ex: '<a protean>' mistaken for an HTML tag
     return _WHITESPACE_RE.sub(' ', text).replace('<', '\\<')
 

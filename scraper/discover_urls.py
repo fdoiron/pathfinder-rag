@@ -338,6 +338,11 @@ def main() -> None:
     df = fetch_sitemap_urls(session)
     df_final = filter_urls(df)
 
+    # url_to_filename() joins path segments with '__' and parsing._slug_to_url() splits on '__' to reconstruct the URL.
+    # A path segment that already contains '__' would break that round trip.
+    bad_urls = df_final.loc[df_final['url'].str.contains('__'), 'url'].tolist()
+    assert not bad_urls, f'URL(s) contain a literal "__", would break the slug <-> URL round trip: {bad_urls}'
+
     print(f'{len(df)} urls in sitemap, {len(df_final)} kept, {len(df) - len(df_final)} dropped')
     print(df_final['level_1'].value_counts().to_string())
 

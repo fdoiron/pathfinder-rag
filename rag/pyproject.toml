@@ -4,7 +4,6 @@ version = "0.1.0"
 description = "RAG pipeline for Pathfinder 1e rules. parsing, embedding, retrieval, and eval"
 requires-python = ">=3.12"
 dependencies = [
-    "google-genai>=2.10.0",
     "httpx>=0.28.1",
     "lxml>=6.1.1",
     "numpy>=2.5.0",
@@ -56,7 +55,6 @@ quote-style = 'single'
 
 [tool.mypy]
 strict = true
-exclude = ['^src/rag/scratchpad/']
 
 [tool.pytest.ini_options]
 testpaths = ['tests']

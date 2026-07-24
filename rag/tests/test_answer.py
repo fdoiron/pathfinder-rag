@@ -95,8 +95,6 @@ def _make_settings(tmp_path: Path) -> Settings:
         encoding='utf-8',
     )
     return Settings(
-        gcp_service_account_file=None,
-        gcp_project='test-proj',
         embedding_model='Qwen/Qwen3-Embedding-0.6B',
         embedding_dim=2,
         ask_prompt_path=prompt_path,
