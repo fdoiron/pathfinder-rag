@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 from transformers import PreTrainedTokenizerBase
 
-from rag.chunking import chunk_article
+from rag.chunking import _DRIFT_MARGIN, chunk_article
 from rag.models import Article, Chunk, Embedder
 
 logger = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def chunk_corpus(
     for article in articles:
         chunks.extend(chunk_article(article, tokenizer, max_tokens=max_tokens, overlap=overlap))
 
-    hard_limit = int(max_tokens * 1.02)
+    hard_limit = int(max_tokens * (1 + _DRIFT_MARGIN))
     broken = [c.chunk_id for c in chunks if c.n_tokens > hard_limit]
     if broken:
         raise ValueError(f'{len(broken)} chunks exceed max_tokens={max_tokens} beyond BPE slack: {broken[:5]}')
