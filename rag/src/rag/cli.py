@@ -10,7 +10,7 @@ from rag.chunking import load_tokenizer
 from rag.config import get_settings
 from rag.corpus import chunk_corpus, embed_corpus
 from rag.embedding import LocalEmbedder
-from rag.evaluation import collapse_to_urls, evaluate_query, load_queries, write_run
+from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, load_retriever
@@ -181,7 +181,7 @@ def evaluate(
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    results = [evaluate_query(query, collapse_to_urls(retriever.search(query.query, k=k * 5), k)) for query in queries]
+    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k)) for query in queries]
 
     run_path, run = write_run(run_dir, retriever.manifest, k, results)
     typer.echo(run.summary.format_line())

@@ -17,6 +17,9 @@ class Retriever:
     def manifest(self) -> ChunksManifest:
         return self._manifest
 
+    def __len__(self) -> int:
+        return len(self._df)
+
     def __init__(self, df: pd.DataFrame, embedder: Embedder, manifest: ChunksManifest) -> None:
         self._df = df.reset_index(drop=True)
         matrix = np.vstack(df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
