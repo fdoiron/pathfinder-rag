@@ -19,6 +19,11 @@ class Settings(BaseSettings):
     tokenizer_model: str = 'Qwen/Qwen3-Embedding-0.6B'
     chunk_max_tokens: int = 450
     chunk_overlap: int = 50
+    llm_base_url: str = 'http://localhost:11434/v1'  # OpenAI-compatible endpoint for Ollama
+    llm_model: str = 'qwen3:14b'
+    llm_timeout: float = 60.0  # Ollama timeout in seconds instead of default 10 minutes
+    ask_prompt_path: Path = Path('prompts/ask.txt')
+    ask_k: int = 5  # excerpts per prompt
 
 
 @lru_cache

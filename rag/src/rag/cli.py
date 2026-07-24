@@ -5,6 +5,7 @@ from typing import Annotated
 import pandas as pd
 import typer
 
+from rag.answer import answer_question, make_llm_client
 from rag.chunking import load_tokenizer
 from rag.config import get_settings
 from rag.corpus import chunk_corpus, embed_corpus
@@ -203,6 +204,26 @@ def evaluate(
             typer.echo(f'  got: {got}')
 
     typer.echo(f'\nWrote evaluation run results to {run_path}')
+
+
+@app.command()
+def ask(question: Annotated[str, typer.Argument(help='a rules question')]) -> None:
+    """Answer a rules question with numbered d20pfsrd citations."""
+    settings = get_settings()
+    embedder = LocalEmbedder(settings)
+
+    try:
+        retriever = load_retriever(settings.chunks_path, embedder, settings)
+    except (FileNotFoundError, ManifestMismatchError) as e:
+        typer.echo(f'Error: {e}', err=True)
+        raise typer.Exit(code=1) from e
+
+    result = answer_question(question, retriever, make_llm_client(settings), settings)
+    typer.echo(result.text)
+    typer.echo()
+    for c in result.citations:
+        typer.echo(f'[{c.n}] {c.title} — {" > ".join(c.heading_path)}')
+        typer.echo(f'    {c.url}')
 
 
 if __name__ == '__main__':
