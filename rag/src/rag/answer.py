@@ -1,3 +1,4 @@
+import importlib.resources
 import re
 
 from openai import OpenAI
@@ -43,7 +44,10 @@ def answer_question(
     excerpts = '\n\n'.join(
         f'[{n}] {hit.title} — {" > ".join(hit.heading_path)}\n{hit.text}' for n, hit in enumerate(hits, start=1)
     )
-    template = settings.ask_prompt_path.read_text(encoding='utf-8')
+    if settings.ask_prompt_path is not None:
+        template = settings.ask_prompt_path.read_text(encoding='utf-8')
+    else:
+        template = importlib.resources.files('rag').joinpath('prompts', 'ask.txt').read_text(encoding='utf-8')
     response = client.chat.completions.create(
         model=settings.llm_model,
         messages=[{'role': 'user', 'content': template.format(excerpts=excerpts, question=question)}],
