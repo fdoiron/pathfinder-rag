@@ -105,6 +105,7 @@ def search(
         int,
         typer.Option(
             help='Maximum number of search results to return',
+            min=1,
         ),
     ] = 5,
     embedding_file_path: Annotated[
@@ -167,6 +168,7 @@ def evaluate(
         int,
         typer.Option(
             help='Maximum number of search results to return',
+            min=1,
         ),
     ] = 5,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
@@ -226,6 +228,7 @@ def ask(
         int | None,
         typer.Option(
             help='Number of excerpts to retrieve for the prompt (defaults to settings.ask_k)',
+            min=1,
         ),
     ] = None,
     embedding_file_path: Annotated[
