@@ -86,7 +86,7 @@ def _make_retriever() -> Retriever:
 class EmptyRetriever:
     """Stands in for a Retriever that finds nothing for the query."""
 
-    def search(self, query: str, k: int) -> list[ChunkHit]:  # noqa: ARG002
+    def search(self, query: str, k: int, category: str | None = None) -> list[ChunkHit]:  # noqa: ARG002
         return []
 
 

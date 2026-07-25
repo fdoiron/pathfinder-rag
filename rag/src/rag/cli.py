@@ -212,20 +212,38 @@ def evaluate(
 
 
 @app.command()
-def ask(question: Annotated[str, typer.Argument(help='a rules question')]) -> None:
+def ask(
+    question: Annotated[str, typer.Argument(help='a rules question')],
+    k: Annotated[
+        int | None,
+        typer.Option(
+            help='Number of excerpts to retrieve for the prompt (defaults to settings.ask_k)',
+        ),
+    ] = None,
+    embedding_file_path: Annotated[
+        Path | None,
+        typer.Option(
+            help='Path to the embedding parquet file',
+            exists=True,
+            readable=True,
+        ),
+    ] = None,
+    category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
     from rag.embedding import LocalEmbedder
 
     settings = get_settings()
+    embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = LocalEmbedder(settings)
 
     try:
-        retriever = load_retriever(settings.chunks_path, embedder, settings)
+        retriever = load_retriever(embedding_file_path, embedder, settings)
     except (FileNotFoundError, ManifestMismatchError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    result = answer_question(question, retriever, make_llm_client(settings), settings)
+    result = answer_question(question, retriever, make_llm_client(settings), settings, k=k, category=category)
     typer.echo(result.text)
     typer.echo()
     for c in result.citations:

@@ -28,8 +28,15 @@ _CITATION_RE = re.compile(r'\[(\d+)\]')
 _NO_COVERAGE_REPLY = "The retrieved excerpts don't cover this."
 
 
-def answer_question(question: str, retriever: Retriever, client: OpenAI, settings: Settings) -> Answer:
-    hits = retriever.search(question, k=settings.ask_k)
+def answer_question(
+    question: str,
+    retriever: Retriever,
+    client: OpenAI,
+    settings: Settings,
+    k: int | None = None,
+    category: str | None = None,
+) -> Answer:
+    hits = retriever.search(question, k=k if k is not None else settings.ask_k, category=category)
     if not hits:
         return Answer(text=_NO_COVERAGE_REPLY, citations=[])
 
