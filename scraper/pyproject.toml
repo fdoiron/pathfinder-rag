@@ -53,6 +53,7 @@ pythonpath = ['.']
 [tool.poe.tasks]
 lint = 'ruff check .'
 fmt = 'ruff format .'
+fmt-check = 'ruff format --check .'
 typecheck = 'mypy pathfinder_scraper discover_urls.py tests'
 test = 'pytest -v'
-check = ['lint', 'fmt', 'typecheck', 'test']
+check = ['lint', 'fmt-check', 'typecheck', 'test']

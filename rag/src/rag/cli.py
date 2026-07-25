@@ -10,7 +10,7 @@ from rag.config import get_settings
 from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
-from rag.retrieval import ManifestMismatchError, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, load_retriever
 
 # torch/transformers imported inside each command body
 app = typer.Typer()
@@ -118,7 +118,7 @@ def search(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
@@ -182,7 +182,7 @@ def evaluate(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
@@ -239,7 +239,7 @@ def ask(
 
     try:
         retriever = load_retriever(embedding_file_path, embedder, settings)
-    except (FileNotFoundError, ManifestMismatchError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 

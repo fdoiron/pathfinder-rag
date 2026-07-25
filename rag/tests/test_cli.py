@@ -4,7 +4,7 @@ from typer.testing import CliRunner
 from rag import cli
 from rag.cli import app
 from rag.models import ChunkHit
-from rag.retrieval import ManifestMismatchError
+from rag.retrieval import ManifestMismatchError, OrphanChunksError
 
 runner = CliRunner()
 
@@ -57,6 +57,7 @@ def test_search_prints_hits(monkeypatch):
     [
         FileNotFoundError('Chunks file not found: data/chunks.parquet'),
         ManifestMismatchError('embedding model mismatch'),
+        OrphanChunksError('1 doc_id(s) have no match in data/corpus.parquet'),
     ],
 )
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):

@@ -485,7 +485,8 @@ def test_retag_pseudo_headings_box_title_becomes_h5(sidebar_class, title_tag):
 
 
 # ---------------------------------------------------------------
-# golden tests: parse_page(html, slug).body_md vs goldens/<slug>.golden.md hand audited vs fixtures
+# golden tests: parse_page(html, slug).body_md vs goldens/<slug>.golden.md h
+# goldens are generated via parser then audited by hand as a change detector
 # ---------------------------------------------------------------
 
 
