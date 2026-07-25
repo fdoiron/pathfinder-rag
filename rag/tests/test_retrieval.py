@@ -1,3 +1,4 @@
+import hashlib
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -21,10 +22,12 @@ class FakeEmbedder:
         return np.array([self._vec], dtype=np.float32)
 
 
-def _make_manifest(model: str = 'Qwen/Qwen3-Embedding-0.6B', dim: int = 2) -> ChunksManifest:
+def _make_manifest(
+    model: str = 'Qwen/Qwen3-Embedding-0.6B', dim: int = 2, source_sha256: str = 'abc123'
+) -> ChunksManifest:
     return ChunksManifest(
         source_file='fake.parquet',
-        source_sha256='abc123',
+        source_sha256=source_sha256,
         n_articles=3,
         n_chunks=3,
         min_body_length=100,
@@ -73,12 +76,6 @@ def _make_settings(model: str = 'Qwen/Qwen3-Embedding-0.6B', dim: int = 2, corpu
 
 
 def _write_test_files(tmp_path: Path, model: str, dim: int) -> tuple[Path, Path]:
-    chunks_df = _make_chunks_df().drop(columns=['title', 'url'])
-    chunks_path = tmp_path / 'chunks.parquet'
-    chunks_df.to_parquet(chunks_path, index=False)
-    manifest_path = chunks_path.with_suffix('.manifest.json')
-    manifest_path.write_text(_make_manifest(model=model, dim=dim).model_dump_json(), encoding='utf-8')
-
     docs_df = pd.DataFrame(
         {
             'doc_id': ['alpha', 'beta', 'gamma'],
@@ -92,6 +89,13 @@ def _write_test_files(tmp_path: Path, model: str, dim: int) -> tuple[Path, Path]
     )
     docs_path = tmp_path / 'corpus.parquet'
     docs_df.to_parquet(docs_path, index=False)
+
+    chunks_df = _make_chunks_df().drop(columns=['title', 'url'])
+    chunks_path = tmp_path / 'chunks.parquet'
+    chunks_df.to_parquet(chunks_path, index=False)
+    manifest = _make_manifest(model=model, dim=dim, source_sha256=hashlib.sha256(docs_path.read_bytes()).hexdigest())
+    manifest_path = chunks_path.with_suffix('.manifest.json')
+    manifest_path.write_text(manifest.model_dump_json(), encoding='utf-8')
     return chunks_path, docs_path
 
 
@@ -187,6 +191,18 @@ def test_manifest_dim_mismatch(tmp_path):
     chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=999)
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     with pytest.raises(ManifestMismatchError, match='embedding dim'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_corpus_sha256_drift(tmp_path):
+    """raise ManifestMismatchError when corpus.parquet was rewritten after the chunks were created from it"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    docs_df = pd.read_parquet(docs_path)
+    docs_df.loc[0, 'title'] = 'Alpha (edited)'
+    docs_df.to_parquet(docs_path, index=False)
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(ManifestMismatchError, match='sha256'):
         load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
 
 

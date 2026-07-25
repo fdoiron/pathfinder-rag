@@ -1,3 +1,4 @@
+import hashlib
 import logging
 from pathlib import Path
 
@@ -65,8 +66,9 @@ class OrphanChunksError(RuntimeError):
 def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
     """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
-        FileNotFoundError if either the chunks or manifest file does not exist
-        ManifestMismatchError if the manifest is incompatible with the current settings
+        FileNotFoundError if the chunks, manifest or corpus file does not exist
+        ManifestMismatchError if the manifest is incompatible with the current settings, or the corpus on disk
+            is not the one the chunks came from (sha256 missmatch)
         OrphanChunksError if a chunk's doc_id has no match in the corpus parquet
     """
 
@@ -87,6 +89,16 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     if manifest.embedding_dim != settings.embedding_dim:
         raise ManifestMismatchError(
             f'Manifest embedding dim {manifest.embedding_dim} does not match configured dim {settings.embedding_dim}'
+        )
+
+    if not settings.corpus_path.exists():
+        raise FileNotFoundError(f'Corpus file not found: {settings.corpus_path}')
+    corpus_sha256 = hashlib.sha256(settings.corpus_path.read_bytes()).hexdigest()
+    if corpus_sha256 != manifest.source_sha256:
+        raise ManifestMismatchError(
+            f'Corpus {settings.corpus_path} (sha256 {corpus_sha256[:12]}) is not the file these chunks came from '
+            f'(manifest source_file "{manifest.source_file}", sha256 {manifest.source_sha256[:12]}). '
+            'Rebuild chunks against the current corpus.'
         )
 
     docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
