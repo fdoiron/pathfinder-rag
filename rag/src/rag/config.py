@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     llm_base_url: str = 'http://localhost:11434/v1'  # OpenAI-compatible endpoint for Ollama
     llm_model: str = 'qwen3:14b'
     llm_timeout: float = 60.0  # Ollama timeout in seconds instead of default 10 minutes
-    ask_prompt_path: Path = Path('prompts/ask.txt')
+    ask_prompt_path: Path | None = None  # override for the packaged prompts/ask.txt, mainly for tests
     ask_k: int = 5  # excerpts per prompt
 
 
