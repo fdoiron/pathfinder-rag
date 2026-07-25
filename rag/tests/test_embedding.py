@@ -6,7 +6,7 @@ import pytest
 
 from rag.config import Settings
 from rag.corpus import embed_corpus
-from rag.embedding import LocalEmbedder
+from rag.embedding import EmbedderUnavailableError, LocalEmbedder, load_embedder
 
 
 class FakeEmbedder:
@@ -155,6 +155,37 @@ def test_embed_dim_mismatch_raises(monkeypatch):
     embedder = LocalEmbedder(_settings(dim=4))
     with pytest.raises(ValueError, match='embedding_dim'):
         embedder.embed(['a'])
+
+
+def _st_raising(error: Exception):
+    def _fail(model_name_or_path, model_kwargs=None):  # noqa: ARG001
+        raise error
+
+    return _fail
+
+
+def test_load_embedder_wraps_download_failure(monkeypatch):
+    error = OSError('502 Server Error: Bad Gateway for url: https://huggingface.co/...')
+    monkeypatch.setattr('rag.embedding.SentenceTransformer', _st_raising(error))
+
+    with pytest.raises(EmbedderUnavailableError, match='Cannot load embedding model') as excinfo:
+        load_embedder(_settings())
+
+    assert 'Qwen/Qwen3-Embedding-0.6B' in str(excinfo.value)
+    assert '502 Server Error' in str(excinfo.value)  # cause kept in the message
+    assert excinfo.value.__cause__ is error
+
+
+def test_load_embedder_wraps_unusable_model(monkeypatch):
+    monkeypatch.setattr('rag.embedding.SentenceTransformer', _fake_st(prompts={}, out_dim=4))
+
+    with pytest.raises(EmbedderUnavailableError, match='query'):
+        load_embedder(_settings())
+
+
+def test_load_embedder_returns_embedder(monkeypatch):
+    monkeypatch.setattr('rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4))
+    assert isinstance(load_embedder(_settings()), LocalEmbedder)
 
 
 @pytest.mark.gpu

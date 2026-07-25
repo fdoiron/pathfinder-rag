@@ -2,6 +2,7 @@ import pytest
 from typer.testing import CliRunner
 
 from rag import cli
+from rag.answer import Answer, Citation, LLMUnavailableError
 from rag.cli import app
 from rag.models import ChunkHit
 from rag.retrieval import ManifestMismatchError, OrphanChunksError
@@ -12,6 +13,13 @@ runner = CliRunner()
 class FakeEmbedder:
     def __init__(self, *args, **kwargs) -> None:
         pass
+
+
+class UnloadableEmbedder:
+    """Stands in for model weights that cannot be fetched"""
+
+    def __init__(self, *_args, **_kwargs) -> None:
+        raise OSError("Couldn't connect to https://huggingface.co")
 
 
 class FakeRetriever:
@@ -70,3 +78,49 @@ def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
     result = runner.invoke(app, ['search', 'aboleth'])
     assert result.exit_code == 1
     assert f'Error: {error}' in result.output
+
+
+@pytest.mark.parametrize('command', [['search', 'aboleth'], ['ask', 'can I move and attack?']])
+def test_embedder_load_failure_prints_clean_error(monkeypatch, command):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', UnloadableEmbedder)
+
+    result = runner.invoke(app, command)
+
+    assert result.exit_code == 1
+    assert 'Error: Cannot load embedding model' in result.output
+    assert 'huggingface.co' in result.output  # cause kept in the message
+
+
+def test_ask_llm_unavailable_prints_clean_error(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
+
+    def _raise(*args, **kwargs):  # noqa: ARG001
+        raise LLMUnavailableError('No LLM server reachable at http://localhost:11434/v1')
+
+    monkeypatch.setattr(cli, 'answer_question', _raise)
+
+    result = runner.invoke(app, ['ask', 'can I move and attack?'])
+
+    assert result.exit_code == 1
+    assert 'Error: No LLM server reachable' in result.output
+
+
+def test_ask_prints_answer_and_citations(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    monkeypatch.setattr(
+        cli,
+        'answer_question',
+        lambda *args, **kwargs: Answer(  # noqa: ARG005
+            text='Yes, as a full-round action. [1]',
+            citations=[Citation(n=1, title='Alpha', heading_path=['Alpha'], url='https://example.com/alpha')],
+        ),
+    )
+
+    result = runner.invoke(app, ['ask', 'can I move and attack?'])
+
+    assert result.exit_code == 0
+    assert 'Yes, as a full-round action. [1]' in result.output
+    assert 'https://example.com/alpha' in result.output

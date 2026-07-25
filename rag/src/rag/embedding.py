@@ -8,6 +8,10 @@ from rag.config import Settings
 from rag.models import TaskType
 
 
+class EmbedderUnavailableError(RuntimeError):
+    """The embedding model could not be loaded."""
+
+
 class LocalEmbedder:
     """Embeds via local model in-process"""
 
@@ -48,3 +52,14 @@ class LocalEmbedder:
         if vectors.shape[1] != self._dim:
             raise ValueError(f'model produced {vectors.shape[1]}-dim vectors but settings.embedding_dim is {self._dim}')
         return cast(np.ndarray, vectors.astype(np.float32))
+
+
+def load_embedder(settings: Settings) -> LocalEmbedder:
+    try:
+        return LocalEmbedder(settings)
+    except ValueError as e:  # unusable model. Malformed repo id (HFValidationError), or no query prompt
+        raise EmbedderUnavailableError(f'Cannot use embedding model {settings.embedding_model!r}: {e}') from e
+    except OSError as e:  # hub and cache failures are OSErrors
+        raise EmbedderUnavailableError(
+            f'Cannot load embedding model {settings.embedding_model!r}.Cause: {type(e).__name__}: {e}'
+        ) from e

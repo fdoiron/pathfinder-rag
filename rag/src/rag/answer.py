@@ -1,11 +1,15 @@
 import importlib.resources
 import re
 
-from openai import OpenAI
+from openai import APIConnectionError, APIStatusError, APITimeoutError, NotFoundError, OpenAI
 from pydantic import BaseModel
 
 from rag.config import Settings
 from rag.retrieval import Retriever
+
+
+class LLMUnavailableError(RuntimeError):
+    """The LLM endpoint is unreachable or too slow, or the configured model is not served there."""
 
 
 def make_llm_client(settings: Settings) -> OpenAI:
@@ -48,10 +52,26 @@ def answer_question(
         template = settings.ask_prompt_path.read_text(encoding='utf-8')
     else:
         template = importlib.resources.files('rag').joinpath('prompts', 'ask.txt').read_text(encoding='utf-8')
-    response = client.chat.completions.create(
-        model=settings.llm_model,
-        messages=[{'role': 'user', 'content': template.format(excerpts=excerpts, question=question)}],
-    )
+    try:
+        response = client.chat.completions.create(
+            model=settings.llm_model,
+            messages=[{'role': 'user', 'content': template.format(excerpts=excerpts, question=question)}],
+        )
+    except APITimeoutError as e:  # subclass of APIConnectionError has to be caught first
+        raise LLMUnavailableError(
+            f'{settings.llm_model!r} at {settings.llm_base_url} did not answer within {settings.llm_timeout:.0f}s. '
+        ) from e
+    except APIConnectionError as e:
+        raise LLMUnavailableError(f'No LLM server reachable at {settings.llm_base_url}.') from e
+    except NotFoundError as e:
+        raise LLMUnavailableError(
+            f'The server at {settings.llm_base_url} does not serve model {settings.llm_model!r}.'
+        ) from e
+    except APIStatusError as e:
+        raise LLMUnavailableError(
+            f'The server at {settings.llm_base_url} returned HTTP {e.status_code} for model '
+            f'{settings.llm_model!r}: {e.message}'
+        ) from e
     text = response.choices[0].message.content or ''
 
     cited = sorted({int(m) for m in _CITATION_RE.findall(text)})
