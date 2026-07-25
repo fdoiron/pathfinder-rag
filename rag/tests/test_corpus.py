@@ -1,13 +1,18 @@
 import hashlib
 import logging
+from typing import cast
 
 import pytest
 
 from rag import corpus
+from rag.chunking import Tokenizer
 from rag.config import Settings
 from rag.corpus import chunk_corpus
 from rag.models import Article, Chunk, ChunksManifest
 from rag.parsing import PARSER_VERSION
+
+# chunk_article is monkeypatched in these tests so tokenizer is never called
+_no_tokenizer = cast(Tokenizer, None)
 
 
 def _make_article(doc_id: str = 'bestiary__x__y') -> Article:
@@ -42,21 +47,21 @@ def _patch_chunk_article(monkeypatch: pytest.MonkeyPatch, n_tokens: int) -> None
 
 
 def test_chunk_corpus_empty_articles_returns_empty():
-    assert chunk_corpus([], tokenizer=None, max_tokens=450, overlap=50) == []
+    assert chunk_corpus([], tokenizer=_no_tokenizer, max_tokens=450, overlap=50) == []
 
 
 def test_chunk_corpus_raises_when_chunk_exceeds_hard_limit(monkeypatch: pytest.MonkeyPatch):
     # 450 * 1.02 -> hard_limit 459. 500 is past the BPE slack and must fail
     _patch_chunk_article(monkeypatch, n_tokens=500)
     with pytest.raises(ValueError, match='beyond BPE slack'):
-        chunk_corpus([_make_article()], tokenizer=None, max_tokens=450, overlap=50)
+        chunk_corpus([_make_article()], tokenizer=_no_tokenizer, max_tokens=450, overlap=50)
 
 
 def test_chunk_corpus_warns_on_drift_within_slack(monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture):
     # 451 is over max_tokens but under the 459 hard_limit -> warning, no  raise
     _patch_chunk_article(monkeypatch, n_tokens=451)
     with caplog.at_level(logging.WARNING):
-        chunks = chunk_corpus([_make_article()], tokenizer=None, max_tokens=450, overlap=50)
+        chunks = chunk_corpus([_make_article()], tokenizer=_no_tokenizer, max_tokens=450, overlap=50)
     assert len(chunks) == 1
     assert 'within BPE slack' in caplog.text
 
@@ -64,7 +69,9 @@ def test_chunk_corpus_warns_on_drift_within_slack(monkeypatch: pytest.MonkeyPatc
 def test_chunk_corpus_within_budget_does_not_warn(monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture):
     _patch_chunk_article(monkeypatch, n_tokens=440)
     with caplog.at_level(logging.WARNING):
-        chunks = chunk_corpus([_make_article('a'), _make_article('b')], tokenizer=None, max_tokens=450, overlap=50)
+        chunks = chunk_corpus(
+            [_make_article('a'), _make_article('b')], tokenizer=_no_tokenizer, max_tokens=450, overlap=50
+        )
     assert len(chunks) == 2
     assert caplog.text == ''
 

@@ -6,15 +6,13 @@ import pandas as pd
 import typer
 
 from rag.answer import answer_question, make_llm_client
-from rag.chunking import load_tokenizer
 from rag.config import get_settings
-from rag.corpus import chunk_corpus, embed_corpus
-from rag.embedding import LocalEmbedder
 from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, load_retriever
 
+# torch/transformers imported inside each command body
 app = typer.Typer()
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('httpx').setLevel(logging.WARNING)
@@ -44,6 +42,10 @@ def build_corpus(
     """
     Build a corpus from a directory of scraped HTML files and save it as a parquet file.
     """
+    from rag.chunking import load_tokenizer
+    from rag.corpus import chunk_corpus, embed_corpus
+    from rag.embedding import LocalEmbedder
+
     settings = get_settings()
     logging.info(f'Parsing HTML files from {html_dir}')
     articles = parse_corpus_dir(html_dir, min_body_length=settings.min_body_length)
@@ -104,6 +106,8 @@ def search(
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
 ) -> None:
     """Embeds search query, returns top k results"""
+    from rag.embedding import LocalEmbedder
+
     settings = get_settings()
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = LocalEmbedder(settings)
@@ -160,6 +164,7 @@ def evaluate(
     """
     Evaluate the retrieval performance of the corpus.
     """
+    from rag.embedding import LocalEmbedder
 
     try:
         queries = load_queries(queries_file)
@@ -207,18 +212,38 @@ def evaluate(
 
 
 @app.command()
-def ask(question: Annotated[str, typer.Argument(help='a rules question')]) -> None:
+def ask(
+    question: Annotated[str, typer.Argument(help='a rules question')],
+    k: Annotated[
+        int | None,
+        typer.Option(
+            help='Number of excerpts to retrieve for the prompt (defaults to settings.ask_k)',
+        ),
+    ] = None,
+    embedding_file_path: Annotated[
+        Path | None,
+        typer.Option(
+            help='Path to the embedding parquet file',
+            exists=True,
+            readable=True,
+        ),
+    ] = None,
+    category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
+    from rag.embedding import LocalEmbedder
+
     settings = get_settings()
+    embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = LocalEmbedder(settings)
 
     try:
-        retriever = load_retriever(settings.chunks_path, embedder, settings)
+        retriever = load_retriever(embedding_file_path, embedder, settings)
     except (FileNotFoundError, ManifestMismatchError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    result = answer_question(question, retriever, make_llm_client(settings), settings)
+    result = answer_question(question, retriever, make_llm_client(settings), settings, k=k, category=category)
     typer.echo(result.text)
     typer.echo()
     for c in result.citations:

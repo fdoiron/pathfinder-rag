@@ -1,17 +1,14 @@
 import logging
 
 import pandas as pd
-from transformers import PreTrainedTokenizerBase
 
-from rag.chunking import _DRIFT_MARGIN, chunk_article
+from rag.chunking import _DRIFT_MARGIN, Tokenizer, chunk_article
 from rag.models import Article, Chunk, Embedder
 
 logger = logging.getLogger(__name__)
 
 
-def chunk_corpus(
-    articles: list[Article], tokenizer: PreTrainedTokenizerBase, max_tokens: int, overlap: int
-) -> list[Chunk]:
+def chunk_corpus(articles: list[Article], tokenizer: Tokenizer, max_tokens: int, overlap: int) -> list[Chunk]:
 
     chunks: list[Chunk] = []
     for article in articles:

@@ -116,7 +116,7 @@ def test_k_greater_than_corpus_size_no_crash():
 
 def test_non_finite_embedding_raises_at_construction():
     df = _make_chunks_df()
-    df.at[1, 'embedding'] = np.array([np.nan, 1.0], dtype=np.float32)  # noqa: PD008
+    df.at[1, 'embedding'] = np.array([np.nan, 1.0], dtype=np.float32)  # type: ignore[assignment]  # noqa: PD008
     with pytest.raises(ValueError, match='non-finite'):
         Retriever(df, FakeEmbedder([1.0, 0.0]), _make_manifest())
 

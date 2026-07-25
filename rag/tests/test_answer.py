@@ -1,13 +1,15 @@
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
+from typing import cast
 
 import numpy as np
 import pandas as pd
+from openai import OpenAI
 
 from rag.answer import answer_question
 from rag.config import Settings
-from rag.models import ChunksManifest
+from rag.models import ChunkHit, ChunksManifest
 from rag.retrieval import Retriever
 
 
@@ -84,7 +86,7 @@ def _make_retriever() -> Retriever:
 class EmptyRetriever:
     """Stands in for a Retriever that finds nothing for the query."""
 
-    def search(self, query: str, k: int) -> list:  # noqa: ARG002
+    def search(self, query: str, k: int, category: str | None = None) -> list[ChunkHit]:  # noqa: ARG002
         return []
 
 
@@ -107,7 +109,7 @@ def test_prompt_contains_excerpts_and_question(tmp_path):
     settings = _make_settings(tmp_path)
     client = FakeChatClient('Use Power Attack as a full-round option. [1][3]')
 
-    answer_question('can I move and attack?', retriever, client, settings)
+    answer_question('can I move and attack?', retriever, cast(OpenAI, client), settings)
 
     prompt = client.prompts[0]
     assert 'Text alpha' in prompt
@@ -122,7 +124,7 @@ def test_citations_resolve_to_retrieved_hits(tmp_path):
     settings = _make_settings(tmp_path)
     client = FakeChatClient('Use Power Attack as a full-round option. [1][3]')
 
-    result = answer_question('can I move and attack?', retriever, client, settings)
+    result = answer_question('can I move and attack?', retriever, cast(OpenAI, client), settings)
 
     assert [c.n for c in result.citations] == [1, 3]
     assert result.citations[0].url == 'https://example.com/alpha'
@@ -134,7 +136,7 @@ def test_invented_citation_is_dropped_not_crashed(tmp_path):
     settings = _make_settings(tmp_path)
     client = FakeChatClient('This cites a nonexistent excerpt. [9]')
 
-    result = answer_question('anything', retriever, client, settings)
+    result = answer_question('anything', retriever, cast(OpenAI, client), settings)
 
     assert result.citations == []
     assert '[9]' in result.text
@@ -145,7 +147,7 @@ def test_no_coverage_reply_passes_through_with_no_citations(tmp_path):
     settings = _make_settings(tmp_path)
     client = FakeChatClient("The retrieved excerpts don't cover this.")
 
-    result = answer_question('anything', retriever, client, settings)
+    result = answer_question('anything', retriever, cast(OpenAI, client), settings)
 
     assert result.text == "The retrieved excerpts don't cover this."
     assert result.citations == []
@@ -155,7 +157,7 @@ def test_no_hits_returns_no_coverage_reply_without_calling_llm(tmp_path):
     settings = _make_settings(tmp_path)
     client = FakeChatClient('should never be called')
 
-    result = answer_question('anything', EmptyRetriever(), client, settings)
+    result = answer_question('anything', cast(Retriever, EmptyRetriever()), cast(OpenAI, client), settings)
 
     assert result.text == "The retrieved excerpts don't cover this."
     assert result.citations == []

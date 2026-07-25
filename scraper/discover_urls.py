@@ -15,6 +15,7 @@ counts in the README were captured from one specific run.
 import os
 import re
 import time
+from typing import cast
 from urllib.parse import urlparse
 
 import pandas as pd
@@ -216,14 +217,15 @@ def get(session: requests_cache.CachedSession, url: str) -> requests.Response:
 def get_locs(session: requests_cache.CachedSession, url: str) -> list[str]:
     resp = get(session, url)
     root = etree.fromstring(resp.content)
-    return root.xpath('//*[local-name()="loc"]/text()')
+    # xpath's return type is dynamic. This expression always selects text so always list[str]
+    return cast(list[str], root.xpath('//*[local-name()="loc"]/text()'))
 
 
 def fetch_sitemap_urls(session: requests_cache.CachedSession) -> pd.DataFrame:
     index = get_locs(session, 'https://www.d20pfsrd.com/wp-sitemap.xml')
     page_sitemaps = [u for u in index if 'posts-page' in u]
 
-    rows = []
+    rows: list[dict[str, int | str]] = []
     for url in page_sitemaps:
         match = re.search(r'page-(\d+)\.xml', url)
         if match is None:

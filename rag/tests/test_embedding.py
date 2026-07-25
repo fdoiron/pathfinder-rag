@@ -1,3 +1,5 @@
+from typing import Any
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -55,7 +57,7 @@ def test_embed_corpus_not_mutate_input():
 QUERY_PROMPT = 'Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:'
 
 
-def _fake_st(*, prompts: dict[str, str], out_dim: int, calls: dict | None = None):
+def _fake_st(*, prompts: dict[str, str], out_dim: int, calls: dict[str, Any] | None = None):
     class FakeSentenceTransformer:
         def __init__(self, model_name_or_path, model_kwargs=None):
             self.prompts = dict(prompts)
@@ -88,7 +90,7 @@ def test_query_prompt_exposes_model_prompt(monkeypatch):
 
 
 def test_init_passes_model_and_dtype_to_sentence_transformer(monkeypatch):
-    calls: dict = {}
+    calls: dict[str, Any] = {}
     monkeypatch.setattr(
         'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
     )
@@ -98,7 +100,7 @@ def test_init_passes_model_and_dtype_to_sentence_transformer(monkeypatch):
 
 
 def test_embed_query_uses_query_prompt_name(monkeypatch):
-    calls: dict = {}
+    calls: dict[str, Any] = {}
     monkeypatch.setattr(
         'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
     )
@@ -108,7 +110,7 @@ def test_embed_query_uses_query_prompt_name(monkeypatch):
 
 
 def test_embed_document_uses_no_prompt_name(monkeypatch):
-    calls: dict = {}
+    calls: dict[str, Any] = {}
     monkeypatch.setattr(
         'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
     )
@@ -118,7 +120,7 @@ def test_embed_document_uses_no_prompt_name(monkeypatch):
 
 
 def test_embed_normalizes_and_batches_from_settings(monkeypatch):
-    calls: dict = {}
+    calls: dict[str, Any] = {}
     monkeypatch.setattr(
         'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
     )
@@ -137,7 +139,7 @@ def test_embed_returns_float32(monkeypatch):
 
 
 def test_embed_empty_returns_empty_no_encode(monkeypatch):
-    calls: dict = {}
+    calls: dict[str, Any] = {}
     monkeypatch.setattr(
         'rag.embedding.SentenceTransformer', _fake_st(prompts={'query': QUERY_PROMPT}, out_dim=4, calls=calls)
     )
