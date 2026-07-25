@@ -47,13 +47,12 @@ def build_corpus(
             dir_okay=True,
         ),
     ],
-    output_file: Annotated[
-        Path,
-        typer.Option(help='Path to the output parquet file', writable=True),
-    ] = Path('data/corpus.parquet'),
 ) -> None:
     """
     Build a corpus from a directory of scraped HTML files and save it as a parquet file.
+
+    Writes the documents parquet, the chunks parquet and its manifest to the paths configured in
+    Settings (RAG_CORPUS_PATH / RAG_CHUNKS_PATH)
     """
     from rag.chunking import load_tokenizer
     from rag.corpus import chunk_corpus, embed_corpus
@@ -71,13 +70,14 @@ def build_corpus(
     if not chunks:
         logging.warning('No chunks produced. Writing empty chunks file')
 
+    corpus_file = settings.corpus_path
     chunks_file = settings.chunks_path
     manifest_path = chunks_file.with_suffix('.manifest.json')
 
     docs_df = pd.DataFrame([a.model_dump(mode='json') for a in articles])
-    output_file.parent.mkdir(parents=True, exist_ok=True)
-    docs_df.to_parquet(output_file, index=False)
-    typer.echo(f'wrote {len(articles)} articles to {output_file}')
+    corpus_file.parent.mkdir(parents=True, exist_ok=True)
+    docs_df.to_parquet(corpus_file, index=False)
+    typer.echo(f'wrote {len(articles)} articles to {corpus_file}')
 
     chunks_df = pd.DataFrame([c.model_dump() for c in chunks])
 
@@ -92,7 +92,7 @@ def build_corpus(
     typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
 
     manifest = ChunksManifest.build(
-        settings, output_file, len(articles), len(chunks), embedder.torch_dtype, embedder.query_prompt
+        settings, corpus_file, len(articles), len(chunks), embedder.torch_dtype, embedder.query_prompt
     )
     manifest_path.write_text(manifest.model_dump_json(indent=2), encoding='utf-8')
     typer.echo(f'wrote manifest to {manifest_path}')
