@@ -3,11 +3,13 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import cast
 
+import httpx
 import numpy as np
 import pandas as pd
-from openai import OpenAI
+import pytest
+from openai import APIConnectionError, APIStatusError, APITimeoutError, NotFoundError, OpenAI
 
-from rag.answer import answer_question
+from rag.answer import LLMUnavailableError, answer_question
 from rag.config import Settings
 from rag.models import ChunkHit, ChunksManifest
 from rag.retrieval import Retriever
@@ -34,6 +36,25 @@ class FakeChatClient:
     def _create(self, model: str, messages: list[dict[str, str]]) -> SimpleNamespace:  # noqa: ARG002
         self.prompts.append(messages[-1]['content'])
         return SimpleNamespace(choices=[SimpleNamespace(message=SimpleNamespace(content=self._reply))])
+
+
+class FailingChatClient:
+    """stands in for client with LLM server down or missing the model"""
+
+    def __init__(self, error: Exception):
+        self._error = error
+        self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
+
+    def _create(self, model: str, messages: list[dict[str, str]]) -> SimpleNamespace:  # noqa: ARG002
+        raise self._error
+
+
+def _request() -> httpx.Request:
+    return httpx.Request('POST', 'http://localhost:11434/v1/chat/completions')
+
+
+def _status_error(error_cls: type[APIStatusError], status_code: int) -> APIStatusError:
+    return error_cls('boom', response=httpx.Response(status_code, request=_request()), body=None)
 
 
 def _make_manifest() -> ChunksManifest:
@@ -162,3 +183,23 @@ def test_no_hits_returns_no_coverage_reply_without_calling_llm(tmp_path):
     assert result.text == "The retrieved excerpts don't cover this."
     assert result.citations == []
     assert client.prompts == []
+
+
+@pytest.mark.parametrize(
+    ('error', 'expected'),
+    [
+        (APIConnectionError(request=_request()), 'No LLM server reachable'),  # server dead
+        (APITimeoutError(request=_request()), 'did not answer within'),  # slow model load
+        (_status_error(NotFoundError, 404), 'does not serve model'),  # model not pulled
+        (_status_error(APIStatusError, 500), 'HTTP 500'),  # anything else from server
+    ],
+)
+def test_llm_failure_becomes_llm_unavailable_error(tmp_path, error, expected):
+    retriever = _make_retriever()
+    settings = _make_settings(tmp_path)
+    client = FailingChatClient(error)
+
+    with pytest.raises(LLMUnavailableError, match=expected) as excinfo:
+        answer_question('anything', retriever, cast(OpenAI, client), settings)
+
+    assert excinfo.value.__cause__ is error
