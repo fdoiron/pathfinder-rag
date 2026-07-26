@@ -7,11 +7,12 @@ from rag.chunking import (
     _HEADING_RE,
     Section,
     _pack_lines,
-    _pack_sentences,
     _pack_table_rows,
+    _pack_units,
     _split_body,
     _split_by_markdown_heading,
     _split_sentences,
+    _split_units,
     chunk_article,
 )
 from rag.models import Article
@@ -271,39 +272,84 @@ def test_pack_lines_empty_input_returns_empty():
 
 
 # ---------------------------------------------------------------
-# _pack_sentences
+# _split_units
 # ---------------------------------------------------------------
 
 
-def test_pack_sentences_carries_overlap_into_next_window():
-    sentences = ['Aa.', 'Bb.', 'Cc.', 'Dd.']
-    assert _pack_sentences(sentences, _tok, budget=2, overlap=1) == ['Aa. Bb.', 'Bb. Cc.', 'Cc. Dd.']
+def _pack(text: str, budget: int, overlap: int = 0) -> list[str]:
+    return _pack_units(_split_units(text, _tok, budget), budget, overlap)
 
 
-def test_pack_sentences_no_overlap_does_not_repeat():
-    sentences = ['Aa.', 'Bb.', 'Cc.', 'Dd.']
-    assert _pack_sentences(sentences, _tok, budget=2, overlap=0) == ['Aa. Bb.', 'Cc. Dd.']
+def test_split_units_keeps_a_fitting_line_whole():
+    units = _split_units('Aa. Bb. Cc.', _tok, budget=10)
+    assert [u.text for u in units] == ['Aa. Bb. Cc.']
 
 
-def test_pack_sentences_oversized_single_line_sentence_hard_splits():
-    assert _pack_sentences(['one two three four'], _tok, budget=2, overlap=0) == ['one two', 'three four']
+def test_split_units_falls_back_to_sentences_when_the_line_does_not_fit():
+    units = _split_units('Aa. Bb. Cc.', _tok, budget=2)
+    assert [(u.text, u.sep) for u in units] == [('Aa.', ''), ('Bb.', ' '), ('Cc.', ' ')]
 
 
-def test_pack_sentences_overlap_carry_respects_budget():
+def test_split_units_records_the_separator_that_preceded_each_unit():
+    units = _split_units('Para one.\n- bullet\n\nPara two.', _tok, budget=10)
+    assert [(u.text, u.sep) for u in units] == [
+        ('Para one.', ''),
+        ('- bullet', '\n'),
+        ('Para two.', '\n\n'),
+    ]
+
+
+def test_split_units_keeps_the_indent_that_marks_nested_list_depth():
+    units = _split_units('- outer\n  - inner', _tok, budget=10)
+    assert [u.text for u in units] == ['- outer', '  - inner']
+
+
+def test_split_units_hard_splits_a_sentence_with_no_boundary_left():
+    units = _split_units('one two three four', _tok, budget=2)
+    assert [u.text for u in units] == ['one two', 'three four']
+
+
+# ---------------------------------------------------------------
+# _pack_units
+# ---------------------------------------------------------------
+
+
+def test_pack_units_carries_overlap_into_next_window():
+    assert _pack('Aa. Bb. Cc. Dd.', budget=2, overlap=1) == ['Aa. Bb.', 'Bb. Cc.', 'Cc. Dd.']
+
+
+def test_pack_units_no_overlap_does_not_repeat():
+    assert _pack('Aa. Bb. Cc. Dd.', budget=2, overlap=0) == ['Aa. Bb.', 'Cc. Dd.']
+
+
+def test_pack_units_overlap_carry_respects_budget():
     # 9-token sentence leaves only 1 token of room: the 3-token carry candidate must be dropped
-    sentences = ['a1 a2 a3.', 'b1 b2 b3.', 'c1 c2 c3 c4 c5 c6 c7 c8 c9.']
-    windows = _pack_sentences(sentences, _tok, budget=10, overlap=4)
-    assert windows == ['a1 a2 a3. b1 b2 b3.', 'c1 c2 c3 c4 c5 c6 c7 c8 c9.']
+    text = 'a1 a2 a3. b1 b2 b3. c1 c2 c3 c4 c5 c6 c7 c8 c9.'
+    assert _pack(text, budget=10, overlap=4) == ['a1 a2 a3. b1 b2 b3.', 'c1 c2 c3 c4 c5 c6 c7 c8 c9.']
 
 
-def test_pack_sentences_oversized_multiline_sentence_falls_back_to_lines():
-    sentence = 'line aa\nline bb'
-    assert _pack_sentences([sentence], _tok, budget=2, overlap=0) == ['line aa', 'line bb']
+def test_pack_units_flushes_current_before_an_oversized_unit():
+    assert _pack('Short. one two three four', budget=3, overlap=0) == ['Short.', 'one two three', 'four']
 
 
-def test_pack_sentences_flushes_current_before_oversized_sentence():
-    sentences = ['Short.', 'one two three four']
-    assert _pack_sentences(sentences, _tok, budget=3, overlap=0) == ['Short.', 'one two three', 'four']
+def test_pack_units_keeps_list_items_on_their_own_lines():
+    """Bugfix: bullets used to be rejoined with spaces, and a marker could close one window while its rule text
+    opened the next
+    """
+    text = '- Alertness. You gain a bonus.\n- Dodge. You gain another bonus.\n- Toughness. More hp.'
+    assert _pack(text, budget=12, overlap=0) == [
+        '- Alertness. You gain a bonus.\n- Dodge. You gain another bonus.',
+        '- Toughness. More hp.',
+    ]
+
+
+def test_pack_units_keeps_the_blank_line_between_paragraphs():
+    assert _pack('Block one.\n\nBlock two.', budget=10, overlap=0) == ['Block one.\n\nBlock two.']
+
+
+def test_pack_units_breaks_between_lines_before_breaking_inside_one():
+    # 'line aa' and 'line bb' each fit the budget -> neither may be cut mid line to fill a window
+    assert _pack('line aa\nline bb', budget=2, overlap=0) == ['line aa', 'line bb']
 
 
 # ---------------------------------------------------------------
@@ -358,7 +404,7 @@ def test_split_body_routes_prose_and_table_and_preserves_order():
 def test_split_body_processes_every_block_not_just_the_first():
     text = 'Block one.\n\nBlock two.\n\nBlock three.'
     bodies = _split_body(text, _tok, budget=100, overlap=0)
-    assert bodies == ['Block one. Block two. Block three.']
+    assert bodies == ['Block one.\n\nBlock two.\n\nBlock three.']
 
 
 def test_split_body_skips_blank_blocks():
@@ -466,3 +512,39 @@ def test_chunk_golden_chunks_reproduce_section_text_minus_overlaps(slug):
 
     for word in expected:
         assert word in emitted, f'{slug}: lost text at {word!r}'
+
+
+# The word sequence check above ignores spacesd and newline completely so it cannot see structure being destroyed
+# ex these are identical:
+#  -Alertness.\n- Dodge.     ->  ['-', 'Alertness.', '-', 'Dodge.']
+# - Alertness. - Dodge.      ->  ['-', 'Alertness.', '-', 'Dodge.']
+# hid bug as tests checked for words not whitespace
+# test below addresses on all 15 goldens
+
+
+@pytest.mark.parametrize('slug', GOLDEN_SLUGS)
+def test_chunk_golden_source_lines_survive_as_whole_lines(slug):
+    """A source line that fits the budget must come back out as one whole line of some chunk.
+    Bullet, numbered item or paragraph, no notion of a list marker is needed (see _split_units)
+
+    Half max_tokens is the "fits" cutoff: under the budget left after any heading prefix so a miss means the line was
+    reflowed into its neighbours not that it was too long to keep
+
+    Table rows are excluded, _pack_table_rows repeats the header on every window so with this test's small max_tokens
+    a wide table would leave too little room per row to keep one whole
+    """
+    _, sections = _split_golden(slug)
+    chunks = _chunk_golden(slug)
+
+    emitted = {line for chunk in chunks for line in chunk.text.splitlines()}
+    checked = 0
+
+    for section in sections:
+        for line in section.text.splitlines():
+            line = line.rstrip()
+            if not line or line.lstrip().startswith('|') or len(line.split()) > _GOLDEN_MAX_TOKENS // 2:
+                continue
+            checked += 1
+            assert line in emitted, f'{slug}: line was reflowed instead of kept whole: {line!r}'
+
+    assert checked

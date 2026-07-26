@@ -22,22 +22,18 @@ URL: https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-figh
 
 ```
 $ uv run rag ask "can I move and attack in the same round?"
-Yes, you can move and attack in the same round using specific full-round actions. For example, the
-Spring Attack feat allows you to move up to your speed, make a single melee attack, and move again
-as part of a full-round action, without provoking attacks of opportunity [2]. Similarly, Shot on the
-Run allows moving, firing a ranged attack, and moving again as a full-round action [4]. Normally,
-movement and attacks are separate actions, but these abilities explicitly combine them.
-
-Additionally, during a full-attack action, you can choose to take a move action instead of completing
-your remaining attacks, though this typically applies to melee combatants after the first attack [1].
-However, standard movement and attack actions (not combined) require separate actions unless modified
-by feats or abilities.
+Yes, you can move and attack in the same round under certain conditions. For example, using the
+**Spring Attack** feat allows you to move up to your speed, make a single melee attack, and move
+again as part of a full-round action [3]. Similarly, **Shot on the Run** allows moving, firing a
+ranged attack, and moving again as a full-round action [5]. Additionally, during a full-attack
+action, you may choose to take a move action instead of making remaining attacks after your first
+attack [1].
 
 [1] Combat — Combat > Actions In Combat > Full-Round Actions > Full Attack > Deciding between an Attack or a Full Attack
     https://www.d20pfsrd.com/gamemastering/combat
-[2] Spring Attack (Combat) — Spring Attack (Combat)
+[3] Spring Attack (Combat) — Spring Attack (Combat)
     https://www.d20pfsrd.com/feats/combat-feats/spring-attack-combat
-[4] Shot on the Run (Combat) — Shot on the Run (Combat)
+[5] Shot on the Run (Combat) — Shot on the Run (Combat)
     https://www.d20pfsrd.com/feats/combat-feats/shot-on-the-run-combat
 ```
 
@@ -47,7 +43,7 @@ Both runs above against the real corpus, `qwen3:14b` served by a local `ollama s
 
 Scraping, parsing, chunking, embedding, search and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk and embed in one pass and writes two parquet artifacts plus a manifest; `rag search` and `rag ask` load them and answer from the terminal. Containers, an API and hybrid retrieval are not built yet, they're staged in [Future expansions](#future-expansions).
 
-24,080 HTML files in, 23,890 cleaned articles out, chunked into 129,200 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
+24,080 HTML files in, 23,890 cleaned articles out, chunked into 129,286 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
 Dropped pages:
 - ~180 pages too small after stripping to be worth indexing
@@ -62,8 +58,8 @@ INFO:root:Loading tokenizer Qwen/Qwen3-Embedding-0.6B
 INFO:root:Chunking articles
 wrote 23890 articles to data/corpus.parquet
 INFO:root:Loading embedder Qwen/Qwen3-Embedding-0.6B
-INFO:root:Embedding 129200 chunks
-wrote 129200 chunks to data/chunks.parquet
+INFO:root:Embedding 129286 chunks
+wrote 129286 chunks to data/chunks.parquet
 wrote manifest to data/chunks.manifest.json
 ```
 
@@ -118,7 +114,7 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,080 files)
               rag build-corpus  (parse → chunk → embed)
                               │
                               ▼
-        data/: corpus.parquet (23,890 articles), chunks.parquet (129,200 chunks + embeddings), manifest
+        data/: corpus.parquet (23,890 articles), chunks.parquet (129,286 chunks + embeddings), manifest
                               │
               rag search "query" in process embedder + numpy cosine over chunks
                               │
@@ -153,16 +149,18 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,080 files)
 
 | | Recall@1 | Recall@3 | Recall@5 | MRR |
 |---|---|---|---|---|
-| **Overall** (n=34) | 0.41 | 0.74 | 0.76 | 0.57 |
-| `exact_name` (n=11) | 0.55 | 0.91 | 0.91 | 0.70 |
+| **Overall** (n=34) | 0.38 | 0.74 | 0.82 | 0.56 |
+| `exact_name` (n=11) | 0.45 | 0.91 | 1.00 | 0.67 |
 | `paraphrase` (n=12) | 0.25 | 0.42 | 0.50 | 0.34 |
-| `rules_reasoning` (n=11) | 0.45 | 0.91 | 0.91 | 0.68 |
+| `rules_reasoning` (n=11) | 0.45 | 0.91 | 1.00 | 0.70 |
 
 **Note**: With n=34 queries one query is worth ~3 points overall and ~8-9 points per type. A single query flipping moves a cell more than most differences between cells in the table. The table ranks interventions against each other on the same queries. It is not a benchmark and the absolute numbers should not be read as precise. Growing the truth set to 60-100 queries in `E2` below will partially address this.
 
-`exact_name` and `rules_reasoning` perform decently well as a feat or combat rule query tends to be embedded close to the page that answers  the query. `paraphrase` is very weak as it's worded around the concept rather than the name. Example: "spell that throws an exploding ball of fire" for fireball. This is a common weakness of vector search; BM25 is expected to help (see `E1`). Additionally, 51.6% of chunks are under 100 tokens and 20.7% under 50 tokens hence the planned small-to-big retrieval (see `E1.5`).
+`exact_name` and `rules_reasoning` perform decently well as a feat or combat rule query tends to be embedded close to the page that answers  the query. `paraphrase` is very weak as it's worded around the concept rather than the name. Example: "spell that throws an exploding ball of fire" for fireball. This is a common weakness of vector search; BM25 is expected to help (see `E1`). Additionally, 51.4% of chunks are under 100 tokens and 20.6% under 50 tokens hence the planned small-to-big retrieval (see `E1.5`).
 
-Per category breakdowns and the full per query results are in the run file itself: [`rag/eval/runs/2026-07-24T23-25-18_eval.json`](rag/eval/runs/2026-07-24T23-25-18_eval.json), the run this table is generated from. `rag evaluate` writes a new timestamped one under `eval/runs/` every time it's run; that directory is otherwise gitignored so re-runs on other machines/dtypes don't clutter history.
+**An example: what the list chunking fix changed.** The packer used to rejoin split sections with spaces, which glued bullets into prose and could leave a list marker at the end of one chunk with its text at the start of the next. It was invisible in every size statistic and only showed up in what got embedded and what `rag ask` pastes into the prompt (see the chunking bullet in [Design decisions](#design-decisions)). Fixing it required a full re-chunk and re-embed, so both runs are tracked and the diff is reproducible: [before](rag/eval/runs/2026-07-24T23-25-18_eval.json) and [after](rag/eval/runs/2026-07-26T01-08-34_eval.json). Overall Recall@5 went 0.76 → 0.82: the two queries that previously missed entirely now hit, both about grappling, and both resolving to exactly the page shape the bug damaged most, i.e. the large list heavy rules pages (`gamemastering/combat` at rank 4, `magic` at rank 5). Recall@1 went the other way, 0.41 -> 0.38, and MRR 0.57 -> 0.56. This is one query (vital strike) whose page scored 0.678 against 0.677 for *Improved Devastating Strike*. Re-chunking moved it to 0.676 and the near tie flipped. This is an  example of the noise floor from the note above, not a signal of regression.
+
+Per category breakdowns and the full per query results are in the run file itself: [`rag/eval/runs/2026-07-26T01-08-34_eval.json`](rag/eval/runs/2026-07-26T01-08-34_eval.json), the run this table is generated from. `rag evaluate` writes a new timestamped one under `eval/runs/` every time it's run; that directory is otherwise gitignored so re-runs on other machines/dtypes don't clutter history.
 
 ## Roadmap
 
@@ -199,7 +197,7 @@ Future expansions:
 - **`doc_id` = filename slug**, which is stable. The `url` is reconstructed from the slug (`__` → `/`) rather than stored twice to avoid drift. See `_slug_to_url`.
 - **Drop filters log why a page was dropped.** `parse_corpus_dir` splits drops into two distinguishable reasons (parse error / too short) logged with slug and reason. This means that if the final article count looks wrong the cause can be established with a `grep` instead of re-running with print statements.
 - **Golden-file testing.** The 15 fixtures are hand picked pages and have a committed expected output file (`rag/tests/fixtures/goldens/*.golden.md`). When the parser changes, the golden file diffs the behavior change line by line. A silent regression shows up as an unintended diff instead of passing quietly.
-- **Heading aware chunking, packed to a token budget.** Sections split on the markdown headings from parsing, then get packed into chunks around `max_tokens ≈ 450` with `overlap ≈ 50` tokens so a boundary straddling sentence is whole somewhere. Tokens are counted with the embedder's own tokenizer, not chars/4, stat blocks are abbreviation dense and blow a char based estimate. Each chunk's text is prefixed with title and heading path, without that prefix all 8,370 bestiary DEFENSE sections look nearly identical to the embedder.
+- **Heading aware chunking, packed to a token budget.** Sections split on the markdown headings from parsing, then get packed into chunks around `max_tokens ≈ 450`. Packing works on whole units, ie a line -> that line's sentences -> raw token windows, so a break can only land *between* units and a list marker can't be separated from its body. `overlap ≈ 50` tokens is therefore conditional: the trailing unit carries into the next chunk only when a whole one fits the allowance, so a section built from large paragraphs gets none. Overlap softens a mid-thought cut, and cuts now land on boundaries. Tokens are counted with the embedder's own tokenizer, not chars/4, stat blocks are abbreviation dense and blow a char based estimate. Each chunk's text is prefixed with title and heading path, without that prefix all 8,370 bestiary DEFENSE sections look nearly identical to the embedder.
 - **`max_tokens` is a hyperparameter.** It has to optimize two conflicting goals : retrieval wants small tight chunks (sharp vector) while generation wants complete rules (a fragment invites the LLM to fill gaps confidently, which is where citation backed hallucinations come from). 450 is a starting value to be measured against later (E2). `max_tokens`/`overlap` are in `Settings`, not as constants in `chunking.py` and the manifest records what `max_tokens`/`overlap` a specific `chunks.parquet` was built with.
 - **In process local embedder (`sentence-transformers`, Qwen3-Embedding-0.6B) instead of a TEI server.** Corpus embedding is a batch job either way. `Embedder` is a Protocol (`rag/src/rag/models.py`), the retriever depends on "anything with an `.embed()` method", not on which implementation, so tests run without a GPU (`FakeEmbedder`) and the Vertex→local swap impacted one file. TEI will be added once a long running API needs query embeddings in E3.
 - **`task_type` is the shared embedding vocabulary.** Qwen3 expects an instruction prefix on queries and nothing on documents. `LocalEmbedder` maps `task_type` to that convention in one line.
