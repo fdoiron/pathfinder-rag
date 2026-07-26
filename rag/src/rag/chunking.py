@@ -129,48 +129,104 @@ def _pack_lines(lines: list[str], tokenizer: Tokenizer, budget: int) -> list[str
     return windows
 
 
-def _pack_sentences(sentences: list[str], tokenizer: Tokenizer, budget: int, overlap: int) -> list[str]:
+@dataclass(frozen=True)
+class _Unit:
     """
-    Greedy fill windows up to the budget of tokens. New window restart with (overlap) number of tokens from the previous
+    Packable piece of a section body with the separator that preceded it in the source as a tag
+    Packing rejoins units with their separator so a paragraph break stays a paragraph break and a
+    list item stays on its own line instead of being glued onto its neighbour with a space
+    """
+
+    text: str
+    sep: str  # '' for the first unit, '\n\n' between blocks, '\n' between lines, ' ' inside a line
+    n_tokens: int  # text plus its separator, the join is charged up front (see _pack_lines)
+
+
+def _split_units(text: str, tokenizer: Tokenizer, budget: int) -> list[_Unit]:
+    """
+    Cuts a body into the coarsest pieces that fits the budget:
+    whole line (paragraph, list item, table caption...)
+    else that line's sentences
+    else raw token windows.
+
+    Unit split is bug fix for input:
+    - Alertness. You gain a bonus.
+    - Dodge. You gain another bonus.
+
+    chunked as
+    a) - Alertness. You gain a bonus. - Dodge.
+    b) You gain another bonus.
+
+    Now correct
+    """
+    units: list[_Unit] = []
+
+    def add(piece: str, sep: str) -> None:
+        sep = '' if not units else sep  # nothing precedes the first unit
+        units.append(_Unit(piece, sep, _calc_tokens(f'{sep}{piece}', tokenizer)))
+
+    for block in re.split(r'\n{2,}', text):
+        for line_index, line in enumerate(block.split('\n')):
+            line = line.rstrip()  # keep leading indent, carries nested list depth
+            if not line.strip():
+                continue
+
+            line_sep = '\n' if line_index else '\n\n'
+            if _calc_tokens(f'{line_sep}{line}', tokenizer) <= budget:
+                add(line, line_sep)
+                continue
+
+            for sentence_index, sentence in enumerate(_split_sentences(line)):
+                sentence_sep = ' ' if sentence_index else line_sep
+                if _calc_tokens(f'{sentence_sep}{sentence}', tokenizer) <= budget:
+                    add(sentence, sentence_sep)
+                    continue
+
+                # No sentence boundary left to break on -> cut the token stream mid sentence
+                for piece_index, piece in enumerate(_hard_split(sentence, tokenizer, budget)):
+                    add(piece, ' ' if piece_index else sentence_sep)
+
+    return units
+
+
+def _join_units(units: list[_Unit]) -> str:
+    """The first unit's separator is dropped: it belongs between this window and what came before it"""
+    return units[0].text + ''.join(f'{unit.sep}{unit.text}' for unit in units[1:])
+
+
+def _pack_units(units: list[_Unit], budget: int, overlap: int) -> list[str]:
+    """
+    Greedy fill windows up to the budget of tokens, breaking only between units.
+    New windows restart with (overlap) number of tokens from the previous one.
+
+    A unit larger than the allowance carries nothing.
     """
     windows: list[str] = []
-    current: list[tuple[str, int]] = []  # (sentence, n_tokens), the carry loop never retokenizes
+    current: list[_Unit] = []
     current_tokens = 0
 
-    for sentence in sentences:
-        sentence_tokens = _calc_tokens(f' {sentence}', tokenizer)  # charge the joining space (see _pack_lines)
-
-        # If a sentence is bigger than budget drop to packing the sentence's lines instead
-        if sentence_tokens > budget:
-            if current:
-                windows.append(' '.join(s for s, _ in current))
-                current = []
-                current_tokens = 0
-            lines = [line for line in sentence.splitlines() if line.strip()]
-            windows.extend(_pack_lines(lines, tokenizer, budget))
-            continue
-
-        # This sentence would cause a budget overflow.
+    for unit in units:
+        # This unit would cause a budget overflow.
         # Close the window, start a new one and carry (overlap) tokens into the new window
-        if current_tokens + sentence_tokens > budget:
-            windows.append(' '.join(s for s, _ in current))
+        if current and current_tokens + unit.n_tokens > budget:
+            windows.append(_join_units(current))
 
-            carry_forward: list[tuple[str, int]] = []
+            carry_forward: list[_Unit] = []
             carry_tokens = 0
-            max_carry = min(overlap, budget - sentence_tokens)
-            for previous, previous_tokens in reversed(current):
-                if carry_tokens + previous_tokens > max_carry:
+            max_carry = min(overlap, budget - unit.n_tokens)
+            for previous in reversed(current):
+                if carry_tokens + previous.n_tokens > max_carry:
                     break
-                carry_forward.insert(0, (previous, previous_tokens))
-                carry_tokens += previous_tokens
+                carry_forward.insert(0, previous)
+                carry_tokens += previous.n_tokens
             current = carry_forward
             current_tokens = carry_tokens
 
-        current.append((sentence, sentence_tokens))
-        current_tokens += sentence_tokens
+        current.append(unit)
+        current_tokens += unit.n_tokens
 
     if current:
-        windows.append(' '.join(s for s, _ in current))
+        windows.append(_join_units(current))
 
     return windows
 
@@ -203,7 +259,7 @@ def _split_body(text: str, tokenizer: Tokenizer, budget: int, overlap: int) -> l
     """
     Splits oversized section bodies into the proper path by block type on blank lines
     Tables -> row packer _pack_table_rows()
-    everything else -> sentence packer _pack_sentences()
+    everything else -> unit packer, which preserves the source's line and paragraph breaks
     """
     bodies: list[str] = []
 
@@ -212,8 +268,9 @@ def _split_body(text: str, tokenizer: Tokenizer, budget: int, overlap: int) -> l
 
     def flush_prose() -> None:
         if prose_blocks:
-            sentences = _split_sentences('\n\n'.join(prose_blocks))
-            bodies.extend(_pack_sentences(sentences, tokenizer, budget, overlap))
+            # rejoin on blank lines and resplit by _split_units which reads those breaks back off the text
+            units = _split_units('\n\n'.join(prose_blocks), tokenizer, budget)
+            bodies.extend(_pack_units(units, budget, overlap))
             prose_blocks.clear()
 
     for block in re.split(r'\n{2,}', text):
