@@ -105,12 +105,16 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
 
     parts = [_normalize_whitespace(element.text)]
     has_content = bool(parts[0].strip())
+    prev_tag: str | None = None
 
     for child in element:
         child_markdown = _element_to_markdown(child)
 
         spec = TAGS.get(child.tag) if isinstance(child.tag, str) else None
-        if spec is not None and spec.is_block and has_content:
+        # bug fix: Flavor text after a heading isn't always wrapped in a block tag
+        # (ex: a bare <span>/<i> instead of <p>). Force the break so it doesn't glue on the heading line
+        after_heading = prev_tag in _HEADING_TAGS
+        if (after_heading or (spec is not None and spec.is_block)) and has_content:
             parts[-1] = parts[-1].rstrip()
             parts.append('\n\n' + child_markdown.lstrip())
         else:
@@ -118,6 +122,8 @@ def _element_to_markdown(element: lxml.html.HtmlElement) -> str:
 
         if child_markdown.strip():
             has_content = True
+        if isinstance(child.tag, str):
+            prev_tag = child.tag
 
     assembled = _wrap(element, ''.join(parts))
 
