@@ -653,7 +653,7 @@ Making an attack is a standard action.
 
 With a normal melee weapon, you can strike any opponent within 5 feet. (Opponents within 5 feet are considered adjacent to you.) Some melee weapons have reach, as indicated in their descriptions. With a typical reach weapon, you can strike opponents 10 feet away, but you can’t strike adjacent foes (those within 5 feet).
 
-##### Unarmed Attacks 
+##### Unarmed Attacks
 
 Striking for damage with punches, kicks, and head butts is much like attacking with a melee weapon, except for the following:
 
