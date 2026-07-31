@@ -56,6 +56,7 @@ def make_manifest() -> ChunksManifest:
         tokenizer_model='Qwen/Qwen3-Embedding-0.6B',
         max_tokens=450,
         overlap=50,
+        fts5_tokenchar=False,
         parser_version='1',
         embedding_model='Qwen/Qwen3-Embedding-0.6B',
         embedding_dim=1024,

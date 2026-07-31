@@ -34,6 +34,7 @@ def _make_manifest(
         tokenizer_model=model,
         max_tokens=450,
         overlap=50,
+        fts5_tokenchar=False,
         parser_version='1',
         embedding_model=model,
         embedding_dim=dim,

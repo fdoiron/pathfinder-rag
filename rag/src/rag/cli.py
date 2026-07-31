@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated
 
@@ -8,6 +9,7 @@ import typer
 from rag.answer import LLMUnavailableError, answer_question, make_llm_client
 from rag.config import Settings, get_settings
 from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
+from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, load_retriever
@@ -90,6 +92,12 @@ def build_corpus(
     chunks_file.parent.mkdir(parents=True, exist_ok=True)
     chunks_df.to_parquet(chunks_file, index=False)
     typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
+
+    fts_path = chunks_file.with_suffix('.fts5.db')
+    fts_con = sqlite3.connect(fts_path)
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=settings.fts5_tokenchar)
+    fts_con.close()
+    typer.echo(f'wrote fts5 index to {fts_path}')
 
     manifest = ChunksManifest.build(
         settings, corpus_file, len(articles), len(chunks), embedder.torch_dtype, embedder.query_prompt
