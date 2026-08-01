@@ -232,6 +232,68 @@ def test_category_filter_k_larger_than_category_size_no_inf_filler():
     assert results[0].doc_id == 'gamma'
 
 
+# Retriever.search (bm25 / hybrid)
+
+
+def _make_retriever_with_fts(query_vec: list[float], rrf_k: int = 60) -> Retriever:
+    chunks_df = _make_chunks_df()
+    fts_con = sqlite3.connect(':memory:')
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
+    return Retriever(chunks_df, FakeEmbedder(query_vec), _make_manifest(), fts_con=fts_con, rrf_k=rrf_k)
+
+
+def test_bm25_method_without_fts_index_raises():
+    retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
+    with pytest.raises(ValueError, match='FTS5 index'):
+        retriever.search('anything', k=3, method='bm25')
+
+
+def test_hybrid_method_without_fts_index_raises():
+    retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
+    with pytest.raises(ValueError, match='FTS5 index'):
+        retriever.search('anything', k=3, method='hybrid')
+
+
+def test_bm25_search_returns_matching_chunk():
+    # chunk text is 'Text alpha', 'Text beta' and 'Text gamma'. 'gamma' matches only the gamma chunk
+    retriever = _make_retriever_with_fts([1.0, 0.0])
+    results = retriever.search('gamma', k=3, method='bm25')
+    assert [r.doc_id for r in results] == ['gamma']
+
+
+def test_bm25_search_ignores_query_embedding():
+    """method='bm25' must rank with the FTS5 match not the (fake) query embedding result which is set up to favor alpha
+    from cosine similarity."""
+    retriever = _make_retriever_with_fts([1.0, 0.0])
+    results = retriever.search('gamma', k=3, method='bm25')
+    assert results[0].doc_id == 'gamma'
+
+
+def test_hybrid_is_default_method():
+    retriever = _make_retriever_with_fts([1.0, 0.0])
+    default_call = retriever.search('gamma', k=3)
+    explicit_hybrid = retriever.search('gamma', k=3, method='hybrid')
+    assert [r.doc_id for r in default_call] == [r.doc_id for r in explicit_hybrid]
+
+
+def test_hybrid_search_promotes_bm25_match_that_vector_ranked_last():
+    """Gamma ranks last by  cosine similarity but is the only bm25 match for 'gamma'.
+    Hybrid should pull it back up to first result."""
+    retriever = _make_retriever_with_fts([1.0, 0.0])
+    vector_only = retriever.search('gamma', k=3, method='vector')
+    assert vector_only[0].doc_id == 'alpha'
+
+    hybrid = retriever.search('gamma', k=3, method='hybrid')
+    assert hybrid[0].doc_id == 'gamma'
+
+
+def test_hybrid_search_category_filter_excludes_bm25_only_match():
+    # gamma is in category 'feats'. Filtering to 'bestiary' must exclude gamma even though bm25 returns it as top result
+    retriever = _make_retriever_with_fts([1.0, 0.0])
+    results = retriever.search('gamma', k=3, method='hybrid', category='bestiary')
+    assert 'gamma' not in [r.doc_id for r in results]
+
+
 # load_retriever
 
 
