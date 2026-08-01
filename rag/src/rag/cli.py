@@ -81,7 +81,8 @@ def build_corpus(
     logging.info(f'Parsing HTML files from {html_dir}')
     articles = parse_corpus_dir(html_dir, min_body_length=settings.min_body_length)
     if not articles:
-        logging.warning(f'No articles parsed from {html_dir}. Writing empty corpus and chunks')
+        typer.echo(f'Error: no articles parsed from {html_dir}', err=True)
+        raise typer.Exit(code=1)
 
     logging.info(f'Loading tokenizer {settings.tokenizer_model}')
     tokenizer = load_tokenizer(settings.tokenizer_model)

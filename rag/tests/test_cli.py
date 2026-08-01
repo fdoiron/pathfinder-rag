@@ -480,6 +480,22 @@ def test_build_corpus_fts5_tokenchar_setting_reaches_index(monkeypatch, tmp_path
     assert "tokenchars '-'" in create_sql
 
 
+def test_build_corpus_no_articles_fails_clean_before_any_write(monkeypatch, tmp_path):
+    monkeypatch.setattr(cli, 'parse_corpus_dir', lambda html_dir, min_body_length: [])  # noqa: ARG005
+    settings = _build_corpus_settings(tmp_path)
+    monkeypatch.setattr(cli, 'get_settings', lambda: settings)
+
+    html_dir = tmp_path / 'html'
+    html_dir.mkdir()
+
+    result = runner.invoke(app, ['build-corpus', str(html_dir)])
+
+    assert result.exit_code == 1
+    assert 'no articles parsed' in result.output
+    assert not settings.corpus_path.exists()
+    assert not settings.chunks_path.exists()
+
+
 # _apply_fts5_weight_overrides
 
 
