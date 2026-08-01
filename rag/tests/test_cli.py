@@ -3,9 +3,10 @@ from typer.testing import CliRunner
 
 from rag import cli
 from rag.answer import Answer, Citation, LLMUnavailableError
-from rag.cli import app
+from rag.cli import _apply_fts5_weight_overrides, app
+from rag.config import Settings
 from rag.models import ChunkHit
-from rag.retrieval import ManifestMismatchError, OrphanChunksError
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, StaleIndexError
 
 runner = CliRunner()
 
@@ -72,6 +73,7 @@ def test_search_prints_hits(monkeypatch):
         FileNotFoundError('Chunks file not found: data/chunks.parquet'),
         ManifestMismatchError('embedding model mismatch'),
         OrphanChunksError('1 doc_id(s) have no match in data/corpus.parquet'),
+        StaleIndexError('FTS5 index data/chunks.fts5.db does not match data/chunks.parquet'),
     ],
 )
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
@@ -130,3 +132,39 @@ def test_ask_prints_answer_and_citations(monkeypatch):
     assert result.exit_code == 0
     assert 'Yes, as a full-round action. [1]' in result.output
     assert 'https://example.com/alpha' in result.output
+
+
+# _apply_fts5_weight_overrides
+
+
+def test_no_overrides_returns_same_settings_object():
+    settings = Settings()
+    assert _apply_fts5_weight_overrides(settings, None, None) is settings
+
+
+def test_title_weight_override_replaces_default_only():
+    settings = Settings()
+    result = _apply_fts5_weight_overrides(settings, 3.0, None)
+    assert result.fts5_title_weight == 3.0
+    assert result.fts5_text_weight == settings.fts5_text_weight
+
+
+def test_text_weight_override_replaces_default_only():
+    settings = Settings()
+    result = _apply_fts5_weight_overrides(settings, None, 2.5)
+    assert result.fts5_text_weight == 2.5
+    assert result.fts5_title_weight == settings.fts5_title_weight
+
+
+def test_both_overrides_applied_together():
+    settings = Settings()
+    result = _apply_fts5_weight_overrides(settings, 3.0, 2.5)
+    assert result.fts5_title_weight == 3.0
+    assert result.fts5_text_weight == 2.5
+
+
+def test_override_does_not_mutate_original_settings():
+    settings = Settings()
+    original_title_weight = settings.fts5_title_weight
+    _apply_fts5_weight_overrides(settings, 3.0, None)
+    assert settings.fts5_title_weight == original_title_weight
