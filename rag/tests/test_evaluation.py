@@ -280,6 +280,7 @@ def test_write_run_creates_readable_file(tmp_path: Path):
     out_path, run = write_run(
         run_dir=tmp_path / 'runs',
         manifest=manifest,
+        method='hybrid',
         k=5,
         results=results,
     )

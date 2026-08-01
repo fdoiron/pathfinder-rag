@@ -12,7 +12,7 @@ from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, writ
 from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
-from rag.retrieval import ManifestMismatchError, OrphanChunksError, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod, load_retriever
 
 if TYPE_CHECKING:
     from rag.embedding import LocalEmbedder
@@ -125,6 +125,7 @@ def search(
         ),
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
 ) -> None:
     """Embeds search query, returns top k results"""
     settings = get_settings()
@@ -141,7 +142,7 @@ def search(
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    chunk_hits = retriever.search(query=query, k=k, category=category)
+    chunk_hits = retriever.search(query=query, k=k, category=category, method=method)
 
     if not chunk_hits:
         typer.echo('No results found.')
@@ -180,6 +181,7 @@ def evaluate(
         ),
     ] = 5,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
 ) -> None:
     """
     Evaluate the retrieval performance of the corpus.
@@ -204,9 +206,9 @@ def evaluate(
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k)) for query in queries]
+    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method)) for query in queries]
 
-    run_path, run = write_run(run_dir, retriever.manifest, k, results)
+    run_path, run = write_run(run_dir, retriever.manifest, method, k, results)
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
@@ -248,6 +250,7 @@ def ask(
         ),
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
 ) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
     settings = get_settings()
@@ -261,7 +264,9 @@ def ask(
         raise typer.Exit(code=1) from e
 
     try:
-        result = answer_question(question, retriever, make_llm_client(settings), settings, k=k, category=category)
+        result = answer_question(
+            question, retriever, make_llm_client(settings), settings, k=k, category=category, method=method
+        )
     except LLMUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e

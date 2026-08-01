@@ -26,7 +26,13 @@ class FakeRetriever:
     def __init__(self, hits: list[ChunkHit]) -> None:
         self._hits = hits
 
-    def search(self, query: str, k: int, category: str | None = None) -> list[ChunkHit]:  # noqa: ARG002
+    def search(
+        self,
+        query: str,  # noqa: ARG002
+        k: int,  # noqa: ARG002
+        category: str | None = None,  # noqa: ARG002
+        method: str = 'hybrid',  # noqa: ARG002
+    ) -> list[ChunkHit]:
         return self._hits
 
 

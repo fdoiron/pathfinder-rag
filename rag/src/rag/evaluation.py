@@ -9,7 +9,7 @@ from urllib.parse import urlparse
 from pydantic import BaseModel, Field, field_validator
 
 from rag.models import ChunkHit, ChunksManifest
-from rag.retrieval import Retriever
+from rag.retrieval import Retriever, SearchMethod
 
 logger = logging.getLogger(__name__)
 
@@ -89,6 +89,7 @@ class EvalRun(BaseModel):
 
     created_at: datetime
     manifest: ChunksManifest
+    method: SearchMethod
     k: int
     summary: EvalSummary
     by_type: dict[str, EvalSummary]
@@ -175,6 +176,7 @@ def summarize_results(results: list[QueryResult], ks: tuple[int, ...] = RECALL_K
 def write_run(
     run_dir: Path,
     manifest: ChunksManifest,
+    method: SearchMethod,
     k: int,
     results: list[QueryResult],
 ) -> tuple[Path, EvalRun]:
@@ -186,6 +188,7 @@ def write_run(
     run = EvalRun(
         created_at=now,
         manifest=manifest,
+        method=method,
         k=k,
         summary=summary,
         by_type=by_type,
@@ -215,7 +218,7 @@ def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
     return collapsed[:k]
 
 
-def search_top_k_docs(retriever: Retriever, query: str, k: int) -> list[ChunkHit]:
+def search_top_k_docs(retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid') -> list[ChunkHit]:
     """Search and combine to k unique pages. If it falls short of k it widens the chunk fetch.
 
     One doc can occupy several of the top chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR
@@ -225,7 +228,7 @@ def search_top_k_docs(retriever: Retriever, query: str, k: int) -> list[ChunkHit
     total_chunks = len(retriever)
     fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
     while True:
-        collapsed = collapse_to_urls(retriever.search(query, k=fetch_k), k)
+        collapsed = collapse_to_urls(retriever.search(query, k=fetch_k, method=method), k)
         if len(collapsed) >= k or fetch_k >= total_chunks:
             return collapsed
         fetch_k = min(fetch_k * 2, total_chunks)

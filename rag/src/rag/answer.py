@@ -5,7 +5,7 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, NotFound
 from pydantic import BaseModel
 
 from rag.config import Settings
-from rag.retrieval import Retriever
+from rag.retrieval import Retriever, SearchMethod
 
 
 class LLMUnavailableError(RuntimeError):
@@ -40,8 +40,9 @@ def answer_question(
     settings: Settings,
     k: int | None = None,
     category: str | None = None,
+    method: SearchMethod = 'hybrid',
 ) -> Answer:
-    hits = retriever.search(question, k=k if k is not None else settings.ask_k, category=category)
+    hits = retriever.search(question, k=k if k is not None else settings.ask_k, category=category, method=method)
     if not hits:
         return Answer(text=_NO_COVERAGE_REPLY, citations=[])
 

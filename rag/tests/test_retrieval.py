@@ -1,4 +1,5 @@
 import hashlib
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -7,6 +8,7 @@ import pandas as pd
 import pytest
 
 from rag.config import Settings
+from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, load_retriever
 
@@ -97,25 +99,29 @@ def _write_test_files(tmp_path: Path, model: str, dim: int) -> tuple[Path, Path]
     manifest = _make_manifest(model=model, dim=dim, source_sha256=hashlib.sha256(docs_path.read_bytes()).hexdigest())
     manifest_path = chunks_path.with_suffix('.manifest.json')
     manifest_path.write_text(manifest.model_dump_json(), encoding='utf-8')
+
+    fts_con = sqlite3.connect(chunks_path.with_suffix('.fts5.db'))
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
+    fts_con.close()
     return chunks_path, docs_path
 
 
 def test_ranks_in_expected_order():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
-    results = retriever.search('anything', k=3)
+    results = retriever.search('anything', k=3, method='vector')
     assert [r.doc_id for r in results] == ['alpha', 'beta', 'gamma']
 
 
 def test_scores_descend():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.01]), _make_manifest())
-    results = retriever.search('anything', k=3)
+    results = retriever.search('anything', k=3, method='vector')
     scores = [r.score for r in results]
     assert scores == sorted(scores, reverse=True)
 
 
 def test_k_greater_than_corpus_size_no_crash():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
-    results = retriever.search('anything', k=100)
+    results = retriever.search('anything', k=100, method='vector')
     assert len(results) == 3
 
 
@@ -129,23 +135,23 @@ def test_non_finite_embedding_raises_at_construction():
 def test_search_non_finite_query_vector_raises():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([np.nan, 0.0]), _make_manifest())
     with pytest.raises(ValueError, match='non finite'):
-        retriever.search('anything', k=3)
+        retriever.search('anything', k=3, method='vector')
 
 
 def test_search_zero_norm_query_vector_raises():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([0.0, 0.0]), _make_manifest())
     with pytest.raises(ValueError, match='zero-norm'):
-        retriever.search('anything', k=3)
+        retriever.search('anything', k=3, method='vector')
 
 
 def test_search_always_returns_k_results():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.01]), _make_manifest())
-    assert len(retriever.search('anything', k=2)) == 2
+    assert len(retriever.search('anything', k=2, method='vector')) == 2
 
 
 def test_hits_carry_doc_id_and_url():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
-    top = retriever.search('anything', k=1)[0]
+    top = retriever.search('anything', k=1, method='vector')[0]
     assert top.doc_id == 'alpha'
     assert str(top.url) == 'https://example.com/alpha'
 
@@ -155,13 +161,13 @@ def test_hits_carry_doc_id_and_url():
 
 def test_category_filter_excludes_higher_scoring_other_category():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
-    results = retriever.search('anything', k=3, category='feats')
+    results = retriever.search('anything', k=3, category='feats', method='vector')
     assert [r.doc_id for r in results] == ['gamma']
 
 
 def test_category_filter_k_larger_than_category_size_no_inf_filler():
     retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
-    results = retriever.search('anything', k=10, category='feats')
+    results = retriever.search('anything', k=10, category='feats', method='vector')
     assert len(results) == 1
     assert results[0].doc_id == 'gamma'
 
@@ -173,7 +179,7 @@ def test_load_retriever_merges_title_and_url_from_documents(tmp_path):
     chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     retriever = load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
-    top = retriever.search('anything', k=1)[0]
+    top = retriever.search('anything', k=1, method='vector')[0]
     assert top.doc_id == 'alpha'
     assert top.title == 'Alpha'
     assert str(top.url) == 'https://example.com/alpha'
