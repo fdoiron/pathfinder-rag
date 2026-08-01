@@ -19,6 +19,13 @@ if TYPE_CHECKING:
 
 # torch/transformers imported inside each command body
 app = typer.Typer()
+
+
+def _require_positive(value: float | None) -> float | None:
+    """Mirrors config.py's PositiveFloat for fts5 weight CLI flags."""
+    if value is not None and value <= 0:
+        raise typer.BadParameter('must be > 0')
+    return value
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('httpx').setLevel(logging.WARNING)
 
@@ -139,11 +146,17 @@ def search(
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
     fts5_title_weight: Annotated[
         float | None,
-        typer.Option(help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)'),
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)',
+        ),
     ] = None,
     fts5_text_weight: Annotated[
         float | None,
-        typer.Option(help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)'),
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
+        ),
     ] = None,
 ) -> None:
     """Embeds search query, returns top k results"""
@@ -204,11 +217,17 @@ def evaluate(
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
     fts5_title_weight: Annotated[
         float | None,
-        typer.Option(help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)'),
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)',
+        ),
     ] = None,
     fts5_text_weight: Annotated[
         float | None,
-        typer.Option(help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)'),
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
+        ),
     ] = None,
 ) -> None:
     """

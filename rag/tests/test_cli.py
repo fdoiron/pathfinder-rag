@@ -181,6 +181,14 @@ def test_search_without_weight_flags_uses_settings_defaults(monkeypatch):
     assert captured['settings'].fts5_text_weight == Settings().fts5_text_weight
 
 
+@pytest.mark.parametrize('flag', ['--fts5-title-weight', '--fts5-text-weight'])
+@pytest.mark.parametrize('value', ['-5', '0'])
+def test_search_rejects_non_positive_weight(flag, value):
+    result = runner.invoke(app, ['search', 'aboleth', flag, value])
+    assert result.exit_code == 2
+    assert 'must be > 0' in result.output
+
+
 @pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
@@ -354,6 +362,15 @@ def test_evaluate_weight_flags_reach_load_retriever_settings(monkeypatch, tmp_pa
     assert result.exit_code == 0
     assert captured['settings'].fts5_title_weight == 3.0
     assert captured['settings'].fts5_text_weight == 2.0
+
+
+@pytest.mark.parametrize('flag', ['--fts5-title-weight', '--fts5-text-weight'])
+@pytest.mark.parametrize('value', ['-5', '0'])
+def test_evaluate_rejects_non_positive_weight(flag, value, tmp_path):
+    queries_file = _write_queries_file(tmp_path)
+    result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(tmp_path / 'runs'), flag, value])
+    assert result.exit_code == 2
+    assert 'must be > 0' in result.output
 
 
 def test_evaluate_bad_queries_file_prints_clean_error(tmp_path):
