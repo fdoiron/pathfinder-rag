@@ -374,3 +374,28 @@ def test_fts5_index_different_ids_fails_at_load(tmp_path):
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     with pytest.raises(StaleIndexError, match='FTS5'):
         load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_corrupt_fts5_db_raises_stale_index_error(tmp_path):
+    """A garbage .fts5.db file should raise StaleIndexError not a raw sqlite3.DatabaseError"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    chunks_path.with_suffix('.fts5.db').write_bytes(b'not a sqlite database')
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(StaleIndexError, match='not a valid FTS5 index'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_foreign_fts5_db_missing_table_raises_stale_index_error(tmp_path):
+    """A valid sqlite db without a chunks_fts table should raise StaleIndexError not a raw OperationalError"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    fts_path = chunks_path.with_suffix('.fts5.db')
+    fts_path.unlink()
+    fts_con = sqlite3.connect(fts_path)
+    fts_con.execute('CREATE TABLE unrelated (id INTEGER)')
+    fts_con.commit()
+    fts_con.close()
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(StaleIndexError, match='not a valid FTS5 index'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)

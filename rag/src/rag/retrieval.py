@@ -204,7 +204,10 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     df[metadata_cols] = meta.where(meta.notna(), None)  # replace NaN with None for pydantic model
     logger.info(f'Loaded {len(df)} chunks from {chunks_file}')
 
-    fts_ids = {row[0] for row in fts_con.execute('SELECT chunk_id FROM chunks_fts')}
+    try:
+        fts_ids = {row[0] for row in fts_con.execute('SELECT chunk_id FROM chunks_fts')}
+    except sqlite3.Error as e:
+        raise StaleIndexError(f'{fts_path} is not a valid FTS5 index ({e}). Rebuild chunks to regenerate it.') from e
     df_ids = set(df['chunk_id'])
     if fts_ids != df_ids:
         missing = sorted(df_ids - fts_ids)[:10]
