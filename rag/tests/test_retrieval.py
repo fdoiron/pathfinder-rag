@@ -10,7 +10,14 @@ import pytest
 from rag.config import Settings
 from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
-from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, StaleIndexError, load_retriever
+from rag.retrieval import (
+    ManifestMismatchError,
+    OrphanChunksError,
+    Retriever,
+    StaleIndexError,
+    load_retriever,
+    reciprocal_rank_fusion,
+)
 
 
 # helpers
@@ -104,6 +111,59 @@ def _write_test_files(tmp_path: Path, model: str, dim: int) -> tuple[Path, Path]
     build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
     fts_con.close()
     return chunks_path, docs_path
+
+
+# reciprocal_rank_fusion
+
+
+def test_single_ranking_preserves_order():
+    result = reciprocal_rank_fusion({'vector': ['a', 'b', 'c']}, rrf_k=60)
+    assert [item_id for item_id, _ in result] == ['a', 'b', 'c']
+
+
+def test_single_ranking_scores_match_rrf_formula():
+    result = reciprocal_rank_fusion({'vector': ['a', 'b']}, rrf_k=60)
+    assert dict(result) == pytest.approx({'a': 1 / 61, 'b': 1 / 62})
+
+
+def test_item_in_both_rankings_outranks_item_in_one():
+    rankings = {'vector': ['a', 'b'], 'bm25': ['a', 'c']}
+    result = reciprocal_rank_fusion(rankings, rrf_k=60)
+    assert result[0][0] == 'a'
+    assert result[0][1] == pytest.approx(2 / 61)
+
+
+def test_scores_sum_across_rankings():
+    rankings = {'vector': ['a', 'b'], 'bm25': ['b', 'a']}
+    scores = dict(reciprocal_rank_fusion(rankings, rrf_k=60))
+    assert scores['a'] == pytest.approx(1 / 61 + 1 / 62)
+    assert scores['b'] == pytest.approx(1 / 62 + 1 / 61)
+    assert scores['a'] == pytest.approx(scores['b'])
+
+
+def test_item_in_only_one_ranking_still_included():
+    rankings = {'vector': ['a'], 'bm25': ['b']}
+    result = reciprocal_rank_fusion(rankings, rrf_k=60)
+    assert {item_id for item_id, _ in result} == {'a', 'b'}
+
+
+def test_empty_rankings_returns_empty_list():
+    assert reciprocal_rank_fusion({}, rrf_k=60) == []
+
+
+def test_empty_ranked_lists_returns_empty_list():
+    assert reciprocal_rank_fusion({'vector': [], 'bm25': []}, rrf_k=60) == []
+
+
+def test_higher_rrf_k_shrinks_rank_gap_between_top_and_bottom():
+    """Larger rrf_k reducess how much rank position matters. The score gap between rank 1 and
+    rank 2 should go down as rrf_k goes up."""
+    low_k = dict(reciprocal_rank_fusion({'vector': ['a', 'b']}, rrf_k=1))
+    high_k = dict(reciprocal_rank_fusion({'vector': ['a', 'b']}, rrf_k=1000))
+    assert (low_k['a'] - low_k['b']) > (high_k['a'] - high_k['b'])
+
+
+# Retriever.search (vector)
 
 
 def test_ranks_in_expected_order():
