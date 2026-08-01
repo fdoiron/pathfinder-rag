@@ -1,4 +1,5 @@
 import hashlib
+import json
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
@@ -332,6 +333,19 @@ def test_corpus_sha256_drift(tmp_path):
 
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     with pytest.raises(ManifestMismatchError, match='sha256'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_manifest_predates_schema_raises_manifest_mismatch(tmp_path):
+    """A manifest written before fts5_tokenchar was added should raise ManifestMismatchError, not ValidationError"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    manifest_path = chunks_path.with_suffix('.manifest.json')
+    stale_manifest = json.loads(manifest_path.read_text(encoding='utf-8'))
+    del stale_manifest['fts5_tokenchar']
+    manifest_path.write_text(json.dumps(stale_manifest), encoding='utf-8')
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(ManifestMismatchError, match='predates this build'):
         load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
 
 

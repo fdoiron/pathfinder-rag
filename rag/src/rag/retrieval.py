@@ -6,6 +6,7 @@ from typing import Any, Literal, cast
 
 import numpy as np
 import pandas as pd
+from pydantic import ValidationError
 
 from rag.config import Settings
 from rag.lexical import search_fts5
@@ -141,8 +142,8 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
         FileNotFoundError if the chunks, manifest or corpus file does not exist
-        ManifestMismatchError if the manifest is incompatible with the current settings, or the corpus on disk
-            is not the one the chunks came from (sha256 missmatch)
+        ManifestMismatchError if the manifest is incompatible with the current settings, the corpus on disk
+            is not the one the chunks came from (sha256 missmatch), or the manifest predates this build's schema
         OrphanChunksError if a chunk's doc_id has no match in the corpus parquet
         StaleIndexError if the FTS5 index's chunk_ids doesn't match chunks.parquet's chunk_ids
     """
@@ -154,7 +155,10 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     if not manifest_path.exists():
         raise FileNotFoundError(f'Manifest file not found: {manifest_path}')
 
-    manifest = ChunksManifest.model_validate_json(manifest_path.read_text(encoding='utf-8'))
+    try:
+        manifest = ChunksManifest.model_validate_json(manifest_path.read_text(encoding='utf-8'))
+    except ValidationError as e:
+        raise ManifestMismatchError('manifest predates this build — rebuild chunks') from e
 
     if manifest.embedding_model != settings.embedding_model:
         raise ManifestMismatchError(
