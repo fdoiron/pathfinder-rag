@@ -19,13 +19,6 @@ if TYPE_CHECKING:
 
 # torch/transformers imported inside each command body
 app = typer.Typer()
-
-
-def _require_positive(value: float | None) -> float | None:
-    """Mirrors config.py's PositiveFloat for fts5 weight CLI flags."""
-    if value is not None and value <= 0:
-        raise typer.BadParameter('must be > 0')
-    return value
 logging.basicConfig(level=logging.INFO)
 logging.getLogger('httpx').setLevel(logging.WARNING)
 
@@ -33,6 +26,13 @@ logging.getLogger('httpx').setLevel(logging.WARNING)
 @app.callback()
 def _callback() -> None:
     """Pathfinder 1e RAG pipeline CLI."""
+
+
+def _require_positive(value: float | None) -> float | None:
+    # mirrors config.py's PositiveFloat; model_copy(update=...) in _apply_fts5_weight_overrides skips validation
+    if value is not None and value <= 0:
+        raise typer.BadParameter('must be > 0')
+    return value
 
 
 def _load_embedder(settings: Settings) -> 'LocalEmbedder':
