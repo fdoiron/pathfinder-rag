@@ -18,11 +18,11 @@ SearchMethod = Literal['vector', 'bm25', 'hybrid']
 _HYBRID_CANDIDATE_POOL = 50
 
 
-def reciprocal_rank_fusion(rankings: dict[str, list[str]], k: int) -> list[tuple[str, float]]:
+def reciprocal_rank_fusion(rankings: dict[str, list[str]], rrf_k: int) -> list[tuple[str, float]]:
     scores: dict[str, float] = {}
     for ranked_ids in rankings.values():
         for rank, item_id in enumerate(ranked_ids, start=1):
-            scores[item_id] = scores.get(item_id, 0.0) + 1.0 / (k + rank)
+            scores[item_id] = scores.get(item_id, 0.0) + 1.0 / (rrf_k + rank)
     return sorted(scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
@@ -80,7 +80,7 @@ class Retriever:
         pool = max(k, _HYBRID_CANDIDATE_POOL)
         vector_ids = [hit.chunk_id for hit in self._search_vector(query, pool, category)]
         bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
-        fused = reciprocal_rank_fusion({'vector': vector_ids, 'bm25': bm25_ids}, k=self._rrf_k)
+        fused = reciprocal_rank_fusion({'vector': vector_ids, 'bm25': bm25_ids}, rrf_k=self._rrf_k)
         return self._hits_from_ranked(fused[:k])
 
     def _search_vector(self, query: str, k: int, category: str | None) -> list[ChunkHit]:
@@ -115,7 +115,7 @@ class Retriever:
         )
 
     def _hits_from_ranked(self, ranked: list[tuple[str, float]]) -> list[ChunkHit]:
-        # bug fix: mypy/pydantic plugin mistypes to_dict()'s keys as non-str here (but not in unpack in _search_vector)
+        # mypy/pydantic plugin mistypes to_dict()'s keys as non-str here (but not in unpack in _search_vector);
         # cast is a no op at runtime, keys are str
         hits: list[ChunkHit] = []
         for chunk_id, rank_score in ranked:

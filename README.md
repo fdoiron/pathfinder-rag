@@ -49,11 +49,11 @@ Both runs above against the real corpus with the current hybrid index, `qwen3:14
 
 Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion) and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask` and `rag evaluate` all take `--method {vector,bm25,hybrid}` and load straight from disk to answer or score from the terminal. Containers and an API are not built yet, they're staged in [Future expansions](#future-expansions).
 
-24,080 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
+24,098 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
-Dropped pages:
-- ~180 pages too small after stripping to be worth indexing
-- 1 page where the original URL was too long and was hashed
+Dropped pages (208 total):
+- 207 pages too small after stripping to be worth indexing
+- 1 page where the original URL was too long and was hashed so the source URL couldn't be reconstructed
 
 ```
 $ cd rag
@@ -115,7 +115,7 @@ uv run pytest
 **Current state**, everything is a batch step or a CLI call, no services of its own, the only long running process is Ollama:
 
 ```
-scraper (Scrapy)  ──▶  scraper/data/html/ (24,080 files)
+scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
                               │
                               ▼
           rag build-corpus  (parse → chunk → embed → index)
@@ -154,7 +154,7 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,080 files)
 
 ## Evaluation
 
-34 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the top k). Vector-only vs BM25-only vs hybrid (RRF, `rrf_k=60`), all three scored at `k=5` against the same truth set and the same corpus:
+34 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). Vector-only, BM25-only and hybrid (RRF, `rrf_k=60`) were each run with a retrieval depth of 5 against the same truth set and the same corpus:
 
 | Type | Method | Recall@1 | Recall@3 | Recall@5 | MRR |
 |---|---|---|---|---|---|
