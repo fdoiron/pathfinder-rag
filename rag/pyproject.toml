@@ -60,7 +60,7 @@ plugins = ['pydantic.mypy']
 
 # tests use untyped/loosely-typed fixtures and fakes on purpose
 [[tool.mypy.overrides]]
-module = ['test_answer', 'test_chunking', 'test_cli', 'test_corpus', 'test_embedding', 'test_evaluation', 'test_parsing', 'test_retrieval']
+module = ['test_answer', 'test_chunking', 'test_cli', 'test_corpus', 'test_embedding', 'test_evaluation', 'test_lexical', 'test_parsing', 'test_retrieval']
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
 

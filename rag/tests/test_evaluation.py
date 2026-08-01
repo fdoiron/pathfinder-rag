@@ -1,6 +1,9 @@
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 
+import numpy as np
+import pandas as pd
 import pytest
 
 from rag.evaluation import (
@@ -11,11 +14,14 @@ from rag.evaluation import (
     evaluate_query,
     load_queries,
     normalize_url,
+    search_top_k_docs,
     summarize_by,
     summarize_results,
     write_run,
 )
+from rag.lexical import build_fts5_index
 from rag.models import ChunkHit, ChunksManifest
+from rag.retrieval import Retriever
 
 # helpers
 
@@ -56,6 +62,7 @@ def make_manifest() -> ChunksManifest:
         tokenizer_model='Qwen/Qwen3-Embedding-0.6B',
         max_tokens=450,
         overlap=50,
+        fts5_tokenchar=False,
         parser_version='1',
         embedding_model='Qwen/Qwen3-Embedding-0.6B',
         embedding_dim=1024,
@@ -181,6 +188,131 @@ def test_collapse_applies_k_after_dedupe_not_before():
     assert [str(h.url) for h in collapsed] == ['https://example.com/a', 'https://example.com/b']
 
 
+# search_top_k_docs
+
+
+class _FakeEmbedder:
+    def __init__(self, vec: list[float]) -> None:
+        self._vec = np.array(vec, dtype=np.float32)
+
+    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:  # noqa: ARG002
+        return np.array([self._vec] * len(texts), dtype=np.float32)
+
+
+def _make_retriever(n: int) -> Retriever:
+    chunks_df = pd.DataFrame(
+        {
+            'chunk_id': [f'doc{i}#000' for i in range(n)],
+            'doc_id': [f'doc{i}' for i in range(n)],
+            'title': [f'Title {i}' for i in range(n)],
+            'url': [f'https://example.com/{i}' for i in range(n)],
+            'heading_path': [[f'Title {i}'] for i in range(n)],
+            'text': [f'body text {i}' for i in range(n)],
+            'category': ['bestiary'] * n,
+            'n_tokens': [5] * n,
+            'embedding': [np.array([1.0, 0.0], dtype=np.float32) for _ in range(n)],
+        }
+    )
+    fts_con = sqlite3.connect(':memory:')
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
+    return Retriever(chunks_df, _FakeEmbedder([1.0, 0.0]), make_manifest(), fts_con=fts_con)
+
+
+def test_search_top_k_docs_stops_widening_when_bm25_exhausted(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A BM25 query matching 0 chunks returns 0 chunks at any fetch_k. The loop must not keep rerunning that same
+    exhausted MATCH up to the full corpus size before giving up."""
+    retriever = _make_retriever(n=100)
+    calls: list[int] = []
+    original_search = retriever.search
+
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+        calls.append(k)
+        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(retriever, 'search', counting_search)
+
+    result = search_top_k_docs(retriever, 'zzznomatchzzz', k=5, method='bm25')
+
+    assert result == []
+    assert calls == [25]
+
+
+def test_search_top_k_docs_stops_widening_when_exhausted_after_a_widen(monkeypatch: pytest.MonkeyPatch) -> None:
+    """25 chunks match the query term but all collapse to the same doc and no other chunk in the corpus
+    matches. The loop must widen once (fetch_k 25 -> 50), see the second fetch still return fewer hits than
+    requested, and stop there. It must not keep doubling fetch_k up to the full n=100 corpus."""
+    n_dup = 25
+    n_filler = 75
+    total = n_dup + n_filler
+    chunks_df = pd.DataFrame(
+        {
+            'chunk_id': [f'dup#{i:03d}' for i in range(n_dup)] + [f'filler{i}#000' for i in range(n_filler)],
+            'doc_id': ['dup'] * n_dup + [f'filler{i}' for i in range(n_filler)],
+            'title': ['Dup'] * n_dup + [f'Filler {i}' for i in range(n_filler)],
+            'url': ['https://example.com/dup'] * n_dup + [f'https://example.com/filler{i}' for i in range(n_filler)],
+            'heading_path': [['Dup']] * n_dup + [[f'Filler {i}'] for i in range(n_filler)],
+            'text': ['zzzmatchzzz'] * n_dup + ['unrelated text'] * n_filler,
+            'category': ['bestiary'] * total,
+            'n_tokens': [5] * total,
+            'embedding': [np.array([1.0, 0.0], dtype=np.float32) for _ in range(total)],
+        }
+    )
+    fts_con = sqlite3.connect(':memory:')
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
+    retriever = Retriever(chunks_df, _FakeEmbedder([1.0, 0.0]), make_manifest(), fts_con=fts_con)
+
+    calls: list[int] = []
+    original_search = retriever.search
+
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+        calls.append(k)
+        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(retriever, 'search', counting_search)
+
+    result = search_top_k_docs(retriever, 'zzzmatchzzz', k=5, method='bm25')
+
+    assert calls == [25, 50]
+    assert [r.doc_id for r in result] == ['dup']
+
+
+def test_search_top_k_docs_widens_on_duplicate_doc_collapse(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The preexisting widening trigger (collapsed < k after deduplication) still works through search_top_k_docs:
+    the top 10 vector hits all collapse to one doc so it must widen to fetch 20 before it can find a 2nd."""
+    n_dup = 10
+    n_unique = 10
+    total = n_dup + n_unique
+    scores = np.linspace(1.0, 0.5, total)
+    chunks_df = pd.DataFrame(
+        {
+            'chunk_id': [f'dup#{i:03d}' for i in range(n_dup)] + [f'doc{i}#000' for i in range(n_unique)],
+            'doc_id': ['dup'] * n_dup + [f'doc{i}' for i in range(n_unique)],
+            'title': ['Dup'] * n_dup + [f'Title {i}' for i in range(n_unique)],
+            'url': ['https://example.com/dup'] * n_dup + [f'https://example.com/doc{i}' for i in range(n_unique)],
+            'heading_path': [['Dup']] * n_dup + [[f'Title {i}'] for i in range(n_unique)],
+            'text': ['text'] * total,
+            'category': ['bestiary'] * total,
+            'n_tokens': [5] * total,
+            'embedding': [np.array([s, (1 - s**2) ** 0.5], dtype=np.float32) for s in scores],
+        }
+    )
+    retriever = Retriever(chunks_df, _FakeEmbedder([1.0, 0.0]), make_manifest())
+
+    calls: list[int] = []
+    original_search = retriever.search
+
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+        calls.append(k)
+        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(retriever, 'search', counting_search)
+
+    result = search_top_k_docs(retriever, 'anything', k=2, method='vector')
+
+    assert calls == [10, 20]
+    assert [r.doc_id for r in result] == ['dup', 'doc0']
+
+
 # @summarize results
 
 
@@ -279,6 +411,7 @@ def test_write_run_creates_readable_file(tmp_path: Path):
     out_path, run = write_run(
         run_dir=tmp_path / 'runs',
         manifest=manifest,
+        method='hybrid',
         k=5,
         results=results,
     )

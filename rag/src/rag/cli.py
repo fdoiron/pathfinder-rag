@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 from pathlib import Path
 from typing import TYPE_CHECKING, Annotated
 
@@ -8,9 +9,10 @@ import typer
 from rag.answer import LLMUnavailableError, answer_question, make_llm_client
 from rag.config import Settings, get_settings
 from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
+from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
-from rag.retrieval import ManifestMismatchError, OrphanChunksError, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod, StaleIndexError, load_retriever
 
 if TYPE_CHECKING:
     from rag.embedding import LocalEmbedder
@@ -26,6 +28,13 @@ def _callback() -> None:
     """Pathfinder 1e RAG pipeline CLI."""
 
 
+def _require_positive(value: float | None) -> float | None:
+    # mirrors config.py's PositiveFloat; model_copy(update=...) in _apply_fts5_weight_overrides skips validation
+    if value is not None and value <= 0:
+        raise typer.BadParameter('must be > 0')
+    return value
+
+
 def _load_embedder(settings: Settings) -> 'LocalEmbedder':
     from rag.embedding import EmbedderUnavailableError, load_embedder
 
@@ -34,6 +43,17 @@ def _load_embedder(settings: Settings) -> 'LocalEmbedder':
     except EmbedderUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
+
+
+def _apply_fts5_weight_overrides(
+    settings: Settings, fts5_title_weight: float | None, fts5_text_weight: float | None
+) -> Settings:
+    overrides = {
+        name: value
+        for name, value in [('fts5_title_weight', fts5_title_weight), ('fts5_text_weight', fts5_text_weight)]
+        if value is not None
+    }
+    return settings.model_copy(update=overrides) if overrides else settings
 
 
 @app.command()
@@ -61,7 +81,8 @@ def build_corpus(
     logging.info(f'Parsing HTML files from {html_dir}')
     articles = parse_corpus_dir(html_dir, min_body_length=settings.min_body_length)
     if not articles:
-        logging.warning(f'No articles parsed from {html_dir}. Writing empty corpus and chunks')
+        typer.echo(f'Error: no articles parsed from {html_dir}', err=True)
+        raise typer.Exit(code=1)
 
     logging.info(f'Loading tokenizer {settings.tokenizer_model}')
     tokenizer = load_tokenizer(settings.tokenizer_model)
@@ -91,6 +112,12 @@ def build_corpus(
     chunks_df.to_parquet(chunks_file, index=False)
     typer.echo(f'wrote {len(chunks)} chunks to {chunks_file}')
 
+    fts_path = chunks_file.with_suffix('.fts5.db')
+    fts_con = sqlite3.connect(fts_path)
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=settings.fts5_tokenchar)
+    fts_con.close()
+    typer.echo(f'wrote fts5 index to {fts_path}')
+
     manifest = ChunksManifest.build(
         settings, corpus_file, len(articles), len(chunks), embedder.torch_dtype, embedder.query_prompt
     )
@@ -117,9 +144,25 @@ def search(
         ),
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    fts5_title_weight: Annotated[
+        float | None,
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)',
+        ),
+    ] = None,
+    fts5_text_weight: Annotated[
+        float | None,
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
+        ),
+    ] = None,
 ) -> None:
     """Embeds search query, returns top k results"""
     settings = get_settings()
+    settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
 
@@ -129,11 +172,11 @@ def search(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    chunk_hits = retriever.search(query=query, k=k, category=category)
+    chunk_hits = retriever.search(query=query, k=k, category=category, method=method)
 
     if not chunk_hits:
         typer.echo('No results found.')
@@ -172,6 +215,21 @@ def evaluate(
         ),
     ] = 5,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    fts5_title_weight: Annotated[
+        float | None,
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)',
+        ),
+    ] = None,
+    fts5_text_weight: Annotated[
+        float | None,
+        typer.Option(
+            callback=_require_positive,
+            help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
+        ),
+    ] = None,
 ) -> None:
     """
     Evaluate the retrieval performance of the corpus.
@@ -183,6 +241,7 @@ def evaluate(
         raise typer.Exit(1) from e
 
     settings = get_settings()
+    settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
 
@@ -192,13 +251,13 @@ def evaluate(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k)) for query in queries]
+    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method)) for query in queries]
 
-    run_path, run = write_run(run_dir, retriever.manifest, k, results)
+    run_path, run = write_run(run_dir, retriever.manifest, method, k, results)
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
@@ -240,6 +299,7 @@ def ask(
         ),
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
 ) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
     settings = get_settings()
@@ -248,12 +308,14 @@ def ask(
 
     try:
         retriever = load_retriever(embedding_file_path, embedder, settings)
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
     try:
-        result = answer_question(question, retriever, make_llm_client(settings), settings, k=k, category=category)
+        result = answer_question(
+            question, retriever, make_llm_client(settings), settings, k=k, category=category, method=method
+        )
     except LLMUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e

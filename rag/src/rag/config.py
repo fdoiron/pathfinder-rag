@@ -22,6 +22,10 @@ class Settings(BaseSettings):
     llm_timeout: PositiveFloat = 60.0  # Ollama timeout in seconds instead of default 10 minutes
     ask_prompt_path: Path | None = None  # override for the packaged prompts/ask.txt, mainly for tests
     ask_k: PositiveInt = 5  # excerpts per prompt
+    rrf_k: PositiveInt = 60  # Reciprocal Rank Fusion k denominator
+    fts5_tokenchar: bool = False  # True: tokenize="unicode61 tokenchars '-'" (keeps "aboleth-psionic" as one token)
+    fts5_title_weight: PositiveFloat = 10.0  # bm25() weight for the chunk's heading vs. body text
+    fts5_text_weight: PositiveFloat = 1.0
 
 
 @lru_cache

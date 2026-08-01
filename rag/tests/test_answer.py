@@ -1,3 +1,4 @@
+import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -11,6 +12,7 @@ from openai import APIConnectionError, APIStatusError, APITimeoutError, NotFound
 
 from rag.answer import LLMUnavailableError, answer_question
 from rag.config import Settings
+from rag.lexical import build_fts5_index
 from rag.models import ChunkHit, ChunksManifest
 from rag.retrieval import Retriever
 
@@ -67,6 +69,7 @@ def _make_manifest() -> ChunksManifest:
         tokenizer_model='Qwen/Qwen3-Embedding-0.6B',
         max_tokens=450,
         overlap=50,
+        fts5_tokenchar=False,
         parser_version='1',
         embedding_model='Qwen/Qwen3-Embedding-0.6B',
         embedding_dim=2,
@@ -101,13 +104,22 @@ def _make_chunks_df() -> pd.DataFrame:
 
 
 def _make_retriever() -> Retriever:
-    return Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
+    chunks_df = _make_chunks_df()
+    fts_con = sqlite3.connect(':memory:')
+    build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
+    return Retriever(chunks_df, FakeEmbedder([1.0, 0.0]), _make_manifest(), fts_con=fts_con)
 
 
 class EmptyRetriever:
     """Stands in for a Retriever that finds nothing for the query."""
 
-    def search(self, query: str, k: int, category: str | None = None) -> list[ChunkHit]:  # noqa: ARG002
+    def search(
+        self,
+        query: str,  # noqa: ARG002
+        k: int,  # noqa: ARG002
+        category: str | None = None,  # noqa: ARG002
+        method: str = 'hybrid',  # noqa: ARG002
+    ) -> list[ChunkHit]:
         return []
 
 

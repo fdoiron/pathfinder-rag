@@ -57,6 +57,7 @@ class ChunksManifest(BaseModel):
     tokenizer_model: str
     max_tokens: int
     overlap: int
+    fts5_tokenchar: bool
     parser_version: str  # from parsing.PARSER_VERSION
     embedding_model: str
     embedding_dim: int
@@ -85,6 +86,7 @@ class ChunksManifest(BaseModel):
             tokenizer_model=settings.tokenizer_model,
             max_tokens=settings.chunk_max_tokens,
             overlap=settings.chunk_overlap,
+            fts5_tokenchar=settings.fts5_tokenchar,
             parser_version=PARSER_VERSION,
             embedding_model=settings.embedding_model,
             embedding_dim=settings.embedding_dim,
