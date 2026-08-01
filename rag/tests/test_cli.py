@@ -37,6 +37,18 @@ class FakeRetriever:
         return self._hits
 
 
+class SpyRetriever:
+    """Records the kwargs of the last search() call and returns fixed hits."""
+
+    def __init__(self, hits: list[ChunkHit]) -> None:
+        self._hits = hits
+        self.last_call: dict[str, object] | None = None
+
+    def search(self, query: str, k: int, category: str | None = None, method: str = 'hybrid') -> list[ChunkHit]:
+        self.last_call = {'query': query, 'k': k, 'category': category, 'method': method}
+        return self._hits
+
+
 def _make_hit() -> ChunkHit:
     return ChunkHit(
         chunk_id='alpha#000',
@@ -65,6 +77,65 @@ def test_search_prints_hits(monkeypatch):
     result = runner.invoke(app, ['search', 'aboleth'])
     assert result.exit_code == 0
     assert 'Alpha' in result.output
+
+
+def test_search_default_method_is_hybrid(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    spy = SpyRetriever([_make_hit()])
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
+    runner.invoke(app, ['search', 'aboleth'])
+    assert spy.last_call is not None
+    assert spy.last_call['method'] == 'hybrid'
+
+
+@pytest.mark.parametrize('method', ['vector', 'bm25', 'hybrid'])
+def test_search_method_flag_reaches_retriever(monkeypatch, method):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    spy = SpyRetriever([_make_hit()])
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
+    result = runner.invoke(app, ['search', 'aboleth', '--method', method])
+    assert result.exit_code == 0
+    assert spy.last_call is not None
+    assert spy.last_call['method'] == method
+
+
+def test_search_k_and_category_flags_reach_retriever(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    spy = SpyRetriever([_make_hit()])
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
+    runner.invoke(app, ['search', 'aboleth', '--k', '3', '--category', 'bestiary'])
+    assert spy.last_call is not None
+    assert spy.last_call['k'] == 3
+    assert spy.last_call['category'] == 'bestiary'
+
+
+def test_search_weight_flags_reach_load_retriever_settings(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    captured: dict[str, Settings] = {}
+
+    def _capture(**kwargs) -> FakeRetriever:
+        captured['settings'] = kwargs['settings']
+        return FakeRetriever([_make_hit()])
+
+    monkeypatch.setattr(cli, 'load_retriever', _capture)
+    result = runner.invoke(app, ['search', 'aboleth', '--fts5-title-weight', '3.0', '--fts5-text-weight', '2.0'])
+    assert result.exit_code == 0
+    assert captured['settings'].fts5_title_weight == 3.0
+    assert captured['settings'].fts5_text_weight == 2.0
+
+
+def test_search_without_weight_flags_uses_settings_defaults(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    captured: dict[str, Settings] = {}
+
+    def _capture(**kwargs) -> FakeRetriever:
+        captured['settings'] = kwargs['settings']
+        return FakeRetriever([_make_hit()])
+
+    monkeypatch.setattr(cli, 'load_retriever', _capture)
+    runner.invoke(app, ['search', 'aboleth'])
+    assert captured['settings'].fts5_title_weight == Settings().fts5_title_weight
+    assert captured['settings'].fts5_text_weight == Settings().fts5_text_weight
 
 
 @pytest.mark.parametrize(
