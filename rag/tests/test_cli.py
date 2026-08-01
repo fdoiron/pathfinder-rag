@@ -1,3 +1,7 @@
+import sqlite3
+from datetime import UTC, datetime
+
+import numpy as np
 import pytest
 from typer.testing import CliRunner
 
@@ -5,15 +9,53 @@ from rag import cli
 from rag.answer import Answer, Citation, LLMUnavailableError
 from rag.cli import _apply_fts5_weight_overrides, app
 from rag.config import Settings
-from rag.models import ChunkHit
+from rag.models import Article, Chunk, ChunkHit, ChunksManifest
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, StaleIndexError
 
 runner = CliRunner()
+
+_RETRIEVER_LOAD_ERRORS = [
+    FileNotFoundError('Chunks file not found: data/chunks.parquet'),
+    ManifestMismatchError('embedding model mismatch'),
+    OrphanChunksError('1 doc_id(s) have no match in data/corpus.parquet'),
+    StaleIndexError('FTS5 index data/chunks.fts5.db does not match data/chunks.parquet'),
+]
+
+
+def _make_manifest() -> ChunksManifest:
+    return ChunksManifest(
+        source_file='data/corpus.parquet',
+        source_sha256='abc123',
+        n_articles=1,
+        n_chunks=1,
+        min_body_length=100,
+        tokenizer_model='Qwen/Qwen3-Embedding-0.6B',
+        max_tokens=450,
+        overlap=50,
+        fts5_tokenchar=False,
+        parser_version='1',
+        embedding_model='Qwen/Qwen3-Embedding-0.6B',
+        embedding_dim=2,
+        embedding_dtype='float32',
+        query_prompt='',
+        created_at=datetime(2026, 1, 1, tzinfo=UTC),
+    )
 
 
 class FakeEmbedder:
     def __init__(self, *args, **kwargs) -> None:
         pass
+
+
+class FakeCorpusEmbedder:
+    """Stands in for LocalEmbedder in build-corpus tests, which also reads torch_dtype/query_prompt."""
+
+    def __init__(self, *args, **kwargs) -> None:  # noqa: ARG002
+        self.torch_dtype = 'float32'
+        self.query_prompt = ''
+
+    def embed(self, texts: list[str], task_type: str = 'RETRIEVAL_DOCUMENT') -> np.ndarray:  # noqa: ARG002
+        return np.array([[1.0, 0.0]] * len(texts), dtype=np.float32)
 
 
 class UnloadableEmbedder:
@@ -24,8 +66,9 @@ class UnloadableEmbedder:
 
 
 class FakeRetriever:
-    def __init__(self, hits: list[ChunkHit]) -> None:
+    def __init__(self, hits: list[ChunkHit], manifest: ChunksManifest | None = None) -> None:
         self._hits = hits
+        self.manifest = manifest or _make_manifest()
 
     def search(
         self,
@@ -138,15 +181,7 @@ def test_search_without_weight_flags_uses_settings_defaults(monkeypatch):
     assert captured['settings'].fts5_text_weight == Settings().fts5_text_weight
 
 
-@pytest.mark.parametrize(
-    'error',
-    [
-        FileNotFoundError('Chunks file not found: data/chunks.parquet'),
-        ManifestMismatchError('embedding model mismatch'),
-        OrphanChunksError('1 doc_id(s) have no match in data/corpus.parquet'),
-        StaleIndexError('FTS5 index data/chunks.fts5.db does not match data/chunks.parquet'),
-    ],
-)
+@pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
 
@@ -203,6 +238,229 @@ def test_ask_prints_answer_and_citations(monkeypatch):
     assert result.exit_code == 0
     assert 'Yes, as a full-round action. [1]' in result.output
     assert 'https://example.com/alpha' in result.output
+
+
+# evaluate
+
+
+def _write_queries_file(tmp_path) -> str:
+    content = (
+        '{"query": "fireball", "type": "exact_name", "expected_urls": ["https://example.com/spells/fireball"]}\n'
+        '{"query": "grapple", "type": "rules_reasoning", "expected_urls": ["https://example.com/combat/grapple"]}\n'
+    )
+    path = tmp_path / 'queries.jsonl'
+    path.write_text(content, encoding='utf-8')
+    return str(path)
+
+
+def _fireball_hit() -> ChunkHit:
+    return ChunkHit(
+        chunk_id='fireball#000',
+        doc_id='fireball',
+        url='https://example.com/spells/fireball',
+        title='Fireball',
+        heading_path=['Fireball'],
+        text='deals damage in an area',
+        category='spells',
+        n_tokens=6,
+        score=0.95,
+    )
+
+
+def test_evaluate_writes_run_and_prints_summary(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid'):  # noqa: ARG001
+        return [_fireball_hit()] if query == 'fireball' else []
+
+    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(run_dir)])
+
+    assert result.exit_code == 0
+    assert 'n=2' in result.output
+    assert 'by type:' in result.output
+    assert 'exact_name' in result.output
+    assert 'rules_reasoning' in result.output
+    assert 'by category:' in result.output
+    assert 'spells' in result.output
+    assert 'combat' in result.output
+    assert '1 queries had no hits' in result.output
+    assert 'grapple' in result.output
+    assert list(run_dir.glob('*.json'))
+
+
+@pytest.mark.parametrize('method', ['vector', 'bm25', 'hybrid'])
+def test_evaluate_method_flag_reaches_search_top_k_docs(monkeypatch, tmp_path, method):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    calls: list[str] = []
+
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid'):  # noqa: ARG001
+        calls.append(method)
+        return []
+
+    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(tmp_path / 'runs'), '--method', method])
+
+    assert result.exit_code == 0
+    assert calls == [method, method]
+
+
+def test_evaluate_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'search_top_k_docs', lambda *a, **k: [])  # noqa: ARG005
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(run_dir)])
+
+    [run_file] = run_dir.glob('*.json')
+    assert '"method": "hybrid"' in run_file.read_text(encoding='utf-8')
+
+
+def test_evaluate_weight_flags_reach_load_retriever_settings(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    captured: dict[str, Settings] = {}
+
+    def _capture(**kwargs) -> FakeRetriever:
+        captured['settings'] = kwargs['settings']
+        return FakeRetriever([])
+
+    monkeypatch.setattr(cli, 'load_retriever', _capture)
+    monkeypatch.setattr(cli, 'search_top_k_docs', lambda *a, **k: [])  # noqa: ARG005
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(
+        app,
+        [
+            'evaluate',
+            queries_file,
+            '--run-dir',
+            str(tmp_path / 'runs'),
+            '--fts5-title-weight',
+            '3.0',
+            '--fts5-text-weight',
+            '2.0',
+        ],
+    )
+
+    assert result.exit_code == 0
+    assert captured['settings'].fts5_title_weight == 3.0
+    assert captured['settings'].fts5_text_weight == 2.0
+
+
+def test_evaluate_bad_queries_file_prints_clean_error(tmp_path):
+    bad_file = tmp_path / 'bad.jsonl'
+    bad_file.write_text('not valid json\n', encoding='utf-8')
+
+    result = runner.invoke(app, ['evaluate', str(bad_file), '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 1
+    assert 'Error loading queries:' in result.output
+
+
+@pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
+def test_evaluate_load_retriever_failure_prints_clean_error(monkeypatch, tmp_path, error):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+
+    def _raise(**kwargs):  # noqa: ARG001
+        raise error
+
+    monkeypatch.setattr(cli, 'load_retriever', _raise)
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 1
+    assert f'Error: {error}' in result.output
+
+
+# build-corpus
+
+
+def _fake_article() -> Article:
+    return Article(
+        doc_id='fireball',
+        url='https://example.com/spells/fireball',
+        title='Fireball',
+        category='spells',
+        breadcrumb=['Spells', 'Fireball'],
+        body_md='Deals damage in an area.',
+        n_chars=25,
+    )
+
+
+def _fake_chunk() -> Chunk:
+    return Chunk(
+        chunk_id='fireball#000',
+        doc_id='fireball',
+        heading_path=['Fireball'],
+        text='Deals damage in an area.',
+        category='spells',
+        n_tokens=6,
+    )
+
+
+def _build_corpus_settings(tmp_path, fts5_tokenchar: bool = False) -> Settings:
+    return Settings(
+        corpus_path=tmp_path / 'data' / 'corpus.parquet',
+        chunks_path=tmp_path / 'data' / 'chunks.parquet',
+        fts5_tokenchar=fts5_tokenchar,
+    )
+
+
+def test_build_corpus_writes_fts5_index(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeCorpusEmbedder)
+    monkeypatch.setattr(cli, 'parse_corpus_dir', lambda html_dir, min_body_length: [_fake_article()])  # noqa: ARG005
+    monkeypatch.setattr('rag.chunking.load_tokenizer', lambda model: object())  # noqa: ARG005
+    monkeypatch.setattr(
+        'rag.corpus.chunk_corpus',
+        lambda articles, tokenizer, max_tokens, overlap: [_fake_chunk()],  # noqa: ARG005
+    )
+    settings = _build_corpus_settings(tmp_path)
+    monkeypatch.setattr(cli, 'get_settings', lambda: settings)
+
+    html_dir = tmp_path / 'html'
+    html_dir.mkdir()
+
+    result = runner.invoke(app, ['build-corpus', str(html_dir)])
+
+    assert result.exit_code == 0
+    fts_path = settings.chunks_path.with_suffix('.fts5.db')
+    assert fts_path.exists()
+    assert f'wrote fts5 index to {fts_path}' in result.output
+    con = sqlite3.connect(fts_path)
+    assert con.execute('SELECT COUNT(*) FROM chunks_fts').fetchone()[0] == 1
+
+
+def test_build_corpus_fts5_tokenchar_setting_reaches_index(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeCorpusEmbedder)
+    monkeypatch.setattr(cli, 'parse_corpus_dir', lambda html_dir, min_body_length: [_fake_article()])  # noqa: ARG005
+    monkeypatch.setattr('rag.chunking.load_tokenizer', lambda model: object())  # noqa: ARG005
+    monkeypatch.setattr(
+        'rag.corpus.chunk_corpus',
+        lambda articles, tokenizer, max_tokens, overlap: [_fake_chunk()],  # noqa: ARG005
+    )
+    settings = _build_corpus_settings(tmp_path, fts5_tokenchar=True)
+    monkeypatch.setattr(cli, 'get_settings', lambda: settings)
+
+    html_dir = tmp_path / 'html'
+    html_dir.mkdir()
+
+    result = runner.invoke(app, ['build-corpus', str(html_dir)])
+
+    assert result.exit_code == 0
+    fts_path = settings.chunks_path.with_suffix('.fts5.db')
+    con = sqlite3.connect(fts_path)
+    create_sql = con.execute("SELECT sql FROM sqlite_master WHERE name = 'chunks_fts'").fetchone()[0]
+    assert "tokenchars '-'" in create_sql
 
 
 # _apply_fts5_weight_overrides
