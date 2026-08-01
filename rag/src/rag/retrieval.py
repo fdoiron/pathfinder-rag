@@ -48,7 +48,7 @@ class Retriever:
         fts5_text_weight: float = 1.0,
     ) -> None:
         self._df = df.reset_index(drop=True)
-        matrix = np.vstack(df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
+        matrix = np.vstack(self._df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
         if not np.isfinite(matrix).all():
             bad_rows = np.where(~np.isfinite(matrix).all(axis=1))[0]
             raise ValueError(f'non-finite embeddings (NaN/inf) at rows : {bad_rows.tolist()}')
