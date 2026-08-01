@@ -133,6 +133,10 @@ class OrphanChunksError(RuntimeError):
     """Chunks reference a doc_id that is missing from the corpus parquet."""
 
 
+class StaleIndexError(RuntimeError):
+    """FTS5 index's chunk_ids doesn't match chunks.parquet's chunk_ids (stale or foreign db)."""
+
+
 def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
     """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
@@ -140,6 +144,7 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
         ManifestMismatchError if the manifest is incompatible with the current settings, or the corpus on disk
             is not the one the chunks came from (sha256 missmatch)
         OrphanChunksError if a chunk's doc_id has no match in the corpus parquet
+        StaleIndexError if the FTS5 index's chunk_ids doesn't match chunks.parquet's chunk_ids
     """
 
     if not chunks_file.exists():
@@ -174,8 +179,6 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     fts_path = chunks_file.with_suffix('.fts5.db')
     if not fts_path.exists():
         raise FileNotFoundError(f'FTS5 index not found: {fts_path}. Rebuild chunks to generate it.')
-    # TODO: the fts5 db is only checked for existence, not staleness.  Add a check once
-    # df is loaded below: SELECT count(*) FROM chunks_fts vs len(df), raise ManifestMismatchError.
     fts_con = sqlite3.connect(fts_path)
 
     docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
@@ -196,6 +199,17 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
     meta = df[metadata_cols].astype(object)
     df[metadata_cols] = meta.where(meta.notna(), None)  # replace NaN with None for pydantic model
     logger.info(f'Loaded {len(df)} chunks from {chunks_file}')
+
+    fts_ids = {row[0] for row in fts_con.execute('SELECT chunk_id FROM chunks_fts')}
+    df_ids = set(df['chunk_id'])
+    if fts_ids != df_ids:
+        missing = sorted(df_ids - fts_ids)[:10]
+        extra = sorted(fts_ids - df_ids)[:10]
+        raise StaleIndexError(
+            f'FTS5 index {fts_path} does not match {chunks_file} ({len(df_ids - fts_ids)} chunk_id(s) missing '
+            f'from the index, ex: {missing}; {len(fts_ids - df_ids)} extra in the index, ex: {extra}). '
+            'Rebuild chunks to regenerate a matching FTS5 index.'
+        )
 
     return Retriever(
         df,

@@ -12,7 +12,7 @@ from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, writ
 from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
-from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod, StaleIndexError, load_retriever
 
 if TYPE_CHECKING:
     from rag.embedding import LocalEmbedder
@@ -138,7 +138,7 @@ def search(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
@@ -202,7 +202,7 @@ def evaluate(
             embedder=embedder,
             settings=settings,
         )
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
@@ -259,7 +259,7 @@ def ask(
 
     try:
         retriever = load_retriever(embedding_file_path, embedder, settings)
-    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError) as e:
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 

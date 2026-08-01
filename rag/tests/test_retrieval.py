@@ -10,7 +10,7 @@ import pytest
 from rag.config import Settings
 from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
-from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, load_retriever
+from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, StaleIndexError, load_retriever
 
 
 # helpers
@@ -224,4 +224,17 @@ def test_orphan_chunk_fails_at_load(tmp_path):
 
     settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
     with pytest.raises(OrphanChunksError, match='orphan'):
+        load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
+
+
+def test_fts5_index_different_ids_fails_at_load(tmp_path):
+    """Chunks.parquet that has drifted from its chunks.fts5.db should fail to load vs causing KeyError at query time"""
+    chunks_path, docs_path = _write_test_files(tmp_path, model='Qwen/Qwen3-Embedding-0.6B', dim=2)
+    fts_con = sqlite3.connect(chunks_path.with_suffix('.fts5.db'))
+    fts_con.execute("UPDATE chunks_fts SET chunk_id = 'swapped#000' WHERE chunk_id = 'alpha#000'")
+    fts_con.commit()
+    fts_con.close()
+
+    settings = _make_settings(model='Qwen/Qwen3-Embedding-0.6B', dim=2, corpus_path=docs_path)
+    with pytest.raises(StaleIndexError, match='FTS5'):
         load_retriever(chunks_path, FakeEmbedder([1.0, 0.0]), settings)
