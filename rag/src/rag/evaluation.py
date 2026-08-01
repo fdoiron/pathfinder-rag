@@ -223,13 +223,15 @@ def search_top_k_docs(retriever: Retriever, query: str, k: int, method: SearchMe
 
     One doc can occupy several of the top chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR
     can still collapse to less than k unique docs. To ensure k results it doubles the fetch until either
-    k docs are found or every chunk in the corpus has been retrieved.
+    k docs are found, every chunk in the corpus has been retrieved, or the search returned fewer hits than
+    asked for.
     """
     total_chunks = len(retriever)
     fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
     while True:
-        collapsed = collapse_to_urls(retriever.search(query, k=fetch_k, method=method), k)
-        if len(collapsed) >= k or fetch_k >= total_chunks:
+        hits = retriever.search(query, k=fetch_k, method=method)
+        collapsed = collapse_to_urls(hits, k)
+        if len(collapsed) >= k or fetch_k >= total_chunks or len(hits) < fetch_k:
             return collapsed
         fetch_k = min(fetch_k * 2, total_chunks)
 
