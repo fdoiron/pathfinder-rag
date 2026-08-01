@@ -58,8 +58,6 @@ class ChunksManifest(BaseModel):
     max_tokens: int
     overlap: int
     fts5_tokenchar: bool
-    fts5_title_weight: float = 10.0
-    fts5_text_weight: float = 1.0
     parser_version: str  # from parsing.PARSER_VERSION
     embedding_model: str
     embedding_dim: int
@@ -89,8 +87,6 @@ class ChunksManifest(BaseModel):
             max_tokens=settings.chunk_max_tokens,
             overlap=settings.chunk_overlap,
             fts5_tokenchar=settings.fts5_tokenchar,
-            fts5_title_weight=settings.fts5_title_weight,
-            fts5_text_weight=settings.fts5_text_weight,
             parser_version=PARSER_VERSION,
             embedding_model=settings.embedding_model,
             embedding_dim=settings.embedding_dim,

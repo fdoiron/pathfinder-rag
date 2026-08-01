@@ -38,6 +38,17 @@ def _load_embedder(settings: Settings) -> 'LocalEmbedder':
         raise typer.Exit(code=1) from e
 
 
+def _apply_fts5_weight_overrides(
+    settings: Settings, fts5_title_weight: float | None, fts5_text_weight: float | None
+) -> Settings:
+    overrides = {
+        name: value
+        for name, value in [('fts5_title_weight', fts5_title_weight), ('fts5_text_weight', fts5_text_weight)]
+        if value is not None
+    }
+    return settings.model_copy(update=overrides) if overrides else settings
+
+
 @app.command()
 def build_corpus(
     html_dir: Annotated[
@@ -126,9 +137,18 @@ def search(
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    fts5_title_weight: Annotated[
+        float | None,
+        typer.Option(help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)'),
+    ] = None,
+    fts5_text_weight: Annotated[
+        float | None,
+        typer.Option(help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)'),
+    ] = None,
 ) -> None:
     """Embeds search query, returns top k results"""
     settings = get_settings()
+    settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
 
@@ -182,6 +202,14 @@ def evaluate(
     ] = 5,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    fts5_title_weight: Annotated[
+        float | None,
+        typer.Option(help='bm25() weight for chunk headings vs. body text (defaults to settings.fts5_title_weight)'),
+    ] = None,
+    fts5_text_weight: Annotated[
+        float | None,
+        typer.Option(help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)'),
+    ] = None,
 ) -> None:
     """
     Evaluate the retrieval performance of the corpus.
@@ -193,6 +221,7 @@ def evaluate(
         raise typer.Exit(1) from e
 
     settings = get_settings()
+    settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
 
