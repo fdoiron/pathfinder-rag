@@ -213,7 +213,7 @@ def evaluate(
             help='Maximum number of search results to return',
             min=1,
         ),
-    ] = 5,
+    ] = 50,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
     fts5_title_weight: Annotated[
