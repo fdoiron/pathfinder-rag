@@ -2,9 +2,10 @@ import importlib.resources
 import re
 
 from openai import APIConnectionError, APIStatusError, APITimeoutError, NotFoundError, OpenAI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from rag.config import Settings
+from rag.models import ChunkHit
 from rag.retrieval import Retriever, SearchMethod
 
 
@@ -27,10 +28,11 @@ class Citation(BaseModel):
 class Answer(BaseModel):
     text: str
     citations: list[Citation]
+    invented_citations: list[int] = Field(default_factory=list)  # cited numbers outside the retrieved set
 
 
 _CITATION_RE = re.compile(r'\[(\d+)\]')
-_NO_COVERAGE_REPLY = "The retrieved excerpts don't cover this."
+NO_COVERAGE_REPLY = "The retrieved excerpts don't cover this."
 
 
 def answer_question(
@@ -41,10 +43,10 @@ def answer_question(
     k: int | None = None,
     category: str | None = None,
     method: SearchMethod = 'hybrid',
-) -> Answer:
+) -> tuple[Answer, list[ChunkHit]]:
     hits = retriever.search(question, k=k if k is not None else settings.ask_k, category=category, method=method)
     if not hits:
-        return Answer(text=_NO_COVERAGE_REPLY, citations=[])
+        return Answer(text=NO_COVERAGE_REPLY, citations=[]), hits
 
     excerpts = '\n\n'.join(
         f'[{n}] {hit.title} — {" > ".join(hit.heading_path)}\n{hit.text}' for n, hit in enumerate(hits, start=1)
@@ -75,10 +77,11 @@ def answer_question(
         ) from e
     text = response.choices[0].message.content or ''
 
-    cited = sorted({int(m) for m in _CITATION_RE.findall(text)})
+    cited_raw = sorted({int(m) for m in _CITATION_RE.findall(text)})
+    invented = [n for n in cited_raw if not (1 <= n <= len(hits))]
     citations = [
         Citation(n=n, title=hits[n - 1].title, heading_path=hits[n - 1].heading_path, url=str(hits[n - 1].url))
-        for n in cited
-        if 1 <= n <= len(hits)  # don't resolve hallucinated citations
+        for n in cited_raw
+        if 1 <= n <= len(hits)  # don't resolve invented citations
     ]
-    return Answer(text=text, citations=citations)
+    return Answer(text=text, citations=citations, invented_citations=invented), hits

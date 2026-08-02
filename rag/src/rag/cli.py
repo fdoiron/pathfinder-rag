@@ -8,7 +8,14 @@ import typer
 
 from rag.answer import LLMUnavailableError, answer_question, make_llm_client
 from rag.config import Settings, get_settings
-from rag.evaluation import evaluate_query, load_queries, search_top_k_docs, write_run
+from rag.evaluation import (
+    evaluate_answers,
+    evaluate_query,
+    load_queries,
+    search_top_k_docs,
+    write_answer_run,
+    write_run,
+)
 from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
@@ -257,7 +264,7 @@ def evaluate(
 
     results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method)) for query in queries]
 
-    run_path, run = write_run(run_dir, retriever.manifest, method, k, results)
+    run_path, run = write_run(run_dir, retriever.manifest, method, k, results, settings)
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
@@ -313,18 +320,92 @@ def ask(
         raise typer.Exit(code=1) from e
 
     try:
-        result = answer_question(
+        answer, _hits = answer_question(
             question, retriever, make_llm_client(settings), settings, k=k, category=category, method=method
         )
     except LLMUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    typer.echo(result.text)
+    typer.echo(answer.text)
     typer.echo()
-    for c in result.citations:
+    for c in answer.citations:
         typer.echo(f'[{c.n}] {c.title} — {" > ".join(c.heading_path)}')
         typer.echo(f'    {c.url}')
+
+
+@app.command(name='evaluate-answers')
+def evaluate_answers_cmd(
+    queries_file: Annotated[
+        Path,
+        typer.Argument(
+            help='Path to the input queries JSON file for evaluation',
+            exists=True,
+            readable=True,
+        ),
+    ],
+    embedding_file_path: Annotated[
+        Path | None,
+        typer.Option(
+            help='Path to the embedding parquet file',
+            exists=True,
+            readable=True,
+        ),
+    ] = None,
+    k: Annotated[
+        int | None,
+        typer.Option(help='Number of excerpts to retrieve for the prompt (defaults to settings.ask_k)', min=1),
+    ] = None,
+    run_dir: Annotated[Path, typer.Option(help='Directory to save answer evaluation run results')] = Path('eval/runs'),
+    method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+) -> None:
+    """Evaluate if rag ask answers cite the correct source."""
+    try:
+        queries = load_queries(queries_file)
+    except ValueError as e:
+        typer.echo(f'Error loading queries: {e}', err=True)
+        raise typer.Exit(1) from e
+
+    settings = get_settings()
+    embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
+    embedder = _load_embedder(settings)
+
+    try:
+        retriever = load_retriever(chunks_file=embedding_file_path, embedder=embedder, settings=settings)
+    except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
+        typer.echo(f'Error: {e}', err=True)
+        raise typer.Exit(code=1) from e
+
+    client = make_llm_client(settings)
+    eval_k = k if k is not None else settings.ask_k
+
+    results = []
+    for query in queries:
+        try:
+            answer, hits = answer_question(query.query, retriever, client, settings, k=eval_k, method=method)
+        except LLMUnavailableError as e:
+            typer.echo(f'Error: {e}', err=True)
+            raise typer.Exit(code=1) from e
+        results.append(evaluate_answers(query, answer, hits))
+
+    run_path, run = write_answer_run(run_dir, retriever.manifest, method, eval_k, results, settings)
+    typer.echo(run.summary.format_line())
+
+    typer.echo('\nby type:')
+    for name, group_summary in run.by_type.items():
+        typer.echo(f'  {name}: {group_summary.format_line()}')
+
+    typer.echo('\nby category:')
+    for name, group_summary in run.by_category.items():
+        typer.echo(f'  {name}: {group_summary.format_line()}')
+
+    invented = [r for r in results if r.invented_citation]
+    if invented:
+        typer.echo(f'\n{len(invented)} answers cited something outside the retrieved excerpts:')
+        for r in invented:
+            typer.echo(f'  query: {r.query}')
+
+    typer.echo(f'\nWrote answer evaluation run results to {run_path}')
 
 
 if __name__ == '__main__':

@@ -6,17 +6,25 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from rag.answer import NO_COVERAGE_REPLY, Answer, Citation
+from rag.config import Settings
 from rag.evaluation import (
+    AnswerEvalRun,
+    AnswerResult,
     EvalQuery,
     EvalRun,
     QueryResult,
     collapse_to_urls,
+    evaluate_answers,
     evaluate_query,
     load_queries,
     normalize_url,
     search_top_k_docs,
+    summarize_answers,
+    summarize_answers_by,
     summarize_by,
     summarize_results,
+    write_answer_run,
     write_run,
 )
 from rag.lexical import build_fts5_index
@@ -51,6 +59,35 @@ def make_query_result(rank: int | None, qtype: str = 'exact_name') -> QueryResul
         retrieved_items=[],
         rank=rank,
         reciprocal_rank=rr,
+    )
+
+
+def make_answer(
+    text: str = 'An answer. [1]', citations: list[Citation] | None = None, invented: list[int] | None = None
+) -> Answer:
+    return Answer(
+        text=text,
+        citations=[] if citations is None else citations,
+        invented_citations=[] if invented is None else invented,
+    )
+
+
+def make_answer_result(
+    expected_url_retrieved: bool = True,
+    refused: bool = False,
+    cited_correct_source: bool = True,
+    invented_citation: bool = False,
+    qtype: str = 'exact_name',
+) -> AnswerResult:
+    return AnswerResult(
+        query='q',
+        type=qtype,
+        expected_urls=['https://example.com/a'],
+        expected_url_retrieved=expected_url_retrieved,
+        refused=refused,
+        citation_results=[cited_correct_source],
+        cited_correct_source=cited_correct_source,
+        invented_citation=invented_citation,
     )
 
 
@@ -179,6 +216,112 @@ def test_chunk_id_and_n_tokens_preserved_per_item():
     ]
     qr = evaluate_query(query, results)
     assert [(item.chunk_id, item.n_tokens) for item in qr.retrieved_items] == [('a#000', 10), ('b#002', 25)]
+
+
+# evaluate_answers
+
+
+def test_evaluate_answers_all_positive():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    hits = [make_result('https://example.com/a')]
+    citation = Citation(n=1, title='t', heading_path=[], url='https://example.com/a')
+    answer = make_answer(citations=[citation])
+
+    result = evaluate_answers(query, answer, hits)
+
+    assert result.expected_url_retrieved is True
+    assert result.cited_correct_source is True
+    assert result.citation_results == [True]
+    assert result.refused is False
+    assert result.invented_citation is False
+
+
+def test_evaluate_answers_truth_not_retrieved():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    hits = [make_result('https://example.com/other')]
+    answer = make_answer(citations=[])
+
+    result = evaluate_answers(query, answer, hits)
+
+    assert result.expected_url_retrieved is False
+    assert result.cited_correct_source is False
+    assert result.citation_results == []
+
+
+def test_evaluate_answers_cited_wrong_source():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    hits = [make_result('https://example.com/a'), make_result('https://example.com/other')]
+    citation = Citation(n=2, title='t', heading_path=[], url='https://example.com/other')
+    answer = make_answer(citations=[citation])
+
+    result = evaluate_answers(query, answer, hits)
+
+    assert result.expected_url_retrieved is True  # truth was fed to the LLM
+    assert result.cited_correct_source is False  # but cited the wrong thing
+    assert result.citation_results == [False]
+
+
+def test_evaluate_answers_multiple_citations_mixed():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    hits = [make_result('https://example.com/a'), make_result('https://example.com/other')]
+    citations = [
+        Citation(n=1, title='t', heading_path=[], url='https://example.com/other'),
+        Citation(n=2, title='t', heading_path=[], url='https://example.com/a'),
+    ]
+    answer = make_answer(citations=citations)
+
+    result = evaluate_answers(query, answer, hits)
+
+    assert result.citation_results == [False, True]
+    assert result.cited_correct_source is True  # any() hit is enough
+
+
+def test_evaluate_answers_refused_detected():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    answer = make_answer(text=NO_COVERAGE_REPLY, citations=[])
+
+    result = evaluate_answers(query, answer, [])
+
+    assert result.refused is True
+
+
+def test_evaluate_answers_refusal_requires_exact_match():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    answer = make_answer(text=f"I'm sorry, but {NO_COVERAGE_REPLY.lower()}", citations=[])
+
+    result = evaluate_answers(query, answer, [])
+
+    assert result.refused is False
+
+
+def test_evaluate_answers_refusal_tolerates_surrounding_whitespace():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    answer = make_answer(text=f'  {NO_COVERAGE_REPLY}  \n', citations=[])
+
+    result = evaluate_answers(query, answer, [])
+
+    assert result.refused is True
+
+
+def test_evaluate_answers_invented_citation_flagged():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    hits = [make_result('https://example.com/a')]
+    citation = Citation(n=1, title='t', heading_path=[], url='https://example.com/a')
+    answer = make_answer(citations=[citation], invented=[9])
+
+    result = evaluate_answers(query, answer, hits)
+
+    assert result.invented_citation is True
+    assert result.cited_correct_source is True  # it cited right and invented a number
+
+
+def test_evaluate_answers_no_invented_citation_when_list_empty():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    answer = make_answer(citations=[], invented=[])
+
+    result = evaluate_answers(query, answer, [])
+
+    assert result.invented_citation is False
 
 
 # collapse_to_urls
@@ -352,6 +495,53 @@ def test_summary_empty_raises():
         summarize_results([])
 
 
+# summarize_answers
+
+
+def test_summarize_answers_known_mix():
+    # 2 of 4 retrieved, 3 of 4 cited, 1 of 4 refused, 1 of 4 invented a citation
+    results = [
+        make_answer_result(
+            expected_url_retrieved=True, cited_correct_source=True, refused=False, invented_citation=False
+        ),
+        make_answer_result(
+            expected_url_retrieved=True, cited_correct_source=True, refused=False, invented_citation=True
+        ),
+        make_answer_result(
+            expected_url_retrieved=False, cited_correct_source=False, refused=True, invented_citation=False
+        ),
+        make_answer_result(
+            expected_url_retrieved=False, cited_correct_source=True, refused=False, invented_citation=False
+        ),
+    ]
+    summary = summarize_answers(results)
+    assert summary.n_queries == 4
+    assert summary.retrieval_rate == pytest.approx(0.5)
+    assert summary.citation_rate == pytest.approx(0.75)
+    assert summary.refusal_rate == pytest.approx(0.25)
+    assert summary.invented_citation_rate == pytest.approx(0.25)
+
+
+def test_summarize_answers_empty_raises():
+    with pytest.raises(ValueError, match='cannot summarize an empty result list'):
+        summarize_answers([])
+
+
+# summarize_answers_by
+
+
+def test_summarize_answers_by_groups_and_computes_metrics_per_group():
+    results = [
+        make_answer_result(cited_correct_source=True, qtype='exact_name'),
+        make_answer_result(cited_correct_source=False, qtype='exact_name'),
+        make_answer_result(cited_correct_source=True, qtype='paraphrase'),
+    ]
+    by_type = summarize_answers_by(results, lambda r: r.type)
+    assert set(by_type) == {'exact_name', 'paraphrase'}
+    assert by_type['exact_name'].citation_rate == pytest.approx(0.5)
+    assert by_type['paraphrase'].citation_rate == pytest.approx(1.0)
+
+
 # summarize_by
 
 
@@ -426,10 +616,12 @@ def test_write_run_creates_readable_file(tmp_path: Path):
         method='hybrid',
         k=5,
         results=results,
+        settings=Settings(),
     )
 
     assert out_path.exists()
     assert run.k == 5
+    assert run.rrf_vector_weight == Settings().rrf_vector_weight
     assert run.summary.n_queries == 2
     assert run.summary.mrr == pytest.approx(0.5)
     assert 'exact_name' in run.by_type
@@ -438,5 +630,39 @@ def test_write_run_creates_readable_file(tmp_path: Path):
     assert loaded.k == 5
     assert loaded.summary.n_queries == run.summary.n_queries
     assert loaded.summary.mrr == pytest.approx(run.summary.mrr)
+    assert loaded.manifest.n_articles == 10
+    assert len(loaded.results) == 2
+
+
+# write_answer_run
+
+
+def test_write_answer_run_creates_readable_file(tmp_path: Path):
+    manifest = make_manifest()
+    results = [
+        make_answer_result(expected_url_retrieved=True, cited_correct_source=True),
+        make_answer_result(expected_url_retrieved=False, cited_correct_source=False),
+    ]
+
+    out_path, run = write_answer_run(
+        run_dir=tmp_path / 'runs',
+        manifest=manifest,
+        method='hybrid',
+        k=5,
+        results=results,
+        settings=Settings(),
+    )
+
+    assert out_path.exists()
+    assert out_path.name.endswith('_answer_eval.json')
+    assert run.k == 5
+    assert run.rrf_vector_weight == Settings().rrf_vector_weight
+    assert run.summary.n_queries == 2
+    assert run.summary.citation_rate == pytest.approx(0.5)
+    assert 'exact_name' in run.by_type
+
+    loaded = AnswerEvalRun.model_validate_json(out_path.read_text(encoding='utf-8'))
+    assert loaded.k == 5
+    assert loaded.summary.n_queries == run.summary.n_queries
     assert loaded.manifest.n_articles == 10
     assert len(loaded.results) == 2
