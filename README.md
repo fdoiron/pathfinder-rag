@@ -7,36 +7,44 @@ A retrieval augmented question/answering pipeline over the Pathfinder 1e tableto
 ```
 $ uv run rag search "power attack"
 --- Result 1 ---
-Score: 0.033
+Score: 0.262
 Title: Power Attack (Combat)
 URL: https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat
 --- Result 2 ---
-Score: 0.031
-Title: Two-Handed Fighter
-URL: https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-handed-fighter
---- Result 3 ---
-Score: 0.031
+Score: 0.257
 Title: Furious Focus (Combat)
 URL: https://www.d20pfsrd.com/feats/combat-feats/furious-focus-combat
+--- Result 3 ---
+Score: 0.254
+Title: Two-Handed Fighter
+URL: https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-handed-fighter
 --- Result 4 ---
-Score: 0.031
+Score: 0.250
 Title: Mythic Tiberolith
 URL: https://www.d20pfsrd.com/bestiary/monster-listings/constructs/mythic-tiberolith
 --- Result 5 ---
-Score: 0.029
-Title: Chakra Power (Akashic)
-URL: https://www.d20pfsrd.com/magic/variant-magic-rules/akashic-magic/feats/chakra-power-akashic
+Score: 0.244
+Title: Powerful Poisoning
+URL: https://www.d20pfsrd.com/feats/general-feats/powerful-poisoning
 ```
 
-`search` defaults to `--method hybrid` so what is printed is a Reciprocal Rank Fusion score (bounded by `2/(rrf_k+1) ≈ 0.033` at `rrf_k=60`) not a similarity score. RRF ranks and doesn't measure; only the order matters and close ties like results 2 to 4 are how RRF behaves. Use `--method vector` for cosine similarities instead. `--method bm25` prints SQLite FTS5's raw `bm25()` score instead: negative and unbounded, more negative ranks better.
+`search` defaults to `--method hybrid` so what is printed is a Reciprocal Rank Fusion score (bounded by `(rrf_vector_weight+rrf_bm25_weight)/(rrf_k+1) ≈ 0.262` at the current defaults, `rrf_k=60`, `rrf_vector_weight=15`, `rrf_bm25_weight=1`) not a similarity score. RRF ranks and doesn't measure; only the order matters and close scores like results 2 to 4 are how RRF behaves. Use `--method vector` for cosine similarities instead. `--method bm25` prints SQLite FTS5's raw `bm25()` score instead: negative and unbounded, more negative ranks better.
 
 ```
 $ uv run rag ask "can I move and attack in the same round?"
-Yes, you can move and attack in the same round by using the Spring Attack feat for melee attacks or
-Shot on the Run for ranged attacks, both of which allow movement and an attack as part of a
-full-round action [3][5]. Normally, without such feats, you cannot move before and after an attack
-[5], but these abilities specifically grant that capability.
+Yes, you can move and attack in the same round using specific abilities. For example, the **Spring
+Attack** feat allows you to move up to your speed, make a single melee attack, and move again as
+part of a full-round action [3]. Similarly, **Shot on the Run** enables moving, firing a ranged
+attack, and moving again as a full-round action [5]. These feats explicitly allow movement and
+attacks within the same round.
 
+Additionally, during a **full-attack action**, you may choose to take a move action instead of
+making remaining attacks after your first attack [1].
+
+The retrieved excerpts cover this.
+
+[1] Combat — Combat > Actions In Combat > Full-Round Actions > Full Attack > Deciding between an Attack or a Full Attack
+    https://www.d20pfsrd.com/gamemastering/combat
 [3] Spring Attack (Combat) — Spring Attack (Combat)
     https://www.d20pfsrd.com/feats/combat-feats/spring-attack-combat
 [5] Shot on the Run (Combat) — Shot on the Run (Combat)
@@ -45,9 +53,11 @@ full-round action [3][5]. Normally, without such feats, you cannot move before a
 
 Both runs above against the real corpus with the current hybrid index, `qwen3:14b` served by a local `ollama serve`. `ask` output is not deterministic, the wording and the subset of excerpts cited will vary between runs.
 
+The `ask` answer above is also a live example of a current gap : every excerpt it retrieved is feat- or full-attack-specific (Spring Attack, Shot on the Run, two full-attack sub-sections of the combat page), so the model frames the whole answer around feats rather than the baseline rule that a move action plus a standard attack needs no feat at all. Retrieval never found that baseline chunk, so the model had nothing correct to cite and leaned on what it had instead. See [Evaluation](#evaluation) for the broader pattern of confident answers with incomplete retrieval behind them.
+
 ## What works right now
 
-Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion) and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask` and `rag evaluate` all take `--method {vector,bm25,hybrid}` and load straight from disk to answer or score from the terminal. Containers and an API are not built yet, they're staged in [Future expansions](#future-expansions).
+Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion) and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask` and `rag evaluate` all take `--method {vector,bm25,hybrid}` and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know. Containers and an API are not built yet, they're staged in [Future expansions](#future-expansions).
 
 24,098 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
@@ -101,7 +111,10 @@ uv run rag ask "can I move and attack in the same round?"
 # 5. evaluate retrieval against the hand verified truth set
 uv run rag evaluate eval/queries.jsonl
 
-# 6. run the test suite (doesn't require the scraped corpus)
+# 6. evaluate whether rag ask's answers actually cite the correct source
+uv run rag evaluate-answers eval/queries.jsonl
+
+# 7. run the test suite (doesn't require the scraped corpus)
 uv run pytest
 ```
 
@@ -154,30 +167,46 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
 
 ## Evaluation
 
-34 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). Vector-only, BM25-only and hybrid (RRF, `rrf_k=60`) were each run with a retrieval depth of 5 against the same truth set and the same corpus:
+127 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). Vector-only, BM25-only and hybrid (RRF, `rrf_k=60`, vector weighted 15x over BM25 in the fused score) were each run with a retrieval depth of 5 against the same truth set and the same corpus:
 
 | Type | Method | Recall@1 | Recall@3 | Recall@5 | MRR |
 |---|---|---|---|---|---|
-| **Overall** (n=34) | Vector | 0.44 | 0.76 | 0.82 | 0.59 |
-| | BM25 | 0.21 | 0.29 | 0.29 | 0.25 |
-| | **Hybrid** | **0.53** | 0.71 | 0.79 | **0.63** |
-| `exact_name` (n=11) | Vector | 0.55 | 1.00 | 1.00 | 0.73 |
-| | BM25 | 0.55 | 0.82 | 0.82 | 0.68 |
-| | **Hybrid** | **0.82** | 0.82 | 0.91 | **0.84** |
-| `paraphrase` (n=12) | Vector | 0.25 | 0.42 | 0.50 | 0.34 |
+| **Overall** (n=127) | Vector | 0.45 | 0.73 | 0.80 | 0.60 |
+| | BM25 | 0.22 | 0.31 | 0.35 | 0.27 |
+| | **Hybrid** | **0.46** | 0.75 | 0.80 | **0.61** |
+| `exact_name` (n=55) | Vector | 0.51 | 0.78 | 0.87 | 0.66 |
+| | BM25 | 0.49 | 0.67 | 0.76 | 0.59 |
+| | **Hybrid** | **0.55** | 0.82 | 0.89 | **0.69** |
+| `paraphrase` (n=38) | Vector | 0.32 | 0.53 | 0.55 | 0.42 |
 | | BM25 | 0.00 | 0.00 | 0.00 | 0.00 |
-| | Hybrid | 0.25 | 0.42 | 0.50 | 0.34 |
-| `rules_reasoning` (n=11) | Vector | 0.55 | 0.91 | 1.00 | 0.73 |
-| | BM25 | 0.09 | 0.09 | 0.09 | 0.09 |
-| | Hybrid | 0.55 | 0.91 | 1.00 | 0.75 |
+| | Hybrid | 0.32 | 0.53 | 0.55 | 0.42 |
+| `rules_reasoning` (n=34) | Vector | 0.50 | 0.88 | 0.94 | 0.69 |
+| | BM25 | 0.03 | 0.06 | 0.06 | 0.04 |
+| | Hybrid | 0.50 | 0.88 | 0.94 | 0.69 |
 
-**Note**: With n=34 queries one query is worth ~3 points overall and ~8-9 points per type. A single query flipping moves a cell more than most differences between cells in the table. The table ranks interventions against each other on the same queries. It is not a benchmark and the absolute numbers should not be read as precise. Growing the truth set to 60-100 queries in `E2` below will partially address this.
 
-BM25 ties vector on `exact_name` recall@1 but returns nothing on `paraphrase` (MRR 0.00, a paraphrase by construction shares few literal words with its target page) and barely helps `rules_reasoning`. Fused via RRF (rrf_k=60), `exact_name` recall@1 rises to 0.82, above either individual method. RRF ranks a doc highly if it ranks well in either list, and a doc ranking first in both (an exact-name match BM25 does well on while vector gets somewhat close on) dominates the fused order. `paraphrase` is unchanged: BM25 contributes nothing there, so RRF reduces to vector's own ranking. Net change: overall MRR 0.59 → 0.63, recall@1 0.44 → 0.53. `paraphrase` staying weak either way is a chunk size problem rather than a retrieval-method problem: 51.4% of chunks are under 100 tokens, 20.6% under 50. Hence `E1.5`.
+BM25 ties vector on `exact_name` recall@1 (0.49 vs 0.51) but returns nothing on `paraphrase` (MRR 0.00, a paraphrase by construction shares few literal words with its target page) and is not useful on `rules_reasoning` (recall@1 0.03). Fusing it in at equal (1:1) RRF weight was a net negative at n=127. recall@3, recall@5 and overall MRR all moved against hybrid for only a noise level recall@1 tick. A close sibling or variant of the correct page (a poison stat block sharing a condition's name, a `Greater X` version of the base feat, a parent class page over its own subpage) routinely outscored the canonical page on literal term overlap and RRF has no sense of how close it is numerically, it only uses ranks, so it cannot tell that apart from a genuinely wrong page. Weighting vector 15x over BM25 in the fused score (swept in `scripts/rrf_weight_sweep.py`, [sweep output](rag/eval/canonical/n127_rrf_weight_sweep.json)) fixes this issue. That value was picked by maximizing MRR over this same n=127 set, with no held out split at this size to sharpen it further. It sits on a plateau rather than a knife's edge: weights 10, 15, 20, 30 all score MRR 0.603-0.609, a spread smaller than one query flipping. The defensible claim is heavily down-weight BM25 not that 15 specifically is optimal.
 
-The gains from hybrid cost recall@3 (0.76 → 0.71) and recall@5 (0.82 → 0.79). Six queries moved between the two runs: four up and two down. `cleave` 2 → 1, `rage powers` 3 → 1, `summon monster I` 3 → 1, and `can you full attack after a charge` 3 → 2 all climb to or toward the top of the rankings, while `grapple combat maneuver` slips 3 → 5 and `outsider creature type` falls out of the top 5 entirely. The last one is a textbook example of RRF failure: mediocre in both lists beats excellent in one but not the other way around. The Outsiders page is the second best from vector and doesn't appear anywhere in BM25's 50 results, so the fused score is `1/(60+2) ≈ 0.016`. Meanwhile, four `Creature (CR +N)` template pages are in the middle of both lists (Cold Creature at vector 11 and BM25 8, `1/71 + 1/68 ≈ 0.029`) and each individually outscore it, taking fused ranks 1, 2, 4, and 5. Since RRF sees only rank and not score, vector's own verdict that the Outsiders page belongs nine places above those templates never reaches the fused ordering. Re-scoring the fused top 20 with a cross encoder (`E1.6`) is the targeted fix for the queries this loses.
+Down-weighting BM25 contains its failure mode rather than eliminating it entirely. 18 queries still change rank between vector-only and weighted hybrid (10 up, 8 down), about half the churn of the unweighted version (32, split 15/17), and the same sibling page confusion from above is still visible in the 8 moving down. `outsider creature type` (2 → 3) still loses to general reference pages (`Simple Monster Creation`, `Creature Types & Subtypes`) ahead of the specific `Outsiders` category page, and `sorcerer bloodline` (2 → 3) still loses to the parent `Sorcerer` class page over its own `Bloodlines` subpage. The difference is severity. Under unweighted RRF, `fatigued`/`exhausted`/`shaken condition` all fell from a clean vector rank 1 to a complete miss, beaten outright by short poison/drug entries that happen to name the condition once (`Nerveblast` for `shaken condition`). Weighted, the same three queries only slip to rank 2-4. `shaken condition` still loses to `Nerveblast` at rank 1, but the correct `Conditions` page now lands at rank 4, still inside recall@5. BM25 keeps enough influence to rescue real ties (`cleave`, `dodge feat`, `improved critical`, `point blank shot`, and `ranger favored enemy` all climb to rank 1) without enough voting power left to drag a lexically similar wrong page above vector's correct pick outright. Re-scoring the fused top 20 with a cross encoder (`E1.6`) remains the next lever for the residual 8. The cross encoder reads content, not just term overlap, so it's the more plausible fix for cases weighting alone contains but doesn't fully resolve.
 
-Full per-query results and per-category breakdowns are in the run files themselves: [vector](rag/eval/canonical/n34_vector_post-glue-fix.json), [BM25](rag/eval/canonical/n34_bm25.json), [hybrid](rag/eval/canonical/n34_hybrid.json). `rag evaluate --method {vector,bm25,hybrid}` writes a new timestamped run under `eval/runs/` every time it's run; that directory is gitignored scratch space. Runs worth keeping as evidence get copied into `eval/canonical/` with a descriptive name instead of a timestamp. Before/after evidence for bug fixes that also moved the eval numbers are in [Post mortem (draft)](#post-mortem-draft) below.
+Full per-query results and per-category breakdowns are in the run files themselves: [vector](rag/eval/canonical/n127_vector.json), [BM25](rag/eval/canonical/n127_bm25.json), [hybrid](rag/eval/canonical/n127_hybrid.json), and the unweighted (1:1) hybrid run the paragraph above compares against: [hybrid, unweighted](rag/eval/canonical/n127_hybrid_unweighted.json). `rag evaluate --method {vector,bm25,hybrid}` writes a new timestamped run under `eval/runs/` every time it's run; that directory is gitignored scratch space. Runs worth keeping as evidence get copied into `eval/canonical/` with a descriptive name instead of a timestamp. Before/after evidence for bug fixes that also moved the eval numbers are in [Post mortem (draft)](#post-mortem-draft) below.
+
+`rag evaluate-answers` runs the same truth set through `answer_question` instead of raw retrieval scoring four things per query: whether the correct source was even retrieved into the prompt, whether the answer cited it, whether it invented a citation number outside the excerpts it was given, and whether it honestly refused rather than answering uncited. Hybrid, weighted RRF (vector 15x over BM25), `ask_k=5` (the same default `rag ask` currently serves):
+
+| Type | n | Retrieved | Cited | Refused | Invented citation |
+|---|---|---|---|---|---|
+| **Overall** | 127 | 0.80 | 0.71 | 0.10 | 0.00 |
+| `exact_name` | 55 | 0.87 | 0.82 | 0.05 | 0.00 |
+| `paraphrase` | 38 | 0.55 | 0.53 | 0.13 | 0.00 |
+| `rules_reasoning` | 34 | 0.94 | 0.74 | 0.15 | 0.00 |
+
+`Invented citation` is a narrow, structural check: did any `[n]` resolve to something outside the excerpts the model was actually given. Results show zero across all 127 queries, but it is not a general hallucination check. The numbers right below it show why that distinction matters. Retrieval improved along with the RRF reweighting: 101 of 127 queries (80%, up from 75% under unweighted hybrid) now get the correct source into the 5 excerpts handed to the LLM. Citation quality tracks this. Of those 101, 90 (89.1%, up from 86.3%) were cited correctly. Of the 26 queries where retrieval still comes up empty, only 7 (27%, up from 16%) say the excerpts don't cover it. The other 19 (73%) answer confidently anyway with nothing correct behind them. Those are real hallucinations, in the ordinary sense of the word, just not the kind `Invented citation` is built to catch. While there are fewer of them now than before there is roughly 3 confident wrong answers for every honest refusal, which is the same ratio as before. Cutting into those 19 is scoped as `E2.5` as a prompt-side fix.
+
+Five queries are still fully silent (retrieved, not cited, didn't refuse) a similar count to before (was four), though better retrieval resolved some of the old ones and identified different ones: `undead creature type`, `class ability where a monk gets extra unarmed attacks`, and three multipart rules questions (`can you full attack after a charge`, `do two-weapon fighting penalties stack with power attack`, `what happens if you're grappled and try to cast a spell`). Of the 6 queries refused despite the correct source being present, 2 still share the broad `gamemastering/combat` umbrella page (`does concealment stack with cover`, `caster level at negative HP`), the same URL-level blind spot as before (a big page landing one irrelevant chunk in the top 5 counts as "retrieved" even when the specific needed section isn't there), just smaller now that retrieval itself improved.
+
+The demo at the top of this README was one of the silent misses under unweighted hybrid. Under the current default it correctly cites the canonical `gamemastering/combat` page for `can I move and attack in the same round?`, a concrete, visible effect of the RRF reweighting. (Generation is non-deterministic, see the note under [Demo](#demo), so a re-run may cite differently, but the underlying retrieval now consistently shows the right page where it previously didn't.)
+
+Full per-query results: [answer eval, hybrid k=5, weighted RRF](rag/eval/canonical/n127_answer_eval_hybrid.json) — the "up from" figures above compare against the same run under unweighted (1:1) RRF: [answer eval, hybrid k=5, unweighted RRF](rag/eval/canonical/n127_answer_eval_hybrid_unweighted.json).
 
 ## Roadmap
 
@@ -197,8 +226,9 @@ Future expansions:
 
 | Expansion | Status | Content |
 |---|---|---|
-| E1: hybrid retrieval | **Done** | BM25 (SQLite FTS5) + vector, combined by Reciprocal Rank Fusion. Overall MRR 0.59 → 0.63, `exact_name` recall@1 0.55 → 0.82. No movement in `paraphrase` see [Evaluation](#evaluation). |
-| E2: expand evaluation set | — | Grow the truth set to 60-100 queries, add answer level checks (does the answer actually cite what it retrieved).|
+| E1: hybrid retrieval | **Done** | BM25 (SQLite FTS5) + vector, combined by Reciprocal Rank Fusion. At n=127, `exact_name` recall@1 0.51 → 0.55, MRR 0.60 → 0.61. No movement in `paraphrase` see [Evaluation](#evaluation). |
+| E2: expand evaluation set | **Done** | Truth set grown to 127 queries (incl. real play session questions). Answer level checks built and run (`rag evaluate-answers`): 80% retrieval, 71% correctly cited, 0% invented citations but only 27% honest refusal when retrieval actually fails. 73% answer confidently with nothing correct behind them, real hallucinations the invented citation check cannot see. See [Evaluation](#evaluation). |
+| E2.5: reduce confident hallucination | — | 19 of 26 retrieval failure queries answer confidently anyway instead of refusing (see [Evaluation](#evaluation)). Prompt-side fix (stronger/repeated refusal instruction, an explicit "is this actually covered" check before answering). |
 | E1.5: small-to-big retrieval | — | Embed small chunks for sharp search, hand the generator the whole parent section, so `max_tokens` stops having to serve both retrieval precision and generation completeness at once. More promising improvement on `paraphrase` than more BM25/RRF tuning would be |
 | E1.6: reranker | — | Split out of E1's original stretch goal. Cross-encoder re-scores just the RRF top-20 |
 | E3: TEI embedding service | — | Swap the in process embedder for a served one (Hugging Face's text-embeddings-inference), needed once a long running API is doing the embedding instead of a batch job |
@@ -232,7 +262,7 @@ Future expansions:
 
 ## Testing
 
-`ruff check`, `ruff format --check`, and `mypy` in strict mode, 450+ tests. The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
+`ruff check`, `ruff format --check`, and `mypy` in strict mode, 500+ tests. The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
 
 ```bash
 cd rag
@@ -240,6 +270,10 @@ uv run poe check   #in order:  ruff check ., ruff format --check ., mypy src tes
 ```
 
 ## Post mortem (draft)
+
+### Eval methodology notes
+
+**The original evaluation table was n=34.** One query was worth about 3 points overall and 8 to 9 points per type. A single query flipping moved a cell more than most differences between cells in the table. The table ranked interventions against each other on the same queries, but it was not a benchmark and the absolute numbers were not precise. The [Evaluation](#evaluation) section's per-bug before/after deltas below predate the regrow and should be read with that in mind. Growing the truth set to 127 queries (`E2`) fixed this. At n=127 one query is worth well under a point overall (about 0.8) and 2 to 3 points per type, close enough to trust the table at face value.
 
 ### Bugs
 
