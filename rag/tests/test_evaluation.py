@@ -26,16 +26,18 @@ from rag.retrieval import Retriever
 # helpers
 
 
-def make_result(url: str, title: str = 't', score: float = 0.9) -> ChunkHit:
+def make_result(
+    url: str, title: str = 't', score: float = 0.9, chunk_id: str = 'doc#000', n_tokens: int = 4
+) -> ChunkHit:
     return ChunkHit(
-        chunk_id='doc#000',
+        chunk_id=chunk_id,
         doc_id='doc',
         url=url,
         title=title,
         heading_path=[],
         text='body',
         category='bestiary',
-        n_tokens=4,
+        n_tokens=n_tokens,
         score=score,
     )
 
@@ -167,6 +169,16 @@ def test_retrieved_preserved_in_order():
     results = [make_result(u) for u in urls]
     qr = evaluate_query(query, results)
     assert [item.url for item in qr.retrieved_items] == urls
+
+
+def test_chunk_id_and_n_tokens_preserved_per_item():
+    query = EvalQuery(query='q', type='exact_name', expected_urls=['https://example.com/a'])
+    results = [
+        make_result('https://example.com/a', chunk_id='a#000', n_tokens=10),
+        make_result('https://example.com/b', chunk_id='b#002', n_tokens=25),
+    ]
+    qr = evaluate_query(query, results)
+    assert [(item.chunk_id, item.n_tokens) for item in qr.retrieved_items] == [('a#000', 10), ('b#002', 25)]
 
 
 # collapse_to_urls

@@ -13,7 +13,7 @@ from rag.retrieval import Retriever, SearchMethod
 
 logger = logging.getLogger(__name__)
 
-RECALL_KS = (1, 3, 5)
+RECALL_KS = (1, 3, 5, 20, 50)
 EVAL_OVERFETCH_FACTOR = 5  # Headroom for initial chunks pere document when  collapsing chunk hits to unique pages
 
 
@@ -52,6 +52,8 @@ class RetrievedItem(BaseModel):
     url: str
     title: str
     score: float
+    chunk_id: str
+    n_tokens: int
 
 
 class QueryResult(BaseModel):
@@ -145,11 +147,7 @@ def evaluate_query(
         type=query.type,
         expected_urls=query.expected_urls,
         retrieved_items=[
-            RetrievedItem(
-                url=str(r.url),
-                title=r.title,
-                score=r.score,
-            )
+            RetrievedItem(url=str(r.url), title=r.title, score=r.score, chunk_id=r.chunk_id, n_tokens=r.n_tokens)
             for r in results
         ],
         rank=rank,
