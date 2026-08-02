@@ -19,11 +19,14 @@ SearchMethod = Literal['vector', 'bm25', 'hybrid']
 _HYBRID_CANDIDATE_POOL = 50
 
 
-def reciprocal_rank_fusion(rankings: dict[str, list[str]], rrf_k: int) -> list[tuple[str, float]]:
+def reciprocal_rank_fusion(
+    rankings: dict[str, list[str]], rrf_k: int, weights: dict[str, float] | None = None
+) -> list[tuple[str, float]]:
     scores: dict[str, float] = {}
-    for ranked_ids in rankings.values():
+    for name, ranked_ids in rankings.items():
+        weight = 1.0 if weights is None else weights[name]
         for rank, item_id in enumerate(ranked_ids, start=1):
-            scores[item_id] = scores.get(item_id, 0.0) + 1.0 / (rrf_k + rank)
+            scores[item_id] = scores.get(item_id, 0.0) + weight / (rrf_k + rank)
     return sorted(scores.items(), key=lambda pair: pair[1], reverse=True)
 
 
@@ -46,6 +49,8 @@ class Retriever:
         rrf_k: int = 60,
         fts5_title_weight: float = 10.0,
         fts5_text_weight: float = 1.0,
+        rrf_vector_weight: float = 1.0,
+        rrf_bm25_weight: float = 1.0,
     ) -> None:
         self._df = df.reset_index(drop=True)
         matrix = np.vstack(self._df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
@@ -63,6 +68,8 @@ class Retriever:
         self._rrf_k = rrf_k
         self._fts5_title_weight = fts5_title_weight
         self._fts5_text_weight = fts5_text_weight
+        self._rrf_vector_weight = rrf_vector_weight
+        self._rrf_bm25_weight = rrf_bm25_weight
         self._chunk_id_to_pos: dict[str, int] = dict(zip(self._df['chunk_id'], range(len(self._df)), strict=True))
 
     def search(
@@ -81,7 +88,11 @@ class Retriever:
         pool = max(k, _HYBRID_CANDIDATE_POOL)
         vector_ids = [hit.chunk_id for hit in self._search_vector(query, pool, category)]
         bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
-        fused = reciprocal_rank_fusion({'vector': vector_ids, 'bm25': bm25_ids}, rrf_k=self._rrf_k)
+        fused = reciprocal_rank_fusion(
+            {'vector': vector_ids, 'bm25': bm25_ids},
+            rrf_k=self._rrf_k,
+            weights={'vector': self._rrf_vector_weight, 'bm25': self._rrf_bm25_weight},
+        )
         return self._hits_from_ranked(fused[:k])
 
     def _search_vector(self, query: str, k: int, category: str | None) -> list[ChunkHit]:
@@ -226,4 +237,6 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
         rrf_k=settings.rrf_k,
         fts5_title_weight=settings.fts5_title_weight,
         fts5_text_weight=settings.fts5_text_weight,
+        rrf_vector_weight=settings.rrf_vector_weight,
+        rrf_bm25_weight=settings.rrf_bm25_weight,
     )
