@@ -6,7 +6,7 @@ import pytest
 from typer.testing import CliRunner
 
 from rag import cli
-from rag.answer import Answer, Citation, LLMUnavailableError
+from rag.answer import NO_COVERAGE_REPLY, Answer, Citation, LLMUnavailableError
 from rag.cli import _apply_fts5_weight_overrides, app
 from rag.config import Settings
 from rag.models import Article, Chunk, ChunkHit, ChunksManifest
@@ -235,9 +235,12 @@ def test_ask_prints_answer_and_citations(monkeypatch):
     monkeypatch.setattr(
         cli,
         'answer_question',
-        lambda *args, **kwargs: Answer(  # noqa: ARG005
-            text='Yes, as a full-round action. [1]',
-            citations=[Citation(n=1, title='Alpha', heading_path=['Alpha'], url='https://example.com/alpha')],
+        lambda *args, **kwargs: (  # noqa: ARG005
+            Answer(
+                text='Yes, as a full-round action. [1]',
+                citations=[Citation(n=1, title='Alpha', heading_path=['Alpha'], url='https://example.com/alpha')],
+            ),
+            [],
         ),
     )
 
@@ -397,6 +400,139 @@ def test_evaluate_load_retriever_failure_prints_clean_error(monkeypatch, tmp_pat
 
     assert result.exit_code == 1
     assert f'Error: {error}' in result.output
+
+
+# evaluate-answers
+
+
+def _make_answer_question_stub(answers: dict[str, tuple[Answer, list[ChunkHit]]]):
+    def _stub(question, retriever, client, settings, k=None, category=None, method='hybrid'):  # noqa: ARG001
+        return answers[question]
+
+    return _stub
+
+
+def test_evaluate_answers_writes_run_and_prints_summary(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    fireball_citation = Citation(
+        n=1, title='Fireball', heading_path=['Fireball'], url='https://example.com/spells/fireball'
+    )
+    monkeypatch.setattr(
+        cli,
+        'answer_question',
+        _make_answer_question_stub(
+            {
+                'fireball': (
+                    Answer(text='Deals fire damage. [1]', citations=[fireball_citation]),
+                    [_fireball_hit()],
+                ),
+                'grapple': (Answer(text=NO_COVERAGE_REPLY, citations=[]), []),
+            }
+        ),
+    )
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    result = runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(run_dir)])
+
+    assert result.exit_code == 0
+    assert 'n=2' in result.output
+    assert 'by type:' in result.output
+    assert 'exact_name' in result.output
+    assert 'rules_reasoning' in result.output
+    assert 'by category:' in result.output
+    assert list(run_dir.glob('*.json'))
+
+
+def test_evaluate_answers_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    monkeypatch.setattr(
+        cli,
+        'answer_question',
+        _make_answer_question_stub(
+            {
+                'fireball': (Answer(text=NO_COVERAGE_REPLY, citations=[]), []),
+                'grapple': (Answer(text=NO_COVERAGE_REPLY, citations=[]), []),
+            }
+        ),
+    )
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(run_dir)])
+
+    [run_file] = run_dir.glob('*.json')
+    assert '"method": "hybrid"' in run_file.read_text(encoding='utf-8')
+
+
+def test_evaluate_answers_bad_queries_file_prints_clean_error(tmp_path):
+    bad_file = tmp_path / 'bad.jsonl'
+    bad_file.write_text('not valid json\n', encoding='utf-8')
+
+    result = runner.invoke(app, ['evaluate-answers', str(bad_file), '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 1
+    assert 'Error loading queries:' in result.output
+
+
+@pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
+def test_evaluate_answers_load_retriever_failure_prints_clean_error(monkeypatch, tmp_path, error):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+
+    def _raise(**kwargs):  # noqa: ARG001
+        raise error
+
+    monkeypatch.setattr(cli, 'load_retriever', _raise)
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 1
+    assert f'Error: {error}' in result.output
+
+
+def test_evaluate_answers_llm_unavailable_prints_clean_error(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+
+    def _raise(*args, **kwargs):  # noqa: ARG001
+        raise LLMUnavailableError('No LLM server reachable at http://localhost:11434/v1')
+
+    monkeypatch.setattr(cli, 'answer_question', _raise)
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 1
+    assert 'Error: No LLM server reachable' in result.output
+
+
+def test_evaluate_answers_reports_invented_citations(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    monkeypatch.setattr(
+        cli,
+        'answer_question',
+        _make_answer_question_stub(
+            {
+                'fireball': (Answer(text='Made up. [9]', citations=[], invented_citations=[9]), []),
+                'grapple': (Answer(text=NO_COVERAGE_REPLY, citations=[]), []),
+            }
+        ),
+    )
+    queries_file = _write_queries_file(tmp_path)
+
+    result = runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(tmp_path / 'runs')])
+
+    assert result.exit_code == 0
+    assert 'cited something outside the retrieved excerpts' in result.output
+    assert 'fireball' in result.output
 
 
 # build-corpus

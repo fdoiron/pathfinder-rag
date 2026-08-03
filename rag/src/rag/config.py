@@ -23,6 +23,8 @@ class Settings(BaseSettings):
     ask_prompt_path: Path | None = None  # override for the packaged prompts/ask.txt, mainly for tests
     ask_k: PositiveInt = 5  # excerpts per prompt
     rrf_k: PositiveInt = 60  # Reciprocal Rank Fusion k denominator
+    rrf_vector_weight: PositiveFloat = 15.0  # per-list weight on the vector ranking's RRF contribution
+    rrf_bm25_weight: PositiveFloat = 1.0  # per-list weight on the BM25 ranking's RRF contribution
     fts5_tokenchar: bool = False  # True: tokenize="unicode61 tokenchars '-'" (keeps "aboleth-psionic" as one token)
     fts5_title_weight: PositiveFloat = 10.0  # bm25() weight for the chunk's heading vs. body text
     fts5_text_weight: PositiveFloat = 1.0

@@ -164,6 +164,38 @@ def test_higher_rrf_k_shrinks_rank_gap_between_top_and_bottom():
     assert (low_k['a'] - low_k['b']) > (high_k['a'] - high_k['b'])
 
 
+def test_weights_none_matches_all_weights_equal_to_one():
+    unweighted = reciprocal_rank_fusion({'vector': ['a', 'b'], 'bm25': ['b', 'a']}, rrf_k=60)
+    explicit = reciprocal_rank_fusion(
+        {'vector': ['a', 'b'], 'bm25': ['b', 'a']}, rrf_k=60, weights={'vector': 1.0, 'bm25': 1.0}
+    )
+    assert unweighted == explicit
+
+
+def test_weight_scales_contribution_by_the_given_factor():
+    result = reciprocal_rank_fusion({'vector': ['a', 'b']}, rrf_k=60, weights={'vector': 3.0})
+    assert dict(result) == pytest.approx({'a': 3.0 / 61, 'b': 3.0 / 62})
+
+
+def test_zero_weight_excludes_that_rankings_contribution():
+    rankings = {'vector': ['a', 'b'], 'bm25': ['b', 'a']}
+    scores = dict(reciprocal_rank_fusion(rankings, rrf_k=60, weights={'vector': 1.0, 'bm25': 0.0}))
+    assert scores == pytest.approx({'a': 1 / 61, 'b': 1 / 62})
+
+
+def test_weight_can_flip_which_item_ranks_first():
+    # a is vector's exclusive rank-1 pick, b is bm25's
+    rankings = {'vector': ['a'], 'bm25': ['b']}
+    equal_weight = dict(reciprocal_rank_fusion(rankings, rrf_k=60, weights={'vector': 1.0, 'bm25': 1.0}))
+    assert equal_weight['a'] == pytest.approx(equal_weight['b'])
+
+    bm25_trusted_more = reciprocal_rank_fusion(rankings, rrf_k=60, weights={'vector': 1.0, 'bm25': 10.0})
+    assert bm25_trusted_more[0][0] == 'b'
+
+    vector_trusted_more = reciprocal_rank_fusion(rankings, rrf_k=60, weights={'vector': 10.0, 'bm25': 1.0})
+    assert vector_trusted_more[0][0] == 'a'
+
+
 # Retriever.search (vector)
 
 
@@ -236,11 +268,21 @@ def test_category_filter_k_larger_than_category_size_no_inf_filler():
 # Retriever.search (bm25 / hybrid)
 
 
-def _make_retriever_with_fts(query_vec: list[float], rrf_k: int = 60) -> Retriever:
+def _make_retriever_with_fts(
+    query_vec: list[float], rrf_k: int = 60, rrf_vector_weight: float = 1.0, rrf_bm25_weight: float = 1.0
+) -> Retriever:
     chunks_df = _make_chunks_df()
     fts_con = sqlite3.connect(':memory:')
     build_fts5_index(chunks_df, fts_con, fts5_tokenchar=False)
-    return Retriever(chunks_df, FakeEmbedder(query_vec), _make_manifest(), fts_con=fts_con, rrf_k=rrf_k)
+    return Retriever(
+        chunks_df,
+        FakeEmbedder(query_vec),
+        _make_manifest(),
+        fts_con=fts_con,
+        rrf_k=rrf_k,
+        rrf_vector_weight=rrf_vector_weight,
+        rrf_bm25_weight=rrf_bm25_weight,
+    )
 
 
 def test_bm25_method_without_fts_index_raises():
@@ -286,6 +328,18 @@ def test_hybrid_search_promotes_bm25_match_that_vector_ranked_last():
 
     hybrid = retriever.search('gamma', k=3, method='hybrid')
     assert hybrid[0].doc_id == 'gamma'
+
+
+def test_rrf_bm25_weight_near_zero_suppresses_bm25_promotion():
+    retriever = _make_retriever_with_fts([1.0, 0.0], rrf_bm25_weight=0.001)
+    hybrid = retriever.search('gamma', k=3, method='hybrid')
+    assert hybrid[0].doc_id == 'alpha'
+
+
+def test_rrf_vector_weight_can_also_override_a_bm25_promotion():
+    retriever = _make_retriever_with_fts([1.0, 0.0], rrf_vector_weight=50.0)
+    hybrid = retriever.search('gamma', k=3, method='hybrid')
+    assert hybrid[0].doc_id == 'alpha'
 
 
 def test_hybrid_search_category_filter_excludes_bm25_only_match():
