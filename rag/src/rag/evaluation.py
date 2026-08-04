@@ -109,7 +109,8 @@ class EvalRun(BaseModel):
     created_at: datetime
     manifest: ChunksManifest
     method: SearchMethod
-    rerank: bool
+    reranker_model: str | None
+    reranker_dtype: str | None
     k: int
     rrf_k: int
     rrf_vector_weight: float
@@ -144,7 +145,8 @@ class AnswerEvalRun(BaseModel):
     created_at: datetime
     manifest: ChunksManifest
     method: SearchMethod
-    rerank: bool
+    reranker_model: str | None
+    reranker_dtype: str | None
     k: int
     rrf_k: int
     rrf_vector_weight: float
@@ -266,7 +268,8 @@ def write_run(
     run_dir: Path,
     manifest: ChunksManifest,
     method: SearchMethod,
-    rerank: bool,
+    reranker_model: str | None,
+    reranker_dtype: str | None,
     k: int,
     results: list[QueryResult],
     settings: Settings,
@@ -281,7 +284,8 @@ def write_run(
         created_at=now,
         manifest=manifest,
         method=method,
-        rerank=rerank,
+        reranker_model=reranker_model,
+        reranker_dtype=reranker_dtype,
         k=k,
         rrf_k=settings.rrf_k,
         rrf_vector_weight=settings.rrf_vector_weight,
@@ -305,7 +309,8 @@ def write_answer_run(
     run_dir: Path,
     manifest: ChunksManifest,
     method: SearchMethod,
-    rerank: bool,
+    reranker_model: str | None,
+    reranker_dtype: str | None,
     k: int,
     results: list[AnswerResult],
     settings: Settings,
@@ -319,7 +324,8 @@ def write_answer_run(
         created_at=now,
         manifest=manifest,
         method=method,
-        rerank=rerank,
+        reranker_model=reranker_model,
+        reranker_dtype=reranker_dtype,
         k=k,
         rrf_k=settings.rrf_k,
         rrf_vector_weight=settings.rrf_vector_weight,

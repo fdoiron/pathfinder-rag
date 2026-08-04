@@ -51,6 +51,10 @@ class FakeReranker:
     def __init__(self, *args, **kwargs) -> None:
         pass
 
+    @property
+    def torch_dtype(self) -> str:
+        return 'torch.float32'
+
 
 class FakeCorpusEmbedder:
     """Stands in for LocalEmbedder in build-corpus tests, which also reads torch_dtype/query_prompt."""
@@ -458,7 +462,9 @@ def test_evaluate_default_rerank_is_true_and_recorded_in_run(monkeypatch, tmp_pa
 
     assert calls == [True, True]
     [run_file] = run_dir.glob('*.json')
-    assert '"rerank": true' in run_file.read_text(encoding='utf-8')
+    run_text = run_file.read_text(encoding='utf-8')
+    assert '"reranker_model": "Qwen/Qwen3-Reranker-0.6B"' in run_text
+    assert '"reranker_dtype": "torch.float32"' in run_text
 
 
 def test_evaluate_no_rerank_flag_reaches_search_top_k_docs_and_skips_reranker_load(monkeypatch, tmp_path):
@@ -480,7 +486,9 @@ def test_evaluate_no_rerank_flag_reaches_search_top_k_docs_and_skips_reranker_lo
     assert result.exit_code == 0
     assert calls == [False, False]
     [run_file] = run_dir.glob('*.json')
-    assert '"rerank": false' in run_file.read_text(encoding='utf-8')
+    run_text = run_file.read_text(encoding='utf-8')
+    assert '"reranker_model": null' in run_text
+    assert '"reranker_dtype": null' in run_text
 
 
 def test_evaluate_weight_flags_reach_load_retriever_settings(monkeypatch, tmp_path):
@@ -648,7 +656,9 @@ def test_evaluate_answers_default_rerank_is_true_and_recorded_in_run(monkeypatch
 
     assert calls == [True, True]
     [run_file] = run_dir.glob('*.json')
-    assert '"rerank": true' in run_file.read_text(encoding='utf-8')
+    run_text = run_file.read_text(encoding='utf-8')
+    assert '"reranker_model": "Qwen/Qwen3-Reranker-0.6B"' in run_text
+    assert '"reranker_dtype": "torch.float32"' in run_text
 
 
 def test_evaluate_answers_no_rerank_flag_skips_reranker_load(monkeypatch, tmp_path):
@@ -671,7 +681,9 @@ def test_evaluate_answers_no_rerank_flag_skips_reranker_load(monkeypatch, tmp_pa
     assert result.exit_code == 0
     assert calls == [False, False]
     [run_file] = run_dir.glob('*.json')
-    assert '"rerank": false' in run_file.read_text(encoding='utf-8')
+    run_text = run_file.read_text(encoding='utf-8')
+    assert '"reranker_model": null' in run_text
+    assert '"reranker_dtype": null' in run_text
 
 
 def test_evaluate_answers_bad_queries_file_prints_clean_error(tmp_path):

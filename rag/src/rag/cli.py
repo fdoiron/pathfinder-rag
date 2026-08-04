@@ -287,7 +287,9 @@ def evaluate(
         for query in queries
     ]
 
-    run_path, run = write_run(run_dir, retriever.manifest, method, rerank, k, results, settings)
+    reranker_model = settings.reranker_model if rerank else None
+    reranker_dtype = reranker.torch_dtype if reranker is not None else None
+    run_path, run = write_run(run_dir, retriever.manifest, method, reranker_model, reranker_dtype, k, results, settings)
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
@@ -438,7 +440,11 @@ def evaluate_answers_cmd(
             raise typer.Exit(code=1) from e
         results.append(evaluate_answers(query, answer, hits))
 
-    run_path, run = write_answer_run(run_dir, retriever.manifest, method, rerank, eval_k, results, settings)
+    reranker_model = settings.reranker_model if rerank else None
+    reranker_dtype = reranker.torch_dtype if reranker is not None else None
+    run_path, run = write_answer_run(
+        run_dir, retriever.manifest, method, reranker_model, reranker_dtype, eval_k, results, settings
+    )
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
