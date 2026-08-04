@@ -10,7 +10,8 @@ from pydantic import ValidationError
 
 from rag.config import Settings
 from rag.lexical import search_fts5
-from rag.models import ChunkHit, ChunksManifest, Embedder
+from rag.models import ChunkHit, ChunksManifest, Embedder, Reranker
+from rag.vector import search_vector
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ class Retriever:
         df: pd.DataFrame,
         embedder: Embedder,
         manifest: ChunksManifest,
+        reranker: Reranker | None = None,
         fts_con: sqlite3.Connection | None = None,
         rrf_k: int = 60,
         fts5_title_weight: float = 10.0,
@@ -63,6 +65,7 @@ class Retriever:
             raise ValueError(f'zero norm embeddings (divide by zero) at rows : {bad_rows.tolist()}')
         self._matrix = matrix / norms
         self._embedder = embedder
+        self._reranker = reranker
         self._manifest = manifest
         self._fts_con = fts_con
         self._rrf_k = rrf_k
@@ -73,46 +76,42 @@ class Retriever:
         self._chunk_id_to_pos: dict[str, int] = dict(zip(self._df['chunk_id'], range(len(self._df)), strict=True))
 
     def search(
-        self, query: str, k: int, category: str | None = None, method: SearchMethod = 'hybrid'
+        self, query: str, k: int, category: str | None = None, method: SearchMethod = 'hybrid', rerank: bool = False
     ) -> list[ChunkHit]:
         if method == 'vector':
-            return self._search_vector(query, k, category)
-
-        if self._fts_con is None:
+            ranked = self._search_vector_ranked(query, k, category)
+        elif self._fts_con is None:
             raise ValueError(f'method={method!r} requires an FTS5 index. None was loaded for this retriever')
-
-        if method == 'bm25':
+        elif method == 'bm25':
             ranked = self._search_bm25_ranked(query, k, category)
-            return self._hits_from_ranked(ranked)
+        else:
+            pool = max(k, _HYBRID_CANDIDATE_POOL)
+            vector_ids = [chunk_id for chunk_id, _ in self._search_vector_ranked(query, pool, category)]
+            bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
+            fused = reciprocal_rank_fusion(
+                {'vector': vector_ids, 'bm25': bm25_ids},
+                rrf_k=self._rrf_k,
+                weights={'vector': self._rrf_vector_weight, 'bm25': self._rrf_bm25_weight},
+            )
+            ranked = fused[:k]
 
-        pool = max(k, _HYBRID_CANDIDATE_POOL)
-        vector_ids = [hit.chunk_id for hit in self._search_vector(query, pool, category)]
-        bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
-        fused = reciprocal_rank_fusion(
-            {'vector': vector_ids, 'bm25': bm25_ids},
-            rrf_k=self._rrf_k,
-            weights={'vector': self._rrf_vector_weight, 'bm25': self._rrf_bm25_weight},
+        if rerank:
+            if self._reranker is None:
+                raise ValueError('rerank=True requires a reranker to be configured on this Retriever')
+            ranked = self._rerank(query, ranked)
+
+        return self._hits_from_ranked(ranked)
+
+    def _search_vector_ranked(self, query: str, k: int, category: str | None) -> list[tuple[str, float]]:
+        return search_vector(
+            self._matrix,
+            self._df['chunk_id'].to_numpy(),
+            self._df['category'].to_numpy(),
+            self._embedder,
+            query,
+            k,
+            category=category,
         )
-        return self._hits_from_ranked(fused[:k])
-
-    def _search_vector(self, query: str, k: int, category: str | None) -> list[ChunkHit]:
-        q = self._embedder.embed(
-            [query],
-            task_type='RETRIEVAL_QUERY',
-        )[0]  # embed search query
-        if not np.isfinite(q).all():
-            raise ValueError(f'embedder returned a non finite (NaN/inf) vector for query {query!r}')
-        q_norm = np.linalg.norm(q)
-        if q_norm == 0:
-            raise ValueError(f'embedder returned a zero-norm vector for query {query!r}')
-        q = q / q_norm  # normalize to length 1.0
-        scores = self._matrix @ q  # dot product normalize = cosine similarity
-        if category is not None:
-            scores = np.where(self._df['category'].to_numpy() == category, scores, -np.inf)
-        top_results = [i for i in np.argsort(scores)[::-1][:k] if scores[i] > -np.inf]
-        return [
-            ChunkHit(**self._df.iloc[res].drop('embedding').to_dict(), score=float(scores[res])) for res in top_results
-        ]
 
     def _search_bm25_ranked(self, query: str, k: int, category: str | None) -> list[tuple[str, float]]:
         assert self._fts_con is not None  # checked by search() before calling
@@ -125,6 +124,15 @@ class Retriever:
             fts5_tokenchar=self._manifest.fts5_tokenchar,
             category=category,
         )
+
+    def _rerank(self, query: str, ranked: list[tuple[str, float]]) -> list[tuple[str, float]]:
+        assert self._reranker is not None  # checked by search() before calling
+        ids = [chunk_id for chunk_id, _ in ranked]
+        texts = [self._df.iloc[self._chunk_id_to_pos[chunk_id]]['text'] for chunk_id in ids]
+
+        scores = self._reranker.rerank(query, texts)
+
+        return sorted(zip(ids, scores, strict=False), key=lambda pair: pair[1], reverse=True)
 
     def _hits_from_ranked(self, ranked: list[tuple[str, float]]) -> list[ChunkHit]:
         # mypy/pydantic plugin mistypes to_dict()'s keys as non-str here (but not in unpack in _search_vector);
@@ -149,7 +157,9 @@ class StaleIndexError(RuntimeError):
     """FTS5 index's chunk_ids doesn't match chunks.parquet's chunk_ids (stale or foreign db)."""
 
 
-def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) -> Retriever:
+def load_retriever(
+    chunks_file: Path, embedder: Embedder, settings: Settings, reranker: Reranker | None = None
+) -> Retriever:
     """Load chunks + manifest, merge in document title/url, validate compatibility, return ready Retriever
     Raises:
         FileNotFoundError if the chunks, manifest or corpus file does not exist
@@ -233,6 +243,7 @@ def load_retriever(chunks_file: Path, embedder: Embedder, settings: Settings) ->
         df,
         embedder,
         manifest,
+        reranker=reranker,
         fts_con=fts_con,
         rrf_k=settings.rrf_k,
         fts5_title_weight=settings.fts5_title_weight,
