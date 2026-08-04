@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     reranker_model: str = 'Qwen/Qwen3-Reranker-0.6B'
     embedding_dim: PositiveInt = 1024
     embedding_batch_size: PositiveInt = 32
+    reranker_batch_size: PositiveInt = 32
     corpus_path: Path = Path('data/corpus.parquet')
     chunks_path: Path = Path('data/chunks.parquet')
     min_body_length: NonNegativeInt = 100  # 0 keeps every article

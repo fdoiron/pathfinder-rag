@@ -1,3 +1,5 @@
+import logging
+import time
 from typing import cast
 
 import numpy as np
@@ -5,6 +7,8 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from rag.config import Settings
+
+logger = logging.getLogger(__name__)
 
 DEFAULT_INSTRUCTION = (
     'Given a Pathfinder 1e rules query, identify the single canonical rules page that defines the specific '
@@ -40,6 +44,7 @@ class LocalReranker:
             device = torch.device('cpu')
         self._dtype = str(dtype)
         self._device = device
+        self._batch_size = settings.reranker_batch_size
 
         self._tokenizer = AutoTokenizer.from_pretrained(settings.reranker_model, padding_side='left')
         model: torch.nn.Module = AutoModelForCausalLM.from_pretrained(settings.reranker_model, dtype=dtype)
@@ -59,8 +64,18 @@ class LocalReranker:
 
         instruction = DEFAULT_INSTRUCTION if instruction is None else instruction
         pairs = [f'<Instruct>: {instruction}\n<Query>: {query}\n<Document>: {text}' for text in texts]
-        inputs = self._process_inputs(pairs)
-        scores = self._compute_logits(inputs)
+
+        n_batches = -(-len(pairs) // self._batch_size)  # ceil div
+        scores: list[float] = []
+        for batch_num, i in enumerate(range(0, len(pairs), self._batch_size), start=1):
+            batch = pairs[i : i + self._batch_size]
+            start = time.perf_counter()
+            inputs = self._process_inputs(batch)
+            scores += self._compute_logits(inputs)
+            elapsed = time.perf_counter() - start
+            logger.info(
+                'reranking batch %d/%d (%d candidates) in %.2fs', batch_num, n_batches, len(batch), elapsed
+            )
         return np.array(scores, dtype=np.float32)
 
     def _process_inputs(self, pairs: list[str]) -> dict[str, torch.Tensor]:
