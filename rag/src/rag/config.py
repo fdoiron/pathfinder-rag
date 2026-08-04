@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     llm_timeout: PositiveFloat = 60.0  # Ollama timeout in seconds instead of default 10 minutes
     ask_prompt_path: Path | None = None  # override for the packaged prompts/ask.txt, mainly for tests
     ask_k: PositiveInt = 5  # excerpts per prompt
+    rerank_fetch_k: PositiveInt = 50  # candidates fused/retrieved and reranked before cutting down to k
     rrf_k: PositiveInt = 60  # Reciprocal Rank Fusion k denominator
     rrf_vector_weight: PositiveFloat = 15.0  # per-list weight on the vector ranking's RRF contribution
     rrf_bm25_weight: PositiveFloat = 1.0  # per-list weight on the BM25 ranking's RRF contribution

@@ -93,6 +93,7 @@ class FakeRetriever:
         category: str | None = None,  # noqa: ARG002
         method: str = 'hybrid',  # noqa: ARG002
         rerank: bool = False,  # noqa: ARG002
+        fetch_k: int | None = None,  # noqa: ARG002
     ) -> list[ChunkHit]:
         return self._hits
 
@@ -105,9 +106,22 @@ class SpyRetriever:
         self.last_call: dict[str, object] | None = None
 
     def search(
-        self, query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False
+        self,
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: str = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
     ) -> list[ChunkHit]:
-        self.last_call = {'query': query, 'k': k, 'category': category, 'method': method, 'rerank': rerank}
+        self.last_call = {
+            'query': query,
+            'k': k,
+            'category': category,
+            'method': method,
+            'rerank': rerank,
+            'fetch_k': fetch_k,
+        }
         return self._hits
 
 
@@ -328,7 +342,7 @@ def test_ask_rerank_flag_reaches_answer_question(monkeypatch):
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     calls: list[bool] = []
 
-    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(rerank)
         return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
 
@@ -644,7 +658,7 @@ def test_evaluate_answers_default_rerank_is_true_and_recorded_in_run(monkeypatch
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     calls: list[bool] = []
 
-    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(rerank)
         return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
 
@@ -668,7 +682,7 @@ def test_evaluate_answers_no_rerank_flag_skips_reranker_load(monkeypatch, tmp_pa
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     calls: list[bool] = []
 
-    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(rerank)
         return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
 

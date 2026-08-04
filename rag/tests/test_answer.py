@@ -121,6 +121,7 @@ class EmptyRetriever:
         category: str | None = None,  # noqa: ARG002
         method: str = 'hybrid',  # noqa: ARG002
         rerank: bool = False,  # noqa: ARG002
+        fetch_k: int | None = None,  # noqa: ARG002
     ) -> list[ChunkHit]:
         return []
 

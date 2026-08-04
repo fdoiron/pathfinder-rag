@@ -76,16 +76,27 @@ class Retriever:
         self._chunk_id_to_pos: dict[str, int] = dict(zip(self._df['chunk_id'], range(len(self._df)), strict=True))
 
     def search(
-        self, query: str, k: int, category: str | None = None, method: SearchMethod = 'hybrid', rerank: bool = False
+        self,
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: SearchMethod = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
     ) -> list[ChunkHit]:
+        """fetch_k: candidate pool size to fuse/retrieve and rerank before cutting down to k. Only takes effect
+        when rerank=True and ignored otherwise since there's nothing to gain from over-fetching without a rerank
+        pass to make use of the wider pool. Defaults to k."""
+        search_k = max(k, fetch_k) if (rerank and fetch_k is not None) else k
+
         if method == 'vector':
-            ranked = self._search_vector_ranked(query, k, category)
+            ranked = self._search_vector_ranked(query, search_k, category)
         elif self._fts_con is None:
             raise ValueError(f'method={method!r} requires an FTS5 index. None was loaded for this retriever')
         elif method == 'bm25':
-            ranked = self._search_bm25_ranked(query, k, category)
+            ranked = self._search_bm25_ranked(query, search_k, category)
         else:
-            pool = max(k, _HYBRID_CANDIDATE_POOL)
+            pool = max(search_k, _HYBRID_CANDIDATE_POOL)
             vector_ids = [chunk_id for chunk_id, _ in self._search_vector_ranked(query, pool, category)]
             bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
             fused = reciprocal_rank_fusion(
@@ -93,12 +104,12 @@ class Retriever:
                 rrf_k=self._rrf_k,
                 weights={'vector': self._rrf_vector_weight, 'bm25': self._rrf_bm25_weight},
             )
-            ranked = fused[:k]
+            ranked = fused[:search_k]
 
         if rerank:
             if self._reranker is None:
                 raise ValueError('rerank=True requires a reranker to be configured on this Retriever')
-            ranked = self._rerank(query, ranked)
+            ranked = self._rerank(query, ranked)[:k]
 
         return self._hits_from_ranked(ranked)
 
@@ -132,7 +143,7 @@ class Retriever:
 
         scores = self._reranker.rerank(query, texts)
 
-        return sorted(zip(ids, scores, strict=False), key=lambda pair: pair[1], reverse=True)
+        return sorted(zip(ids, scores, strict=True), key=lambda pair: pair[1], reverse=True)
 
     def _hits_from_ranked(self, ranked: list[tuple[str, float]]) -> list[ChunkHit]:
         # mypy/pydantic plugin mistypes to_dict()'s keys as non-str here (but not in unpack in _search_vector);

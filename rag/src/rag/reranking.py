@@ -73,9 +73,7 @@ class LocalReranker:
             inputs = self._process_inputs(batch)
             scores += self._compute_logits(inputs)
             elapsed = time.perf_counter() - start
-            logger.info(
-                'reranking batch %d/%d (%d candidates) in %.2fs', batch_num, n_batches, len(batch), elapsed
-            )
+            logger.info('reranking batch %d/%d (%d candidates) in %.2fs', batch_num, n_batches, len(batch), elapsed)
         return np.array(scores, dtype=np.float32)
 
     def _process_inputs(self, pairs: list[str]) -> dict[str, torch.Tensor]:

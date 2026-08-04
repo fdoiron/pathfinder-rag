@@ -166,6 +166,14 @@ def search(
     rerank: Annotated[
         bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
     ] = True,
+    fetch_k: Annotated[
+        int | None,
+        typer.Option(
+            help='Candidates to fuse/retrieve and rerank before cutting to k (defaults to settings.rerank_fetch_k; '
+            'ignored unless --rerank)',
+            min=1,
+        ),
+    ] = None,
     fts5_title_weight: Annotated[
         float | None,
         typer.Option(
@@ -198,7 +206,8 @@ def search(
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    chunk_hits = retriever.search(query=query, k=k, category=category, method=method, rerank=rerank)
+    fetch_k = fetch_k if fetch_k is not None else settings.rerank_fetch_k
+    chunk_hits = retriever.search(query=query, k=k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)
 
     if not chunk_hits:
         typer.echo('No results found.')
@@ -335,6 +344,14 @@ def ask(
     rerank: Annotated[
         bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
     ] = True,
+    fetch_k: Annotated[
+        int | None,
+        typer.Option(
+            help='Candidates to fuse/retrieve and rerank before cutting to k (defaults to settings.rerank_fetch_k; '
+            'ignored unless --rerank)',
+            min=1,
+        ),
+    ] = None,
 ) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
     settings = get_settings()
@@ -363,6 +380,7 @@ def ask(
             category=category,
             method=method,
             rerank=rerank,
+            fetch_k=fetch_k,
         )
     except LLMUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)

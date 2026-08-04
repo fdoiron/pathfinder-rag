@@ -44,9 +44,15 @@ def answer_question(
     category: str | None = None,
     method: SearchMethod = 'hybrid',
     rerank: bool = False,
+    fetch_k: int | None = None,
 ) -> tuple[Answer, list[ChunkHit]]:
     hits = retriever.search(
-        question, k=k if k is not None else settings.ask_k, category=category, method=method, rerank=rerank
+        question,
+        k=k if k is not None else settings.ask_k,
+        category=category,
+        method=method,
+        rerank=rerank,
+        fetch_k=fetch_k if fetch_k is not None else settings.rerank_fetch_k,
     )
     if not hits:
         return Answer(text=NO_COVERAGE_REPLY, citations=[]), hits
