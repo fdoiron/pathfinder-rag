@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='RAG_', env_file='.env', env_file_encoding='utf-8')
 
     embedding_model: str = 'Qwen/Qwen3-Embedding-0.6B'
+    reranker_model: str = 'Qwen/Qwen3-Reranker-0.6B'
     embedding_dim: PositiveInt = 1024
     embedding_batch_size: PositiveInt = 32
     corpus_path: Path = Path('data/corpus.parquet')
