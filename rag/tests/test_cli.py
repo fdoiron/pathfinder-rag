@@ -47,6 +47,11 @@ class FakeEmbedder:
         pass
 
 
+class FakeReranker:
+    def __init__(self, *args, **kwargs) -> None:
+        pass
+
+
 class FakeCorpusEmbedder:
     """Stands in for LocalEmbedder in build-corpus tests, which also reads torch_dtype/query_prompt."""
 
@@ -65,6 +70,13 @@ class UnloadableEmbedder:
         raise OSError("Couldn't connect to https://huggingface.co")
 
 
+class UnloadableReranker:
+    """Stands in for model weights that cannot be fetched"""
+
+    def __init__(self, *_args, **_kwargs) -> None:
+        raise OSError("Couldn't connect to https://huggingface.co")
+
+
 class FakeRetriever:
     def __init__(self, hits: list[ChunkHit], manifest: ChunksManifest | None = None) -> None:
         self._hits = hits
@@ -76,6 +88,7 @@ class FakeRetriever:
         k: int,  # noqa: ARG002
         category: str | None = None,  # noqa: ARG002
         method: str = 'hybrid',  # noqa: ARG002
+        rerank: bool = False,  # noqa: ARG002
     ) -> list[ChunkHit]:
         return self._hits
 
@@ -87,8 +100,10 @@ class SpyRetriever:
         self._hits = hits
         self.last_call: dict[str, object] | None = None
 
-    def search(self, query: str, k: int, category: str | None = None, method: str = 'hybrid') -> list[ChunkHit]:
-        self.last_call = {'query': query, 'k': k, 'category': category, 'method': method}
+    def search(
+        self, query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False
+    ) -> list[ChunkHit]:
+        self.last_call = {'query': query, 'k': k, 'category': category, 'method': method, 'rerank': rerank}
         return self._hits
 
 
@@ -108,6 +123,7 @@ def _make_hit() -> ChunkHit:
 
 def test_search_no_results_prints_message(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     result = runner.invoke(app, ['search', 'nonexistent query'])
     assert result.exit_code == 0
@@ -116,6 +132,7 @@ def test_search_no_results_prints_message(monkeypatch):
 
 def test_search_prints_hits(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
     result = runner.invoke(app, ['search', 'aboleth'])
     assert result.exit_code == 0
@@ -124,6 +141,7 @@ def test_search_prints_hits(monkeypatch):
 
 def test_search_default_method_is_hybrid(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     spy = SpyRetriever([_make_hit()])
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
     runner.invoke(app, ['search', 'aboleth'])
@@ -134,6 +152,7 @@ def test_search_default_method_is_hybrid(monkeypatch):
 @pytest.mark.parametrize('method', ['vector', 'bm25', 'hybrid'])
 def test_search_method_flag_reaches_retriever(monkeypatch, method):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     spy = SpyRetriever([_make_hit()])
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
     result = runner.invoke(app, ['search', 'aboleth', '--method', method])
@@ -144,6 +163,7 @@ def test_search_method_flag_reaches_retriever(monkeypatch, method):
 
 def test_search_k_and_category_flags_reach_retriever(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     spy = SpyRetriever([_make_hit()])
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
     runner.invoke(app, ['search', 'aboleth', '--k', '3', '--category', 'bestiary'])
@@ -152,8 +172,38 @@ def test_search_k_and_category_flags_reach_retriever(monkeypatch):
     assert spy.last_call['category'] == 'bestiary'
 
 
+def test_search_default_rerank_is_true(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
+    spy = SpyRetriever([_make_hit()])
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
+    runner.invoke(app, ['search', 'aboleth'])
+    assert spy.last_call is not None
+    assert spy.last_call['rerank'] is True
+
+
+def test_search_no_rerank_flag_reaches_retriever(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
+    spy = SpyRetriever([_make_hit()])
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: spy)  # noqa: ARG005
+    runner.invoke(app, ['search', 'aboleth', '--no-rerank'])
+    assert spy.last_call is not None
+    assert spy.last_call['rerank'] is False
+
+
+def test_search_no_rerank_flag_skips_reranker_load(monkeypatch):
+    """--no-rerank must not even construct the reranker model."""
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', UnloadableReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
+    result = runner.invoke(app, ['search', 'aboleth', '--no-rerank'])
+    assert result.exit_code == 0
+
+
 def test_search_weight_flags_reach_load_retriever_settings(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     captured: dict[str, Settings] = {}
 
     def _capture(**kwargs) -> FakeRetriever:
@@ -169,6 +219,7 @@ def test_search_weight_flags_reach_load_retriever_settings(monkeypatch):
 
 def test_search_without_weight_flags_uses_settings_defaults(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     captured: dict[str, Settings] = {}
 
     def _capture(**kwargs) -> FakeRetriever:
@@ -192,6 +243,7 @@ def test_search_rejects_non_positive_weight(flag, value):
 @pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
 def test_search_load_retriever_failure_prints_clean_error(monkeypatch, error):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
 
     def _raise(**kwargs):  # noqa: ARG001
         raise error
@@ -213,8 +265,21 @@ def test_embedder_load_failure_prints_clean_error(monkeypatch, command):
     assert 'huggingface.co' in result.output  # cause kept in the message
 
 
+@pytest.mark.parametrize('command', [['search', 'aboleth'], ['ask', 'can I move and attack?']])
+def test_reranker_load_failure_prints_clean_error(monkeypatch, command):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', UnloadableReranker)
+
+    result = runner.invoke(app, command)
+
+    assert result.exit_code == 1
+    assert 'Error: Cannot load reranking model' in result.output
+    assert 'huggingface.co' in result.output  # cause kept in the message
+
+
 def test_ask_llm_unavailable_prints_clean_error(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
 
     def _raise(*args, **kwargs):  # noqa: ARG001
@@ -230,6 +295,7 @@ def test_ask_llm_unavailable_prints_clean_error(monkeypatch):
 
 def test_ask_prints_answer_and_citations(monkeypatch):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     monkeypatch.setattr(
@@ -249,6 +315,41 @@ def test_ask_prints_answer_and_citations(monkeypatch):
     assert result.exit_code == 0
     assert 'Yes, as a full-round action. [1]' in result.output
     assert 'https://example.com/alpha' in result.output
+
+
+def test_ask_rerank_flag_reaches_answer_question(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    calls: list[bool] = []
+
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+        calls.append(rerank)
+        return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
+
+    monkeypatch.setattr(cli, 'answer_question', _spy)
+
+    runner.invoke(app, ['ask', 'can I move and attack?'])
+    runner.invoke(app, ['ask', 'can I move and attack?', '--no-rerank'])
+
+    assert calls == [True, False]
+
+
+def test_ask_no_rerank_flag_skips_reranker_load(monkeypatch):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', UnloadableReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda *args, **kwargs: FakeRetriever([_make_hit()]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    monkeypatch.setattr(
+        cli,
+        'answer_question',
+        lambda *args, **kwargs: (Answer(text=NO_COVERAGE_REPLY, citations=[]), []),  # noqa: ARG005
+    )
+
+    result = runner.invoke(app, ['ask', 'can I move and attack?', '--no-rerank'])
+
+    assert result.exit_code == 0
 
 
 # evaluate
@@ -280,9 +381,10 @@ def _fireball_hit() -> ChunkHit:
 
 def test_evaluate_writes_run_and_prints_summary(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid'):  # noqa: ARG001
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
         return [_fireball_hit()] if query == 'fireball' else []
 
     monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
@@ -307,10 +409,11 @@ def test_evaluate_writes_run_and_prints_summary(monkeypatch, tmp_path):
 @pytest.mark.parametrize('method', ['vector', 'bm25', 'hybrid'])
 def test_evaluate_method_flag_reaches_search_top_k_docs(monkeypatch, tmp_path, method):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[str] = []
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid'):  # noqa: ARG001
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
         calls.append(method)
         return []
 
@@ -325,6 +428,7 @@ def test_evaluate_method_flag_reaches_search_top_k_docs(monkeypatch, tmp_path, m
 
 def test_evaluate_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'search_top_k_docs', lambda *a, **k: [])  # noqa: ARG005
     queries_file = _write_queries_file(tmp_path)
@@ -336,8 +440,52 @@ def test_evaluate_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_
     assert '"method": "hybrid"' in run_file.read_text(encoding='utf-8')
 
 
+def test_evaluate_default_rerank_is_true_and_recorded_in_run(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    calls: list[bool] = []
+
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+        calls.append(rerank)
+        return []
+
+    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(run_dir)])
+
+    assert calls == [True, True]
+    [run_file] = run_dir.glob('*.json')
+    assert '"rerank": true' in run_file.read_text(encoding='utf-8')
+
+
+def test_evaluate_no_rerank_flag_reaches_search_top_k_docs_and_skips_reranker_load(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', UnloadableReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    calls: list[bool] = []
+
+    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+        calls.append(rerank)
+        return []
+
+    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(run_dir), '--no-rerank'])
+
+    assert result.exit_code == 0
+    assert calls == [False, False]
+    [run_file] = run_dir.glob('*.json')
+    assert '"rerank": false' in run_file.read_text(encoding='utf-8')
+
+
 def test_evaluate_weight_flags_reach_load_retriever_settings(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     captured: dict[str, Settings] = {}
 
     def _capture(**kwargs) -> FakeRetriever:
@@ -389,6 +537,7 @@ def test_evaluate_bad_queries_file_prints_clean_error(tmp_path):
 @pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
 def test_evaluate_load_retriever_failure_prints_clean_error(monkeypatch, tmp_path, error):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
 
     def _raise(**kwargs):  # noqa: ARG001
         raise error
@@ -406,7 +555,16 @@ def test_evaluate_load_retriever_failure_prints_clean_error(monkeypatch, tmp_pat
 
 
 def _make_answer_question_stub(answers: dict[str, tuple[Answer, list[ChunkHit]]]):
-    def _stub(question, retriever, client, settings, k=None, category=None, method='hybrid'):  # noqa: ARG001
+    def _stub(
+        question,
+        retriever,  # noqa: ARG001
+        client,  # noqa: ARG001
+        settings,  # noqa: ARG001
+        k=None,  # noqa: ARG001
+        category=None,  # noqa: ARG001
+        method='hybrid',  # noqa: ARG001
+        rerank=False,  # noqa: ARG001
+    ):
         return answers[question]
 
     return _stub
@@ -414,6 +572,7 @@ def _make_answer_question_stub(answers: dict[str, tuple[Answer, list[ChunkHit]]]
 
 def test_evaluate_answers_writes_run_and_prints_summary(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     fireball_citation = Citation(
@@ -448,6 +607,7 @@ def test_evaluate_answers_writes_run_and_prints_summary(monkeypatch, tmp_path):
 
 def test_evaluate_answers_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     monkeypatch.setattr(
@@ -469,6 +629,51 @@ def test_evaluate_answers_default_method_is_hybrid_and_recorded_in_run(monkeypat
     assert '"method": "hybrid"' in run_file.read_text(encoding='utf-8')
 
 
+def test_evaluate_answers_default_rerank_is_true_and_recorded_in_run(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    calls: list[bool] = []
+
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+        calls.append(rerank)
+        return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
+
+    monkeypatch.setattr(cli, 'answer_question', _spy)
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(run_dir)])
+
+    assert calls == [True, True]
+    [run_file] = run_dir.glob('*.json')
+    assert '"rerank": true' in run_file.read_text(encoding='utf-8')
+
+
+def test_evaluate_answers_no_rerank_flag_skips_reranker_load(monkeypatch, tmp_path):
+    monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', UnloadableReranker)
+    monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
+    monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
+    calls: list[bool] = []
+
+    def _spy(question, retriever, client, settings, k=None, category=None, method='hybrid', rerank=False):  # noqa: ARG001
+        calls.append(rerank)
+        return Answer(text=NO_COVERAGE_REPLY, citations=[]), []
+
+    monkeypatch.setattr(cli, 'answer_question', _spy)
+    queries_file = _write_queries_file(tmp_path)
+    run_dir = tmp_path / 'runs'
+
+    result = runner.invoke(app, ['evaluate-answers', queries_file, '--run-dir', str(run_dir), '--no-rerank'])
+
+    assert result.exit_code == 0
+    assert calls == [False, False]
+    [run_file] = run_dir.glob('*.json')
+    assert '"rerank": false' in run_file.read_text(encoding='utf-8')
+
+
 def test_evaluate_answers_bad_queries_file_prints_clean_error(tmp_path):
     bad_file = tmp_path / 'bad.jsonl'
     bad_file.write_text('not valid json\n', encoding='utf-8')
@@ -482,6 +687,7 @@ def test_evaluate_answers_bad_queries_file_prints_clean_error(tmp_path):
 @pytest.mark.parametrize('error', _RETRIEVER_LOAD_ERRORS)
 def test_evaluate_answers_load_retriever_failure_prints_clean_error(monkeypatch, tmp_path, error):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
 
     def _raise(**kwargs):  # noqa: ARG001
         raise error
@@ -497,6 +703,7 @@ def test_evaluate_answers_load_retriever_failure_prints_clean_error(monkeypatch,
 
 def test_evaluate_answers_llm_unavailable_prints_clean_error(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
 
@@ -514,6 +721,7 @@ def test_evaluate_answers_llm_unavailable_prints_clean_error(monkeypatch, tmp_pa
 
 def test_evaluate_answers_reports_invented_citations(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
+    monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     monkeypatch.setattr(cli, 'make_llm_client', lambda settings: None)  # noqa: ARG005
     monkeypatch.setattr(
