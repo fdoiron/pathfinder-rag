@@ -7,6 +7,32 @@ A retrieval augmented question/answering pipeline over the Pathfinder 1e tableto
 ```
 $ uv run rag search "power attack"
 --- Result 1 ---
+Score: 0.996
+Title: Power Attack (Combat)
+URL: https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat
+--- Result 2 ---
+Score: 0.965
+Title: Simple Monster Creation
+URL: https://www.d20pfsrd.com/gamemastering/other-rules/unchained-rules/simple-monster-creation
+--- Result 3 ---
+Score: 0.961
+Title: Stunning Assault (Combat)
+URL: https://www.d20pfsrd.com/feats/combat-feats/stunning-assault-combat
+--- Result 4 ---
+Score: 0.934
+Title: Pushing Assault (Combat)
+URL: https://www.d20pfsrd.com/feats/combat-feats/pushing-assault-combat
+--- Result 5 ---
+Score: 0.926
+Title: Feat Tree
+URL: https://www.d20pfsrd.com/feats/feat-tree
+```
+
+`search` defaults to `--rerank`, so the printed score is the reranker's yes-probability that the chunk answers the query (log-softmax over the "yes"/"no" next-token logits, `[0, 1]`, higher is more relevant). It is not a fused retrieval score. The reranker's job is clearly visible: Power Attack pulls ahead of everything else in the pool (0.996 vs 0.965 and below), including pages like "Simple Monster Creation" and "Feat Tree" that only rank at all because they happen to mention Power Attack in passing. With `--no-rerank`, `search` prints the underlying `--method hybrid` Reciprocal Rank Fusion score instead:
+
+```
+$ uv run rag search "power attack" --no-rerank
+--- Result 1 ---
 Score: 0.262
 Title: Power Attack (Combat)
 URL: https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat
@@ -28,36 +54,31 @@ Title: Powerful Poisoning
 URL: https://www.d20pfsrd.com/feats/general-feats/powerful-poisoning
 ```
 
-`search` defaults to `--method hybrid` so what is printed is a Reciprocal Rank Fusion score (bounded by `(rrf_vector_weight+rrf_bm25_weight)/(rrf_k+1) ≈ 0.262` at the current defaults, `rrf_k=60`, `rrf_vector_weight=15`, `rrf_bm25_weight=1`) not a similarity score. RRF ranks and doesn't measure; only the order matters and close scores like results 2 to 4 are how RRF behaves. Use `--method vector` for cosine similarities instead. `--method bm25` prints SQLite FTS5's raw `bm25()` score instead: negative and unbounded, more negative ranks better.
+This is a Reciprocal Rank Fusion score (bounded by `(rrf_vector_weight+rrf_bm25_weight)/(rrf_k+1) ≈ 0.262` at the current defaults, `rrf_k=60`, `rrf_vector_weight=15`, `rrf_bm25_weight=1`) not a similarity score. RRF ranks and doesn't measure; only the order matters and close scores like results 2 to 4 are how RRF behaves. Use `--method vector` for cosine similarities instead. `--method bm25` prints SQLite FTS5's raw `bm25()` score instead: negative and unbounded, more negative ranks better.
 
 ```
 $ uv run rag ask "can I move and attack in the same round?"
-Yes, you can move and attack in the same round using specific abilities. For example, the **Spring
-Attack** feat allows you to move up to your speed, make a single melee attack, and move again as
-part of a full-round action [3]. Similarly, **Shot on the Run** enables moving, firing a ranged
-attack, and moving again as a full-round action [5]. These feats explicitly allow movement and
-attacks within the same round.
+Yes, you can move and attack in the same round under certain conditions. For example, during a
+**charge**, you move before attacking, and may move up to double your speed [1]. The **Spring
+Attack** feat allows you to move up to your speed, make a melee attack, and then move again as
+part of a full-round action [3]. Additionally, if you have a base attack bonus of +1 or higher,
+you can combine a standard action (such as an attack) with movement [4].
 
-Additionally, during a **full-attack action**, you may choose to take a move action instead of
-making remaining attacks after your first attack [1].
-
-The retrieved excerpts cover this.
-
-[1] Combat — Combat > Actions In Combat > Full-Round Actions > Full Attack > Deciding between an Attack or a Full Attack
+[1] Combat — Combat > Special Attacks > Charge > Movement During a Charge
     https://www.d20pfsrd.com/gamemastering/combat
 [3] Spring Attack (Combat) — Spring Attack (Combat)
     https://www.d20pfsrd.com/feats/combat-feats/spring-attack-combat
-[5] Shot on the Run (Combat) — Shot on the Run (Combat)
-    https://www.d20pfsrd.com/feats/combat-feats/shot-on-the-run-combat
+[4] Combat — Combat > Actions In Combat > Action Types > Standard Action
+    https://www.d20pfsrd.com/gamemastering/combat
 ```
 
-Both runs above against the real corpus with the current hybrid index, `qwen3:14b` served by a local `ollama serve`. `ask` output is not deterministic, the wording and the subset of excerpts cited will vary between runs.
+All three runs above against the real corpus with the current hybrid index, `qwen3:14b` served by a local `ollama serve`. `ask` output is not deterministic, the wording and the subset of excerpts cited will vary between runs.
 
-The `ask` answer above is also a live example of a current gap : every excerpt it retrieved is feat- or full-attack-specific (Spring Attack, Shot on the Run, two full-attack sub-sections of the combat page), so the model frames the whole answer around feats rather than the baseline rule that a move action plus a standard attack needs no feat at all. Retrieval never found that baseline chunk, so the model had nothing correct to cite and leaned on what it had instead. See [Evaluation](#evaluation) for the broader pattern of confident answers with incomplete retrieval behind them.
+`[4]` cites the `Standard Action` section: the baseline rule that a move action plus a standard action needs no feat at all, found from the `fetch_k=50` reranked pool. Retrieval doesn't always find the correct chunk; see [Answer-level evaluation](#answer-level-evaluation) for the aggregate pattern of confident answers with incomplete retrieval.
 
 ## What works right now
 
-Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion) and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask` and `rag evaluate` all take `--method {vector,bm25,hybrid}` and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know. Containers and an API are not built yet, they're staged in [Future expansions](#future-expansions).
+Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion), reranking and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask`, `rag evaluate` and `rag evaluate-answers` all take `--method {vector,bm25,hybrid}` and `--rerank/--no-rerank` (on by default, a local Qwen3-Reranker re-scores a candidate pool before cutting to `k`; `search`/`ask` also expose `--fetch-k` to size that pool) and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know. Containers and an API are not built yet, they're staged in [Future expansions](#future-expansions).
 
 24,098 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
@@ -82,7 +103,7 @@ wrote manifest to data/chunks.manifest.json
 
 ## Quickstart
 
-The scraped HTML corpus is not included in the repo (24k files). You need to run the scraper first, or point `build-corpus` at your own directory of d20pfsrd.com HTML pages. `rag ask` also needs a local Ollama server with a model pulled. Whichever command uses the embedder first (`build-corpus` or `search`) downloads ~1.2 GB of Qwen3-Embedding-0.6B weights from Hugging Face Hub as a one time cost. Cached afterwards.
+The scraped HTML corpus is not included in the repo (24k files). You need to run the scraper first, or point `build-corpus` at your own directory of d20pfsrd.com HTML pages. `rag ask` also needs a local Ollama server with a model pulled. Whichever command uses the embedder first (`build-corpus` or `search`) downloads ~1.2 GB of Qwen3-Embedding-0.6B weights from Hugging Face Hub as a one time cost. `search`, `ask`, `evaluate` and `evaluate-answers` also default to `--rerank`, which downloads another ~1.2 GB (Qwen3-Reranker-0.6B) the first time; pass `--no-rerank` to skip it. Cached afterwards.
 
 ```bash
 git clone https://github.com/fdoiron/pathfinder-rag.git
@@ -100,7 +121,7 @@ cd ../rag
 uv sync
 uv run rag build-corpus ../scraper/data/html
 
-# 3. search (no LLM needed, only the embedding model)
+# 3. search (no LLM needed; downloads embedding + reranker weights on first run, add --no-rerank to skip the latter)
 uv run rag search "power attack"
 
 # 4. ask, needs a local Ollama server
@@ -112,6 +133,7 @@ uv run rag ask "can I move and attack in the same round?"
 uv run rag evaluate eval/queries.jsonl
 
 # 6. evaluate whether rag ask's answers actually cite the correct source
+# (rerank is on by default here; the README's answer-level table predates the reranker, pass --no-rerank to match it)
 uv run rag evaluate-answers eval/queries.jsonl
 
 # 7. run the test suite (doesn't require the scraped corpus)
@@ -167,7 +189,18 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
 
 ## Evaluation
 
-127 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). Vector-only, BM25-only and hybrid (RRF, `rrf_k=60`, vector weighted 15x over BM25 in the fused score) were each run with a retrieval depth of 5 against the same truth set and the same corpus:
+127 hand verified queries in `rag/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). This section is organized by major improvement over the basic vector retrieval. Each subsection isolates one change (retrieval method, reranking, and future ones like chunk sizing or long-article handling) with its own before/after. Current best: hybrid retrieval plus reranking, `k=50`:
+
+| Type | n | Recall@1 | Recall@3 | Recall@5 | Recall@50 | MRR |
+|---|---|---|---|---|---|---|
+| **Overall** | 127 | 0.67 | 0.85 | 0.88 | 0.98 | 0.77 |
+| `exact_name` | 55 | 0.69 | 0.91 | 0.93 | 1.00 | 0.80 |
+| `paraphrase` | 38 | 0.55 | 0.76 | 0.82 | 0.95 | 0.67 |
+| `rules_reasoning` | 34 | 0.76 | 0.85 | 0.88 | 1.00 | 0.83 |
+
+### Hybrid retrieval
+
+Vector-only, BM25-only and hybrid (RRF, `rrf_k=60`, vector weighted 15x over BM25 in the fused score) were each run with a retrieval depth of 5 against the same truth set and the same corpus:
 
 | Type | Method | Recall@1 | Recall@3 | Recall@5 | MRR |
 |---|---|---|---|---|---|
@@ -187,11 +220,30 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
 
 BM25 ties vector on `exact_name` recall@1 (0.49 vs 0.51) but returns nothing on `paraphrase` (MRR 0.00, a paraphrase by construction shares few literal words with its target page) and is not useful on `rules_reasoning` (recall@1 0.03). Fusing it in at equal (1:1) RRF weight was a net negative at n=127. recall@3, recall@5 and overall MRR all moved against hybrid for only a noise level recall@1 tick. A close sibling or variant of the correct page (a poison stat block sharing a condition's name, a `Greater X` version of the base feat, a parent class page over its own subpage) routinely outscored the canonical page on literal term overlap and RRF has no sense of how close it is numerically, it only uses ranks, so it cannot tell that apart from a genuinely wrong page. Weighting vector 15x over BM25 in the fused score (swept in `scripts/rrf_weight_sweep.py`, [sweep output](rag/eval/canonical/n127_rrf_weight_sweep.json)) fixes this issue. That value was picked by maximizing MRR over this same n=127 set, with no held out split at this size to sharpen it further. It sits on a plateau rather than a knife's edge: weights 10, 15, 20, 30 all score MRR 0.603-0.609, a spread smaller than one query flipping. The defensible claim is heavily down-weight BM25 not that 15 specifically is optimal.
 
-Down-weighting BM25 contains its failure mode rather than eliminating it entirely. 18 queries still change rank between vector-only and weighted hybrid (10 up, 8 down), about half the churn of the unweighted version (32, split 15/17), and the same sibling page confusion from above is still visible in the 8 moving down. `outsider creature type` (2 → 3) still loses to general reference pages (`Simple Monster Creation`, `Creature Types & Subtypes`) ahead of the specific `Outsiders` category page, and `sorcerer bloodline` (2 → 3) still loses to the parent `Sorcerer` class page over its own `Bloodlines` subpage. The difference is severity. Under unweighted RRF, `fatigued`/`exhausted`/`shaken condition` all fell from a clean vector rank 1 to a complete miss, beaten outright by short poison/drug entries that happen to name the condition once (`Nerveblast` for `shaken condition`). Weighted, the same three queries only slip to rank 2-4. `shaken condition` still loses to `Nerveblast` at rank 1, but the correct `Conditions` page now lands at rank 4, still inside recall@5. BM25 keeps enough influence to rescue real ties (`cleave`, `dodge feat`, `improved critical`, `point blank shot`, and `ranger favored enemy` all climb to rank 1) without enough voting power left to drag a lexically similar wrong page above vector's correct pick outright. Re-scoring the fused top 20 with a cross encoder (`E1.6`) remains the next lever for the residual 8. The cross encoder reads content, not just term overlap, so it's the more plausible fix for cases weighting alone contains but doesn't fully resolve.
+Down-weighting BM25 contains its failure mode rather than eliminating it entirely. 18 queries still change rank between vector-only and weighted hybrid (10 up, 8 down), about half the churn of the unweighted version (32, split 15/17), and the same sibling page confusion from above is still visible in the 8 moving down. `outsider creature type` (2 → 3) still loses to general reference pages (`Simple Monster Creation`, `Creature Types & Subtypes`) ahead of the specific `Outsiders` category page, and `sorcerer bloodline` (2 → 3) still loses to the parent `Sorcerer` class page over its own `Bloodlines` subpage. The difference is severity. Under unweighted RRF, `fatigued`/`exhausted`/`shaken condition` all fell from a clean vector rank 1 to a complete miss, beaten outright by short poison/drug entries that happen to name the condition once (`Nerveblast` for `shaken condition`). Weighted, the same three queries only slip to rank 2-4. `shaken condition` still loses to `Nerveblast` at rank 1, but the correct `Conditions` page now lands at rank 4, still inside recall@5. BM25 keeps enough influence to rescue real ties (`cleave`, `dodge feat`, `improved critical`, `point blank shot`, and `ranger favored enemy` all climb to rank 1) without enough voting power left to drag a lexically similar wrong page above vector's correct pick outright. Re-scoring the fused candidates with a reranker (`E1.6`, see [Reranker](#reranker) below) was the next lever for the residual 8. Reading content instead of just term overlap turned out to be the more plausible fix for cases weighting alone contains but doesn't fully resolve.
 
 Full per-query results and per-category breakdowns are in the run files themselves: [vector](rag/eval/canonical/n127_vector.json), [BM25](rag/eval/canonical/n127_bm25.json), [hybrid](rag/eval/canonical/n127_hybrid.json), and the unweighted (1:1) hybrid run the paragraph above compares against: [hybrid, unweighted](rag/eval/canonical/n127_hybrid_unweighted.json). `rag evaluate --method {vector,bm25,hybrid}` writes a new timestamped run under `eval/runs/` every time it's run; that directory is gitignored scratch space. Runs worth keeping as evidence get copied into `eval/canonical/` with a descriptive name instead of a timestamp. Before/after evidence for bug fixes that also moved the eval numbers are in [Post mortem (draft)](#post-mortem-draft) below.
 
-`rag evaluate-answers` runs the same truth set through `answer_question` instead of raw retrieval scoring four things per query: whether the correct source was even retrieved into the prompt, whether the answer cited it, whether it invented a citation number outside the excerpts it was given, and whether it honestly refused rather than answering uncited. Hybrid, weighted RRF (vector 15x over BM25), `ask_k=5` (the same default `rag ask` currently serves):
+### Reranker
+
+Rerank on vs. off, both hybrid, `k=50` instead of `k=5`: reranking's whole value is promoting a correct answer buried below the top few fused candidates and there is barely a pool to promote from at `k=5`. In `search`/`ask`, `fetch_k` sizes that pool; `evaluate` never passes it, so its pool is whatever `search_top_k_docs`'s widening loop overfetched to collapse to `k` unique URLs (`k×5` here). What makes `k=50` affordable either way is `reranker_batch_size` batching the forward pass instead of scoring the whole pool at once (see [Design decisions](#design-decisions)):
+
+| Type | Rerank | Recall@1 | Recall@3 | Recall@5 | Recall@50 | MRR |
+|---|---|---|---|---|---|---|
+| **Overall** (n=127) | No | 0.46 | 0.75 | 0.80 | 0.98 | 0.62 |
+| | **Yes** | **0.67** | **0.85** | **0.88** | 0.98 | **0.77** |
+| `exact_name` (n=55) | No | 0.55 | 0.82 | 0.87 | 1.00 | 0.69 |
+| | Yes | 0.69 | 0.91 | 0.93 | 1.00 | 0.80 |
+| `paraphrase` (n=38) | No | 0.32 | 0.53 | 0.55 | 0.92 | 0.45 |
+| | Yes | 0.55 | 0.76 | 0.82 | 0.95 | 0.67 |
+| `rules_reasoning` (n=34) | No | 0.50 | 0.88 | 0.94 | 1.00 | 0.69 |
+| | Yes | 0.76 | 0.85 | 0.88 | 1.00 | 0.83 |
+
+`paraphrase` sees the largest lift (MRR 0.45 → 0.67): it cannot lean on literal term overlap the way `exact_name` can; it benefits most from having a wider pool to promote the right page out of. Recall@50 barely moves (0.98 both ways, 124 vs. 125 hits which is exactly one query out of 127): reranking reorders the retrieved pool, it cannot manufacture a candidate that was never fetched, so a metric already near its ceiling should stay flat while order-sensitive metrics move a lot. This is a useful sanity check that the mechanism does what it's supposed to and nothing more. The full story, including the reranker checkpoint swaps and the instruction tuning pass, is in [Post mortem](#post-mortem-draft). Full per-query results: [no rerank, k=50](rag/eval/canonical/n127_hybrid_no_rerank_k50.json), [rerank, k=50](rag/eval/canonical/n127_hybrid_rerank_k50.json).
+
+### Answer-level evaluation
+
+`rag evaluate-answers` runs the same truth set through `answer_question` instead of raw retrieval scoring four things per query: whether the correct source was even retrieved into the prompt, whether the answer cited it, whether it invented a citation number outside the excerpts it was given, and whether it honestly refused rather than answering uncited. Hybrid, weighted RRF (vector 15x over BM25), `ask_k=5`, no reranker as this run predates `E1.6`. `rag ask` now defaults to `--rerank`; the [Reranker](#reranker) table above shows retrieval moving the same direction at `k=50` (recall@5 0.80 → 0.88), but these answer-level numbers haven't been re-measured with rerank on:
 
 | Type | n | Retrieved | Cited | Refused | Invented citation |
 |---|---|---|---|---|---|
@@ -200,13 +252,13 @@ Full per-query results and per-category breakdowns are in the run files themselv
 | `paraphrase` | 38 | 0.55 | 0.53 | 0.13 | 0.00 |
 | `rules_reasoning` | 34 | 0.94 | 0.74 | 0.15 | 0.00 |
 
-`Invented citation` is a narrow, structural check: did any `[n]` resolve to something outside the excerpts the model was actually given. Results show zero across all 127 queries, but it is not a general hallucination check. The numbers right below it show why that distinction matters. Retrieval improved along with the RRF reweighting: 101 of 127 queries (80%, up from 75% under unweighted hybrid) now get the correct source into the 5 excerpts handed to the LLM. Citation quality tracks this. Of those 101, 90 (89.1%, up from 86.3%) were cited correctly. Of the 26 queries where retrieval still comes up empty, only 7 (27%, up from 16%) say the excerpts don't cover it. The other 19 (73%) answer confidently anyway with nothing correct behind them. Those are real hallucinations, in the ordinary sense of the word, just not the kind `Invented citation` is built to catch. While there are fewer of them now than before there is roughly 3 confident wrong answers for every honest refusal, which is the same ratio as before. Cutting into those 19 is scoped as `E2.5` as a prompt-side fix.
+`Invented citation` is a narrow, structural check: did any `[n]` resolve to something outside the excerpts the model was actually given. Results show zero across all 127 queries, but it is not a general hallucination check. The numbers right below it show why that distinction matters. Retrieval improved along with the RRF reweighting: 101 of 127 queries (80%, up from 75% under unweighted hybrid) now get the correct source into the 5 excerpts handed to the LLM. Citation quality tracks this. Of those 101, 90 (89.1%, up from 86.3%) were cited correctly. Of the 26 queries where retrieval still comes up empty, only 7 (27%, up from 16%) say the excerpts don't cover it. The other 19 (73%) answer confidently anyway with nothing correct behind them. Those are real hallucinations, in the ordinary sense of the word, just not the kind `Invented citation` is built to catch. While there are fewer of them now than before there are roughly 3 confident wrong answers for every honest refusal, which is the same ratio as before. Cutting into those 19 is scoped as `E2.5` as a prompt-side fix.
 
 Five queries are still fully silent (retrieved, not cited, didn't refuse) a similar count to before (was four), though better retrieval resolved some of the old ones and identified different ones: `undead creature type`, `class ability where a monk gets extra unarmed attacks`, and three multipart rules questions (`can you full attack after a charge`, `do two-weapon fighting penalties stack with power attack`, `what happens if you're grappled and try to cast a spell`). Of the 6 queries refused despite the correct source being present, 2 still share the broad `gamemastering/combat` umbrella page (`does concealment stack with cover`, `caster level at negative HP`), the same URL-level blind spot as before (a big page landing one irrelevant chunk in the top 5 counts as "retrieved" even when the specific needed section isn't there), just smaller now that retrieval itself improved.
 
-The demo at the top of this README was one of the silent misses under unweighted hybrid. Under the current default it correctly cites the canonical `gamemastering/combat` page for `can I move and attack in the same round?`, a concrete, visible effect of the RRF reweighting. (Generation is non-deterministic, see the note under [Demo](#demo), so a re-run may cite differently, but the underlying retrieval now consistently shows the right page where it previously didn't.)
+The demo at the top of this README was one of the silent misses under unweighted hybrid. Under the current default (weighted RRF plus reranking) it correctly cites the canonical `gamemastering/combat` page for `can I move and attack in the same round?`. Weighted RRF is the mechanism that gets the page into the candidate pool at all; reranking is what reprioritizes the specific section actually being asked about instead of a tangential one. (Generation is non-deterministic, see the note under [Demo](#demo), so a re-run may cite differently, but the underlying retrieval now consistently shows the right page where it previously didn't.)
 
-Full per-query results: [answer eval, hybrid k=5, weighted RRF](rag/eval/canonical/n127_answer_eval_hybrid.json) — the "up from" figures above compare against the same run under unweighted (1:1) RRF: [answer eval, hybrid k=5, unweighted RRF](rag/eval/canonical/n127_answer_eval_hybrid_unweighted.json).
+Full per-query results: [answer eval, hybrid k=5, weighted RRF](rag/eval/canonical/n127_answer_eval_hybrid.json). The "up from" figures above compare against the same run under unweighted (1:1) RRF: [answer eval, hybrid k=5, unweighted RRF](rag/eval/canonical/n127_answer_eval_hybrid_unweighted.json).
 
 ## Roadmap
 
@@ -222,15 +274,15 @@ MVP milestones, all completed:
 | M6: `rag ask` | **Done** | Retrieval augmented generation via local Ollama server, cited answers |
 | M7: README | **Done** | this file |
 
-Future expansions:
+### Future expansions
 
 | Expansion | Status | Content |
 |---|---|---|
-| E1: hybrid retrieval | **Done** | BM25 (SQLite FTS5) + vector, combined by Reciprocal Rank Fusion. At n=127, `exact_name` recall@1 0.51 → 0.55, MRR 0.60 → 0.61. No movement in `paraphrase` see [Evaluation](#evaluation). |
-| E2: expand evaluation set | **Done** | Truth set grown to 127 queries (incl. real play session questions). Answer level checks built and run (`rag evaluate-answers`): 80% retrieval, 71% correctly cited, 0% invented citations but only 27% honest refusal when retrieval actually fails. 73% answer confidently with nothing correct behind them, real hallucinations the invented citation check cannot see. See [Evaluation](#evaluation). |
-| E2.5: reduce confident hallucination | — | 19 of 26 retrieval failure queries answer confidently anyway instead of refusing (see [Evaluation](#evaluation)). Prompt-side fix (stronger/repeated refusal instruction, an explicit "is this actually covered" check before answering). |
+| E1: hybrid retrieval | **Done** | BM25 (SQLite FTS5) + vector, combined by Reciprocal Rank Fusion. At n=127, `exact_name` recall@1 0.51 → 0.55, MRR 0.60 → 0.61. No movement in `paraphrase` see [Hybrid retrieval](#hybrid-retrieval). |
+| E2: expand evaluation set | **Done** | Truth set grown to 127 queries (incl. real play session questions). Answer level checks built and run (`rag evaluate-answers`): 80% retrieval, 71% correctly cited, 0% invented citations but only 27% honest refusal when retrieval actually fails. 73% answer confidently with nothing correct behind them, real hallucinations the invented citation check cannot see. See [Answer-level evaluation](#answer-level-evaluation). |
+| E2.5: reduce confident hallucination | — | 19 of 26 retrieval failure queries answer confidently anyway instead of refusing (see [Answer-level evaluation](#answer-level-evaluation)). Prompt-side fix (stronger/repeated refusal instruction, an explicit "is this actually covered" check before answering). |
 | E1.5: small-to-big retrieval | — | Embed small chunks for sharp search, hand the generator the whole parent section, so `max_tokens` stops having to serve both retrieval precision and generation completeness at once. More promising improvement on `paraphrase` than more BM25/RRF tuning would be |
-| E1.6: reranker | — | Split out of E1's original stretch goal. Cross-encoder re-scores just the RRF top-20 |
+| E1.6: reranker | **Done** | Local Qwen3-Reranker (causal-LM yes/no scoring) re-scores a widened candidate pool before cutting to `k` (`fetch_k` in `search`/`ask`; eval's own overfetch in `evaluate`). At n=127, `k=50`: MRR 0.62 → 0.77, recall@1 0.46 → 0.67. Biggest mover is `paraphrase` (MRR 0.45 → 0.67). See [Reranker](#reranker). |
 | E3: TEI embedding service | — | Swap the in process embedder for a served one (Hugging Face's text-embeddings-inference), needed once a long running API is doing the embedding instead of a batch job |
 | E4: rag-api | — | FastAPI wrapping `search`/`ask` as `POST /v1/search` and `POST /v1/ask`, plus an MCP adapter over the same functions, `/healthz` vs `/readyz` |
 | E4.5: agentic ask | — | Hand the model `search` as a tool it can call itself, for multi-hop questions that need more than one retrieval pass |
@@ -246,7 +298,7 @@ Future expansions:
 - **Drop filters log why a page was dropped.** `parse_corpus_dir` splits drops into two distinguishable reasons (parse error / too short) logged with slug and reason. This means that if the final article count looks wrong the cause can be established with a `grep` instead of re-running with print statements.
 - **Golden-file testing.** The 15 fixtures are hand picked pages and have a committed expected output file (`rag/tests/fixtures/goldens/*.golden.md`). When the parser changes, the golden file diffs the behavior change line by line. A silent regression shows up as an unintended diff instead of passing quietly.
 - **Heading aware chunking, packed to a token budget.** Sections split on the markdown headings from parsing, then get packed into chunks around `max_tokens ≈ 450`. Packing works on whole units, ie a line -> that line's sentences -> raw token windows, so a break can only land *between* units and a list marker can't be separated from its body. `overlap ≈ 50` tokens is therefore conditional: the trailing unit carries into the next chunk only when a whole one fits the allowance, so a section built from large paragraphs gets none. Overlap softens a mid-thought cut, and cuts now land on boundaries. Tokens are counted with the embedder's own tokenizer, not chars/4, stat blocks are abbreviation dense and blow a char based estimate. Each chunk's text is prefixed with title and heading path, without that prefix all 8,370 bestiary DEFENSE sections look nearly identical to the embedder.
-- **`max_tokens` is a hyperparameter.** It has to optimize two conflicting goals : retrieval wants small tight chunks (sharp vector) while generation wants complete rules (a fragment invites the LLM to fill gaps confidently, which is where citation backed hallucinations come from). 450 is a starting value to be measured against later (E2). `max_tokens`/`overlap` are in `Settings`, not as constants in `chunking.py` and the manifest records what `max_tokens`/`overlap` a specific `chunks.parquet` was built with.
+- **`max_tokens` is a hyperparameter.** It has to optimize two conflicting goals: retrieval wants small tight chunks (sharp vector) while generation wants complete rules (a fragment invites the LLM to fill gaps confidently, which is where citation backed hallucinations come from). 450 is a starting value to be measured against later (E2). `max_tokens`/`overlap` are in `Settings`, not as constants in `chunking.py` and the manifest records what `max_tokens`/`overlap` a specific `chunks.parquet` was built with.
 - **In process local embedder (`sentence-transformers`, Qwen3-Embedding-0.6B) instead of a TEI server.** Corpus embedding is a batch job either way. `Embedder` is a Protocol (`rag/src/rag/models.py`), the retriever depends on "anything with an `.embed()` method", not on which implementation, so tests run without a GPU (`FakeEmbedder`) and the Vertex→local swap impacted one file. TEI will be added once a long running API needs query embeddings in E3.
 - **`task_type` is the shared embedding vocabulary.** Qwen3 expects an instruction prefix on queries and nothing on documents. `LocalEmbedder` maps `task_type` to that convention in one line.
 - **Brute force numpy over chunk embeddings, no vector database.** ~130k chunks at 1024 dims is ~530 MB of float32, a matrix vector product over that runs well under a millisecond. A vector DB buys index structures like HNSW that pay off at a scale this corpus isn't at. Revisit if eval or corpus size says otherwise.
@@ -256,9 +308,12 @@ Future expansions:
 - **Citation resolution is ours, not the model's.** `answer_question` builds the numbered excerpt list itself. `[n]` in the model's reply maps back to position `n` in that list, so a citation can never point at a document that wasn't retrieved. The model can still cite a real excerpt that doesn't support its claim, that's what an answer level eval (E2) would catch.
 - **Single shot retrieval, not agentic tool use.** `rag ask` runs exactly one search per question instead of handing the model `search` as a tool it calls itself. Agentic retrieval helps multi hop questions but turns one retrieval into a variable number of calls, which breaks the clean attribution the eval harness depends on. Staged as E4.5, once E4 exposes an MCP tool surface to hang it off of.
 - **BM25 in SQLite FTS5.** The lexical index is a file (`chunks.fts5.db`) written by `build-corpus` next to `chunks.parquet`. It avoids having an Elasticsearch/OpenSearch process to run, configure and keep alive for a CLI that is otherwise all batch steps. FTS5 comes with the standard library's `sqlite3`. Being a file means it joins the artifact set the manifest already checks: `load_retriever` refuses to start without it the same way it refuses a stale corpus hash.
-- **RRF instead of weighted score fusion.** A cosine similarity in `[-1, 1]` and an FTS5 `bm25()` score (negative, unbounded, corpus dependent) share no scale. `a*vector + b*bm25` needs a normalization step that has to be fitted, and refitted whenever the corpus changes. RRF discards the scores and fuses positions instead, `1/(rrf_k + rank)` summed across lists. No normalization or tuning is required beyond `rrf_k`. The cost is "how far ahead" gets discarded along with the scale which is the regression documented in [Evaluation](#evaluation). Fusion runs over a pool of `max(k, 50)` candidates per list, so the fused order is itself a function of `k`: a page outside the 50-candidate pool at `k=5` can enter the pool at `k=100` and change ranks even inside the top 5.
+- **RRF instead of weighted score fusion.** A cosine similarity in `[-1, 1]` and an FTS5 `bm25()` score (negative, unbounded, corpus dependent) share no scale. `a*vector + b*bm25` needs a normalization step that has to be fitted, and refitted whenever the corpus changes. RRF discards the scores and fuses positions instead, `1/(rrf_k + rank)` summed across lists. No normalization or tuning is required beyond `rrf_k`. The cost is "how far ahead" gets discarded along with the scale which is the regression documented in [Hybrid retrieval](#hybrid-retrieval). Fusion runs over a pool of `max(k, 50)` candidates per list, so the fused order is itself a function of `k`: a page outside the 50-candidate pool at `k=5` can enter the pool at `k=100` and change ranks even inside the top 5.
 - **Title is its own FTS5 column and weighted 10:1 over body text.** The index stores `heading_path[0]` as a `title` column separate from `text`, so `bm25()` can score a hit in the page's name above the same word buried in its body. `exact_name` queries are a page title by definition. A feat page's body repeats the generic combat vocabulary of every other feat page. A landmine: `bm25()` takes one weight per column in declared order, including `UNINDEXED` ones. Skipping a slot shifts every following weight onto the wrong column and fails silently instead of erroring.
 - **The MATCH string is rebuilt from tokens.** `_sanitize_match_query` extracts word tokens and quotes each one. User text is not FTS5 text: a trailing `?`, a bare `-`, or an unbalanced `"` are syntax and raise `sqlite3.OperationalError`, and an uppercase `OR`/`AND`/`NOT` sitting in an ordinary question is read as an operator instead of a word, which fails silently. Raw, `move OR attack` matches 22,595 chunks; quoted into `"move" "or" "attack"` it matches 1,186. The tokenizer flag it splits on comes from `manifest.fts5_tokenchar`, not `Settings`, since `tokenchars '-'` is fixed into the index at `CREATE VIRTUAL TABLE` time and a query tokenized differently than the index would miss. The bm25 weights come from `Settings`. They apply at query time and are meant to be tuned. The manifest records them as provenance only.
+- **Reranker reads relevance off the base model's own yes/no next-token logits, not a fitted classification head.** `Qwen/Qwen3-Reranker-0.6B` ships as a causal LM; a `SequenceClassification` conversion approximates its native yes/no prediction with a head fitted on top of it. `LocalReranker` uses the checkpoint's own usage pattern instead (`AutoModelForCausalLM` + `logits_to_keep=1`, which skips materializing full-vocab logits for every position when only the last one is scored): log-softmax over the "yes"/"no" next-token logits is the relevance score. `Reranker` is a `Protocol` (`rag/src/rag/models.py`), the same shape as `Embedder`, so `Retriever` depends on "anything with a `.rerank()` method" and tests fake it with no GPU. See [Post mortem](#post-mortem-draft) for why (the seq-cls path was tried first, saturated, and was reverted).
+- **`fetch_k` sizes the rerank pool separately from the result count; `reranker_batch_size` bounds the forward pass; rerank defaults on.** Reranking only has value if there's a wider pool to promote a buried answer out of, so `search`/`ask` expose `fetch_k` (defaults to `settings.rerank_fetch_k`) to fetch and rerank more candidates than `k` before cutting down. `reranker_batch_size` slices that pool into fixed-size batches instead of scoring it as one padded tensor, which is what made `k=50` measurable at all instead of a CUDA OOM (see [Post mortem](#post-mortem-draft)). `search`, `ask`, `evaluate` and `evaluate-answers` all default `--rerank` to `True`: at n=127, `k=50` it moves MRR 0.62 → 0.77 (see [Reranker](#reranker)) for the cost of one extra local forward pass per query.
+- **`evaluate`'s widening loop re-reranks its entire candidate pool from scratch on every widen. This was left as-is.** `search_top_k_docs` doubles `fetch_k` until `k` unique URLs collapse out, and each widen calls `retriever.search` fresh, which reranks the entire new pool including chunks already scored on the prior iteration. At `k=50` this used to be a hard CUDA OOM (fine at `k=20`) because the whole widened pool went through the reranker as one padded batch. `reranker_batch_size` batching fixed this issue. Every forward pass is now bounded at `reranker_batch_size × max_length` regardless of pool size, and `rag evaluate --k 50 --rerank` completes fine against the full 127-query set. What is left after that fix is redundant compute but not a crash. A pathological widener still reruns the reranker over overlapping pools uncapped up to the full corpus. The fix (keep top-N chunks per unique URL by fused order before reranking, capping the batch at `k*N` instead of the whole widened pool) is scoped, but it is not precision neutral: pruning to top-N per URL before the reranker sees the pool can drop the chunk the reranker would have scored highest on any page with more than N chunks in the pool. It's exact only for pages with ≤N pool chunks which is a reasonable trade for the memory bound. Left unfixed anyway: `search_top_k_docs` has exactly one caller (`evaluate`), so `search`/`ask` never hit this path at all and no query in the 127-query eval set has actually triggered pathological widening in practice.
 
 ## Testing
 
@@ -274,6 +329,31 @@ uv run poe check   #in order:  ruff check ., ruff format --check ., mypy src tes
 ### Eval methodology notes
 
 **The original evaluation table was n=34.** One query was worth about 3 points overall and 8 to 9 points per type. A single query flipping moved a cell more than most differences between cells in the table. The table ranked interventions against each other on the same queries, but it was not a benchmark and the absolute numbers were not precise. The [Evaluation](#evaluation) section's per-bug before/after deltas below predate the regrow and should be read with that in mind. Growing the truth set to 127 queries (`E2`) fixed this. At n=127 one query is worth well under a point overall (about 0.8) and 2 to 3 points per type, close enough to trust the table at face value.
+
+
+**Reranking started with a `SequenceClassification` checkpoint instead of the causal-LM currently in use.** `tomaarsen/Qwen3-Reranker-0.6B-seq-cls`, a community conversion of the base model with a classification head, paired with `sentence-transformers`'s `CrossEncoder` is the standard way to plug a reranker in and the same shape `Embedder` already used. This was the obvious thing to reach for first. It was scored against a first draft instruction, later rewritten below:
+
+> Given a Pathfinder 1e rules query, identify the single canonical rules page that defines the specific spell, feat, condition, or creature type being asked about, not a class, domain, or category page that merely references it.
+
+That setup lifted recall@1 to 0.64 and MRR to 0.74 (`k=20`) over no-rerank, but a chunk of those scores were saturated at, or effectively at, 1.00 "yes." A creature type page and the specific bestiary entries filed under it, or a class page and its own bloodline/domain subpages, would all come back as near certain matches together. The score carried no information about which one in a cluster like that was actually right, only whatever order the candidate pool handed the reranker to begin with. A reranker whose whole job is separating close candidates is not doing that job if it cannot tell a page from its own children pages.
+
+**Switching to the unconverted causal-LM checkpoint to isolate the cause.** The seq-cls conversion approximates the base model's native yes/no next token prediction with a fitted classification head, which raises the question of whether that approximation was itself contributing to the saturation rather than it being an inherent property of the model's judgment. Dropped the seq-cls conversion entirely and switched to the base `Qwen/Qwen3-Reranker-0.6B` causal-LM checkpoint, reading relevance directly off the "yes"/"no" next-token logits (log-softmax over the two tokens, the model's native pretraining objective) rather than through a classification head. This requires the checkpoint's own usage path (`AutoModelForCausalLM` + manual `token_true_id`/`token_false_id` extraction) instead of `CrossEncoder`, since this checkpoint has no classification head to call `CrossEncoder` against at all.
+
+The first attempt led to OOM error. `self._model(**inputs).logits` calculates `(batch, seq_len, vocab_size)` logits for every position in the sequence before slicing out just the last one. At a ~152k vocab, batch 20, and `max_length` 1024, that is roughly 6 GiB in bf16 (batch 20 × 1024 positions × ~152k vocab × 2 bytes) wasted computing logits for positions that are immediately discarded. This is several GiB, still enough to OOM alongside every other processes already resident on the GPU. Fixed with `logits_to_keep=1`, which tells the model to only project the last position's hidden state through the LM head.
+
+With the same domain-specific instruction carried over unchanged, the causal-LM path (`k=20`, matching the seq-cls comparison above) landed on numbers effectively identical to the seq-cls result: MRR 0.74, recall@1 0.64, 5 total misses, matching not just in aggregate but query for query. The same 5 queries failed the same way (`sorcerer` over `bloodlines`, `feats` index over `improved-critical-combat`, `acrobatics` over `mobility-combat`), still saturated at 1.00 or near it. That rules out the seq-cls conversion as the cause of the saturation. It's the base model's own judgment on these cases, not an artifact of the classification head approximating it. The parent-vs-child confusion is a property of the checkpoint not the interface wrapping it.
+
+**Widening the rerank pool to `k=50` and a second instruction pass at resolving its self contradiction.** All numbers above were measured at `k=5`/`k=20`, where the rerank pool is small. Batching the reranker's forward pass (`reranker_batch_size`, see [Design decisions](#design-decisions)) fixed the CUDA OOM that previously made `k=50, --rerank` unrunnable so the reranker could be measured at the same depth as the rest of the eval table. Baseline (`k=50`, no rerank): MRR 0.62, recall@1 0.46, recall@50 0.98 (124/127). Reranked at `k=50` with the same instruction as above: MRR 0.74, recall@1 0.64, recall@50 0.99 (126/127). This is an marked improvemen while recall@50 barely moved (a two-query difference) which is the expected shape: reranking reorders the pool it is given, it cannot manufacture a candidate that was never retrieved.
+
+The one query that still missed under rerank, `type of creature that is mindless and made of inanimate materials` (expected: `constructs`), pointed at the instruction itself. It names "creature type" as a valid target in the same sentence that tells the model to avoid "a class, domain, or category page." A creature type description is shaped like a category page, so on exactly this kind of query the instruction's two clauses fight each other. Rewrote it to key off whether the page's main subject is the thing being asked about rather than whether the page is narrow. This explicitly allows type/subtype/list pages as valid answers when they are what's being asked about:
+
+> Given a Pathfinder 1e rules query, identify the single canonical rules page whose main subject is the specific spell, feat, condition, or creature type being asked about, even if that page is itself a type, subtype, or list page (a creature type's description, a class's bloodline or domain list). Not a broader class, domain, or category page that only references the subject in passing.
+
+Re-run at the same `k=50`: MRR 0.74 → 0.77, recall@1 0.64 → 0.67. Four of the category confusion cases the rewrite targeted moved toward the correct page: `outsider creature type` (rank 15 → 6), `creature type for undead things like zombies and skeletons` (8 → 5), `construct creature type` (6 → 5), `sorcerer bloodline` (29 → 23).
+
+Two results didn't fit that story. The `constructs` query that motivated the rewrite in the first place did not move at all. It still saturated at 1.00 on `flesh-to-stone` which is the same wrong page as before. "Made of inanimate materials" plausibly pulls toward a stone-transmutation spell for reasons that have nothing to do with the class/category clause, so crediting the instruction fix for that specific case would be wrong. And a new miss appeared that was not there before: `feat that improves your chance of scoring a critical hit` had been ranking low at rank 49 pre-rewrite. Post-rewrite it's a clear miss, beaten by `critical-feats`, a category/index page, at a saturated value of 1.00. This is the same failure shape as the four cases the rewrite fixed, only relocated from bestiary to feats. Net aggregate movement is positive, but it is the same pattern as the seq-cls to causal-LM switch above: the saturation does not go away, it only moves category/query.
+
+Eval: [no rerank, k=50](rag/eval/canonical/n127_hybrid_no_rerank_k50.json) → [rerank, k=50](rag/eval/canonical/n127_hybrid_rerank_k50.json).
 
 ### Bugs
 

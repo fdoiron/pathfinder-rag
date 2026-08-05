@@ -11,9 +11,10 @@ from rag.config import Settings
 logger = logging.getLogger(__name__)
 
 DEFAULT_INSTRUCTION = (
-    'Given a Pathfinder 1e rules query, identify the single canonical rules page that defines the specific '
-    'spell, feat, condition, or creature type being asked about; not a class, domain, or category page that '
-    'merely references it.'
+    'Given a Pathfinder 1e rules query, identify the single canonical rules page whose main subject is the '
+    'specific spell, feat, condition, or creature type being asked about, even if that page is itself a type, '
+    "subtype, or list page (a creature type's description, a class's bloodline or domain list). Not a broader "
+    'class, domain, or category page that only references the subject in passing.'
 )
 
 # Qwen3-Reranker "Original Usage" scheme (requires transformers>=4.51.0): the checkpoint is a causal LM, not a
