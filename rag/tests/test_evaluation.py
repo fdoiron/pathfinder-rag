@@ -380,9 +380,9 @@ def test_search_top_k_docs_stops_widening_when_bm25_exhausted(monkeypatch: pytes
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
         calls.append(k)
-        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -419,9 +419,9 @@ def test_search_top_k_docs_stops_widening_when_exhausted_after_a_widen(monkeypat
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
         calls.append(k)
-        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -456,9 +456,9 @@ def test_search_top_k_docs_widens_on_duplicate_doc_collapse(monkeypatch: pytest.
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid'):
+    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
         calls.append(k)
-        return original_search(query, k, category=category, method=method)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -614,6 +614,8 @@ def test_write_run_creates_readable_file(tmp_path: Path):
         run_dir=tmp_path / 'runs',
         manifest=manifest,
         method='hybrid',
+        reranker_model='Qwen/Qwen3-Reranker-0.6B',
+        reranker_dtype='torch.bfloat16',
         k=5,
         results=results,
         settings=Settings(),
@@ -648,6 +650,8 @@ def test_write_answer_run_creates_readable_file(tmp_path: Path):
         run_dir=tmp_path / 'runs',
         manifest=manifest,
         method='hybrid',
+        reranker_model='Qwen/Qwen3-Reranker-0.6B',
+        reranker_dtype='torch.bfloat16',
         k=5,
         results=results,
         settings=Settings(),

@@ -23,6 +23,7 @@ from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod
 
 if TYPE_CHECKING:
     from rag.embedding import LocalEmbedder
+    from rag.reranking import LocalReranker
 
 # torch/transformers imported inside each command body
 app = typer.Typer()
@@ -48,6 +49,16 @@ def _load_embedder(settings: Settings) -> 'LocalEmbedder':
     try:
         return load_embedder(settings)
     except EmbedderUnavailableError as e:
+        typer.echo(f'Error: {e}', err=True)
+        raise typer.Exit(code=1) from e
+
+
+def _load_reranker(settings: Settings) -> 'LocalReranker':
+    from rag.reranking import RerankerUnavailableError, load_reranker
+
+    try:
+        return load_reranker(settings)
+    except RerankerUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
@@ -152,6 +163,17 @@ def search(
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    rerank: Annotated[
+        bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
+    ] = True,
+    fetch_k: Annotated[
+        int | None,
+        typer.Option(
+            help='Candidates to fuse/retrieve and rerank before cutting to k (defaults to settings.rerank_fetch_k; '
+            'ignored unless --rerank)',
+            min=1,
+        ),
+    ] = None,
     fts5_title_weight: Annotated[
         float | None,
         typer.Option(
@@ -172,18 +194,20 @@ def search(
     settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
-
+    reranker = _load_reranker(settings) if rerank else None
     try:
         retriever = load_retriever(
             chunks_file=embedding_file_path,
             embedder=embedder,
+            reranker=reranker,
             settings=settings,
         )
     except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    chunk_hits = retriever.search(query=query, k=k, category=category, method=method)
+    fetch_k = fetch_k if fetch_k is not None else settings.rerank_fetch_k
+    chunk_hits = retriever.search(query=query, k=k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)
 
     if not chunk_hits:
         typer.echo('No results found.')
@@ -223,6 +247,9 @@ def evaluate(
     ] = 50,
     run_dir: Annotated[Path, typer.Option(help='Directory to save evaluation run results')] = Path('eval/runs'),
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    rerank: Annotated[
+        bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
+    ] = True,
     fts5_title_weight: Annotated[
         float | None,
         typer.Option(
@@ -251,20 +278,27 @@ def evaluate(
     settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
+    reranker = _load_reranker(settings) if rerank else None
 
     try:
         retriever = load_retriever(
             chunks_file=embedding_file_path,
             embedder=embedder,
+            reranker=reranker,
             settings=settings,
         )
     except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    results = [evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method)) for query in queries]
+    results = [
+        evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method, rerank=rerank))
+        for query in queries
+    ]
 
-    run_path, run = write_run(run_dir, retriever.manifest, method, k, results, settings)
+    reranker_model = settings.reranker_model if rerank else None
+    reranker_dtype = reranker.torch_dtype if reranker is not None else None
+    run_path, run = write_run(run_dir, retriever.manifest, method, reranker_model, reranker_dtype, k, results, settings)
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')
@@ -307,21 +341,46 @@ def ask(
     ] = None,
     category: Annotated[str | None, typer.Option(help='restrict to one category, ex: bestiary')] = None,
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    rerank: Annotated[
+        bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
+    ] = True,
+    fetch_k: Annotated[
+        int | None,
+        typer.Option(
+            help='Candidates to fuse/retrieve and rerank before cutting to k (defaults to settings.rerank_fetch_k; '
+            'ignored unless --rerank)',
+            min=1,
+        ),
+    ] = None,
 ) -> None:
     """Answer a rules question with numbered d20pfsrd citations."""
     settings = get_settings()
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
+    reranker = _load_reranker(settings) if rerank else None
 
     try:
-        retriever = load_retriever(embedding_file_path, embedder, settings)
+        retriever = load_retriever(
+            embedding_file_path,
+            embedder=embedder,
+            reranker=reranker,
+            settings=settings,
+        )
     except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
     try:
         answer, _hits = answer_question(
-            question, retriever, make_llm_client(settings), settings, k=k, category=category, method=method
+            question,
+            retriever,
+            make_llm_client(settings),
+            settings,
+            k=k,
+            category=category,
+            method=method,
+            rerank=rerank,
+            fetch_k=fetch_k,
         )
     except LLMUnavailableError as e:
         typer.echo(f'Error: {e}', err=True)
@@ -358,6 +417,9 @@ def evaluate_answers_cmd(
     ] = None,
     run_dir: Annotated[Path, typer.Option(help='Directory to save answer evaluation run results')] = Path('eval/runs'),
     method: Annotated[SearchMethod, typer.Option(help='retrieval method')] = 'hybrid',
+    rerank: Annotated[
+        bool, typer.Option('--rerank/--no-rerank', help='cross-encoder rerank the retrieved candidates')
+    ] = True,
 ) -> None:
     """Evaluate if rag ask answers cite the correct source."""
     try:
@@ -369,9 +431,15 @@ def evaluate_answers_cmd(
     settings = get_settings()
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
+    reranker = _load_reranker(settings) if rerank else None
 
     try:
-        retriever = load_retriever(chunks_file=embedding_file_path, embedder=embedder, settings=settings)
+        retriever = load_retriever(
+            chunks_file=embedding_file_path,
+            embedder=embedder,
+            reranker=reranker,
+            settings=settings,
+        )
     except (FileNotFoundError, ManifestMismatchError, OrphanChunksError, StaleIndexError) as e:
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
@@ -382,13 +450,19 @@ def evaluate_answers_cmd(
     results = []
     for query in queries:
         try:
-            answer, hits = answer_question(query.query, retriever, client, settings, k=eval_k, method=method)
+            answer, hits = answer_question(
+                query.query, retriever, client, settings, k=eval_k, method=method, rerank=rerank
+            )
         except LLMUnavailableError as e:
             typer.echo(f'Error: {e}', err=True)
             raise typer.Exit(code=1) from e
         results.append(evaluate_answers(query, answer, hits))
 
-    run_path, run = write_answer_run(run_dir, retriever.manifest, method, eval_k, results, settings)
+    reranker_model = settings.reranker_model if rerank else None
+    reranker_dtype = reranker.torch_dtype if reranker is not None else None
+    run_path, run = write_answer_run(
+        run_dir, retriever.manifest, method, reranker_model, reranker_dtype, eval_k, results, settings
+    )
     typer.echo(run.summary.format_line())
 
     typer.echo('\nby type:')

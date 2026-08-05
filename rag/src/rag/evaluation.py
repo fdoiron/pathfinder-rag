@@ -109,6 +109,8 @@ class EvalRun(BaseModel):
     created_at: datetime
     manifest: ChunksManifest
     method: SearchMethod
+    reranker_model: str | None
+    reranker_dtype: str | None
     k: int
     rrf_k: int
     rrf_vector_weight: float
@@ -143,6 +145,8 @@ class AnswerEvalRun(BaseModel):
     created_at: datetime
     manifest: ChunksManifest
     method: SearchMethod
+    reranker_model: str | None
+    reranker_dtype: str | None
     k: int
     rrf_k: int
     rrf_vector_weight: float
@@ -264,6 +268,8 @@ def write_run(
     run_dir: Path,
     manifest: ChunksManifest,
     method: SearchMethod,
+    reranker_model: str | None,
+    reranker_dtype: str | None,
     k: int,
     results: list[QueryResult],
     settings: Settings,
@@ -278,6 +284,8 @@ def write_run(
         created_at=now,
         manifest=manifest,
         method=method,
+        reranker_model=reranker_model,
+        reranker_dtype=reranker_dtype,
         k=k,
         rrf_k=settings.rrf_k,
         rrf_vector_weight=settings.rrf_vector_weight,
@@ -301,6 +309,8 @@ def write_answer_run(
     run_dir: Path,
     manifest: ChunksManifest,
     method: SearchMethod,
+    reranker_model: str | None,
+    reranker_dtype: str | None,
     k: int,
     results: list[AnswerResult],
     settings: Settings,
@@ -314,6 +324,8 @@ def write_answer_run(
         created_at=now,
         manifest=manifest,
         method=method,
+        reranker_model=reranker_model,
+        reranker_dtype=reranker_dtype,
         k=k,
         rrf_k=settings.rrf_k,
         rrf_vector_weight=settings.rrf_vector_weight,
@@ -348,7 +360,9 @@ def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
     return collapsed[:k]
 
 
-def search_top_k_docs(retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid') -> list[ChunkHit]:
+def search_top_k_docs(
+    retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid', rerank: bool = False
+) -> list[ChunkHit]:
     """Search and combine to k unique pages. If it falls short of k it widens the chunk fetch.
 
     One doc can occupy several of the top chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR
@@ -359,7 +373,7 @@ def search_top_k_docs(retriever: Retriever, query: str, k: int, method: SearchMe
     total_chunks = len(retriever)
     fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
     while True:
-        hits = retriever.search(query, k=fetch_k, method=method)
+        hits = retriever.search(query, k=fetch_k, method=method, rerank=rerank)
         collapsed = collapse_to_urls(hits, k)
         if len(collapsed) >= k or fetch_k >= total_chunks or len(hits) < fetch_k:
             return collapsed

@@ -9,8 +9,10 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix='RAG_', env_file='.env', env_file_encoding='utf-8')
 
     embedding_model: str = 'Qwen/Qwen3-Embedding-0.6B'
+    reranker_model: str = 'Qwen/Qwen3-Reranker-0.6B'
     embedding_dim: PositiveInt = 1024
     embedding_batch_size: PositiveInt = 32
+    reranker_batch_size: PositiveInt = 32
     corpus_path: Path = Path('data/corpus.parquet')
     chunks_path: Path = Path('data/chunks.parquet')
     min_body_length: NonNegativeInt = 100  # 0 keeps every article
@@ -22,6 +24,7 @@ class Settings(BaseSettings):
     llm_timeout: PositiveFloat = 60.0  # Ollama timeout in seconds instead of default 10 minutes
     ask_prompt_path: Path | None = None  # override for the packaged prompts/ask.txt, mainly for tests
     ask_k: PositiveInt = 5  # excerpts per prompt
+    rerank_fetch_k: PositiveInt = 50  # candidates fused/retrieved and reranked before cutting down to k
     rrf_k: PositiveInt = 60  # Reciprocal Rank Fusion k denominator
     rrf_vector_weight: PositiveFloat = 15.0  # per-list weight on the vector ranking's RRF contribution
     rrf_bm25_weight: PositiveFloat = 1.0  # per-list weight on the BM25 ranking's RRF contribution

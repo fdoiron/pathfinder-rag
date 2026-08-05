@@ -32,6 +32,16 @@ class FakeEmbedder:
         return np.array([self._vec], dtype=np.float32)
 
 
+class FakeReranker:
+    """Returns a fixed score per text, looked up by exact text match."""
+
+    def __init__(self, scores: dict[str, float]):
+        self._scores = scores
+
+    def rerank(self, query: str, texts: list[str]) -> np.ndarray:  # noqa: ARG002
+        return np.array([self._scores[text] for text in texts], dtype=np.float32)
+
+
 def _make_manifest(
     model: str = 'Qwen/Qwen3-Embedding-0.6B', dim: int = 2, source_sha256: str = 'abc123'
 ) -> ChunksManifest:
@@ -247,6 +257,29 @@ def test_hits_carry_doc_id_and_url():
     top = retriever.search('anything', k=1, method='vector')[0]
     assert top.doc_id == 'alpha'
     assert str(top.url) == 'https://example.com/alpha'
+
+
+# reranking
+
+
+def test_rerank_reorders_by_reranker_score():
+    reranker = FakeReranker({'Text alpha': 0.1, 'Text beta': 0.9, 'Text gamma': 0.5})
+    retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest(), reranker=reranker)
+    results = retriever.search('anything', k=3, method='vector', rerank=True)
+    assert [r.doc_id for r in results] == ['beta', 'gamma', 'alpha']
+
+
+def test_rerank_false_ignores_reranker():
+    reranker = FakeReranker({'Text alpha': 0.1, 'Text beta': 0.9, 'Text gamma': 0.5})
+    retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest(), reranker=reranker)
+    results = retriever.search('anything', k=3, method='vector', rerank=False)
+    assert [r.doc_id for r in results] == ['alpha', 'beta', 'gamma']
+
+
+def test_rerank_true_without_reranker_raises():
+    retriever = Retriever(_make_chunks_df(), FakeEmbedder([1.0, 0.0]), _make_manifest())
+    with pytest.raises(ValueError, match='reranker'):
+        retriever.search('anything', k=3, method='vector', rerank=True)
 
 
 # category filter

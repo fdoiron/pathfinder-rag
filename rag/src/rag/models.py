@@ -98,3 +98,7 @@ class ChunksManifest(BaseModel):
 
 class Embedder(Protocol):
     def embed(self, texts: list[str], task_type: TaskType = ...) -> np.ndarray: ...
+
+
+class Reranker(Protocol):
+    def rerank(self, query: str, texts: list[str]) -> np.ndarray: ...
