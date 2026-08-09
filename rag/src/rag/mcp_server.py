@@ -189,6 +189,10 @@ def make_queue_depth_callback(ctx: AppContext) -> Callable[[CallbackOptions], It
 async def gpu_worker(worker_id: int, ctx: AppContext) -> None:
     while True:
         job = await ctx.gpu_queue.get()
+        if job.future.cancelled():  # caller gave up while queued -> don't spend a worker on a result nobody will read
+            logger.debug(f'worker {worker_id} skipping cancelled job')
+            ctx.gpu_queue.task_done()
+            continue
         token = otel_context.attach(job.parent_ctx)
         with tracer.start_as_current_span('gpu_worker.search') as span:
             span.set_attribute('queue.wait_ms', (time.monotonic() - job.submitted_at) * 1000)
