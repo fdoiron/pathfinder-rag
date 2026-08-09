@@ -1,14 +1,32 @@
 import asyncio
 import importlib.resources
 import logging
-from collections.abc import AsyncGenerator
+import time
+from collections.abc import AsyncGenerator, Callable, Iterable
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from typing import Annotated, Any, Literal
 
+from mcp.server._otel import OpenTelemetryMiddleware
 from mcp.server.mcpserver import Context, MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
+from opentelemetry import context as otel_context
+from opentelemetry import metrics, trace
+from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+from opentelemetry.metrics import CallbackOptions, Observation
+from opentelemetry.sdk.metrics import MeterProvider
+from opentelemetry.sdk.metrics.export import (
+    ConsoleMetricExporter,
+    ExponentialHistogramDataPoint,
+    HistogramDataPoint,
+    MetricsData,
+    NumberDataPoint,
+    PeriodicExportingMetricReader,
+)
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pydantic import BaseModel, Field, HttpUrl
 
 from rag.config import Settings, get_settings
@@ -19,10 +37,47 @@ from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, S
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 N_WORKERS = 2
 
+_otel_settings = get_settings()
+resource = Resource.create({'service.name': 'rag-search'})
 
+provider = TracerProvider(resource=resource)
+provider.add_span_processor(
+    BatchSpanProcessor(OTLPSpanExporter(endpoint=_otel_settings.otel_exporter_otlp_endpoint, insecure=True))
+)
+trace.set_tracer_provider(provider)
+
+
+def _format_data_point(dp: NumberDataPoint | HistogramDataPoint | ExponentialHistogramDataPoint) -> str:
+    if isinstance(dp, NumberDataPoint):
+        return str(dp.value)
+    return f'count={dp.count} sum={dp.sum}'
+
+
+def _compact_metric_formatter(data: MetricsData) -> str:
+    lines = [
+        f'{m.name}={_format_data_point(dp)}'
+        for rm in data.resource_metrics
+        for sm in rm.scope_metrics
+        for m in sm.metrics
+        for dp in m.data.data_points
+    ]
+    return '\n'.join(lines) + '\n' if lines else ''
+
+
+metric_readers = []
+if _otel_settings.otel_console_export:
+    metric_readers.append(PeriodicExportingMetricReader(ConsoleMetricExporter(formatter=_compact_metric_formatter)))
+
+meter_provider = MeterProvider(resource=resource, metric_readers=metric_readers)
+metrics.set_meter_provider(meter_provider)
+
+tracer = trace.get_tracer('rag-search.worker')
+meter = metrics.get_meter('rag-search')
+
+
+# TODO : add validation / try except to loading of string otherwise bare keyerror
 def _load_tool_strings() -> dict[str, str]:
     """Tool titles/descriptions/field descriptions/error messages from prompts/mcp_tools.txt."""
     text = importlib.resources.files('rag').joinpath('prompts', 'mcp_tools.txt').read_text(encoding='utf-8')
@@ -107,6 +162,8 @@ class SearchJob:
     k: int
     category: str | None
     future: asyncio.Future[list[ChunkHit]] = field()
+    submitted_at: float = field(default_factory=time.monotonic)
+    parent_ctx: otel_context.Context = field(default_factory=otel_context.get_current)
 
 
 @dataclass
@@ -117,27 +174,43 @@ class AppContext:
     worker_tasks: list[asyncio.Task[None]]
 
 
+def make_queue_depth_callback(ctx: AppContext) -> Callable[[CallbackOptions], Iterable[Observation]]:
+    def callback(options: CallbackOptions) -> Iterable[Observation]:
+        yield Observation(ctx.gpu_queue.qsize(), {})
+
+    return callback
+
+
 async def gpu_worker(worker_id: int, ctx: AppContext) -> None:
     while True:
         job = await ctx.gpu_queue.get()
-        try:
-            hits = await asyncio.to_thread(
-                ctx.retriever.search,
-                query=job.query,
-                k=job.k,
-                category=job.category,
-                method='hybrid',
-                rerank=True,
-                fetch_k=ctx.settings.rerank_fetch_k,
-            )
-            if not job.future.cancelled():
-                job.future.set_result(hits)
-        except Exception as e:
-            logger.exception(f'worker {worker_id} search failed')
-            if not job.future.cancelled():
-                job.future.set_exception(e)
-        finally:
-            ctx.gpu_queue.task_done()
+        token = otel_context.attach(job.parent_ctx)
+        with tracer.start_as_current_span('gpu_worker.search') as span:
+            span.set_attribute('queue.wait_ms', (time.monotonic() - job.submitted_at) * 1000)
+            span.set_attribute('worker.id', worker_id)
+            span.set_attribute('search.k', job.k)
+            span.set_attribute('search.category', job.category or 'none')
+            try:
+                hits = await asyncio.to_thread(
+                    ctx.retriever.search,
+                    query=job.query,
+                    k=job.k,
+                    category=job.category,
+                    method='hybrid',
+                    rerank=True,
+                    fetch_k=ctx.settings.rerank_fetch_k,
+                )
+                span.set_attribute('search.hit_count', len(hits))
+                if not job.future.cancelled():
+                    job.future.set_result(hits)
+            except Exception as e:
+                span.record_exception(e)
+                logger.exception(f'worker {worker_id} search failed')
+                if not job.future.cancelled():
+                    job.future.set_exception(e)
+            finally:
+                otel_context.detach(token)
+                ctx.gpu_queue.task_done()
 
 
 @asynccontextmanager
@@ -166,15 +239,26 @@ async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
 
     ctx = AppContext(settings=settings, retriever=retriever, gpu_queue=asyncio.Queue(maxsize=8), worker_tasks=[])
     ctx.worker_tasks = [asyncio.create_task(gpu_worker(i, ctx)) for i in range(N_WORKERS)]
+    meter.create_observable_gauge(
+        'rag_search.gpu_queue.depth',
+        callbacks=[make_queue_depth_callback(ctx)],
+        description='Current number of jobs waiting in the GPU search queue',
+    )
     try:
         yield ctx
     finally:
         for task in ctx.worker_tasks:
             task.cancel()
         await asyncio.gather(*ctx.worker_tasks, return_exceptions=True)
+        provider.shutdown()
+        meter_provider.shutdown()
 
 
-mcp = MCPServer('rag-search', lifespan=app_lifespan)
+mcp = MCPServer(
+    'rag-search',
+    lifespan=app_lifespan,
+    middleware=[OpenTelemetryMiddleware()],
+)
 
 
 @mcp.tool(
@@ -194,7 +278,9 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
     )
     try:
         app_ctx.gpu_queue.put_nowait(job)
+        logger.debug(f'job enqueued, depth={app_ctx.gpu_queue.qsize()}/{app_ctx.gpu_queue.maxsize}')
     except asyncio.QueueFull:
+        logger.warning(f'gpu_queue full (maxsize={app_ctx.gpu_queue.maxsize}), rejecting job')
         raise ToolError(_STR['rag_search.busy_error']) from None
 
     try:

@@ -17,6 +17,8 @@ dependencies = [
     "torch>=2.1.0",
     "openai>=2.48.0",
     "mcp[cli]>=2.0.0",
+    "opentelemetry-sdk>=1.44.0",
+    "opentelemetry-exporter-otlp>=1.44.0",
 ]
 
 [build-system]

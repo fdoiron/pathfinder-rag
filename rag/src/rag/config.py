@@ -1,7 +1,8 @@
 from functools import lru_cache
 from pathlib import Path
+from typing import Annotated
 
-from pydantic import NonNegativeInt, PositiveFloat, PositiveInt
+from pydantic import Field, NonNegativeInt, PositiveFloat, PositiveInt
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -31,6 +32,9 @@ class Settings(BaseSettings):
     fts5_tokenchar: bool = False  # True: tokenize="unicode61 tokenchars '-'" (keeps "aboleth-psionic" as one token)
     fts5_title_weight: PositiveFloat = 10.0  # bm25() weight for the chunk's heading vs. body text
     fts5_text_weight: PositiveFloat = 1.0
+    # None -> OTLPSpanExporter falls back to its own env lookup, defaulting to http://localhost:4317
+    otel_exporter_otlp_endpoint: Annotated[str | None, Field(validation_alias='OTEL_EXPORTER_OTLP_ENDPOINT')] = None
+    otel_console_export: bool = False  # RAG_OTEL_CONSOLE_EXPORT: print metrics via ConsoleMetricExporter
 
 
 @lru_cache
