@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, HttpUrl
 
 from rag.config import Settings, get_settings
 from rag.embedding import EmbedderUnavailableError, load_embedder
-from rag.models import Article, ChunkHit
+from rag.models import ChunkHit
 from rag.reranking import RerankerUnavailableError, load_reranker
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, StaleIndexError, load_retriever
 
@@ -51,6 +51,28 @@ class SearchQuery(BaseModel):
 
 class FetchQuery(BaseModel):
     chunk_id: Annotated[str, Field(description='The chunk_id from search')]
+    max_chars: Annotated[
+        int,
+        Field(
+            ge=1000,
+            le=60000,
+            description='Upper bound on the returned body. A longer article is narrowed to a window around the chunk',
+        ),
+    ] = 12000
+
+
+class ArticleWindow(BaseModel):
+    """The source article for a chunk narrowed around it when the whole body would be too large."""
+
+    doc_id: str
+    title: str
+    url: HttpUrl
+    category: str
+    breadcrumb: list[str]
+    body_md: str = Field(description='Article body, or a window of it centred on the requested chunk')
+    n_chars: int = Field(description='Length of the FULL article body, not of the returned excerpt')
+    window_start: int = Field(description='Offset of the returned body within the full article (0 when whole)')
+    window_end: int = Field(description='End offset of the returned body, exclusive. Equals n_chars when whole')
 
 
 class ChunkSearchResult(BaseModel):
@@ -185,18 +207,42 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
 
 
 @mcp.tool(
-    title='Fetch a full Article based on a chunkID',
+    title='Fetch the source article for a chunkID',
     annotations=ToolAnnotations(
         read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
     ),
 )
-async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> Article:
-    """Fetch a full Article based on a chunkID"""
+async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> ArticleWindow:
+    """Fetch the source article a chunk came from windowed around it if it is over max_chars"""
     app_ctx: AppContext = ctx.request_context.lifespan_context
-    article = app_ctx.retriever.get_article(fetch_query.chunk_id)
-    if article is None:
+    retriever = app_ctx.retriever
+    article = retriever.get_article(fetch_query.chunk_id)
+    chunk_text = retriever.get_chunk_text(fetch_query.chunk_id)
+    if article is None or chunk_text is None:
         raise ToolError(f'Unknown chunk_id: {fetch_query.chunk_id}')
-    return article
+
+    body = article.body_md
+    max_chars = fetch_query.max_chars
+    if len(body) <= max_chars:
+        start, end = 0, len(body)
+    else:
+        snippet = max(chunk_text.splitlines()[1:], key=len, default='')  # [1:] skip heading prefix
+        mid = max(body.find(snippet), 0) + len(snippet) // 2
+        start = max(0, mid - max_chars // 2)
+        end = min(len(body), start + max_chars)
+        start = max(0, end - max_chars)
+
+    return ArticleWindow(
+        doc_id=article.doc_id,
+        title=article.title,
+        url=article.url,
+        category=article.category,
+        breadcrumb=article.breadcrumb,
+        body_md=body[start:end],
+        n_chars=article.n_chars,
+        window_start=start,
+        window_end=end,
+    )
 
 
 if __name__ == '__main__':

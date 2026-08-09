@@ -167,6 +167,13 @@ class Retriever:
         doc_id = self._df.iloc[pos]['doc_id']
         return Article(doc_id=doc_id, **self._docs.loc[doc_id].to_dict())
 
+    def get_chunk_text(self, chunk_id: str) -> str | None:
+        """The embedded text of a chunk for locating the chunk inside its source article."""
+        pos = self._chunk_id_to_pos.get(chunk_id)
+        if pos is None:
+            return None
+        return cast(str, self._df.iloc[pos]['text'])
+
 
 class ManifestMismatchError(RuntimeError):
     """Chunks were embedded with a different model or embedding dimension than the current settings."""
