@@ -133,6 +133,7 @@ async def gpu_worker(worker_id: int, ctx: AppContext) -> None:
             if not job.future.cancelled():
                 job.future.set_result(hits)
         except Exception as e:
+            logger.exception(f'worker {worker_id} search failed')
             if not job.future.cancelled():
                 job.future.set_exception(e)
         finally:
@@ -196,7 +197,11 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
     except asyncio.QueueFull:
         raise ToolError(_STR['rag_search.busy_error']) from None
 
-    hits = await job.future
+    try:
+        hits = await job.future
+    except Exception as e:
+        logger.exception('search job failed')
+        raise ToolError(f'Search failed: {e}') from e
 
     if not hits:
         return SearchResults(results=[], message=_STR['rag_search.no_results_message'])
