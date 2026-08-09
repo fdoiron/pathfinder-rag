@@ -46,6 +46,7 @@ def make_result(
         text='body',
         category='bestiary',
         n_tokens=n_tokens,
+        article_n_chars=100,
         score=score,
     )
 
@@ -409,6 +410,7 @@ def test_search_top_k_docs_stops_widening_when_exhausted_after_a_widen(monkeypat
             'text': ['zzzmatchzzz'] * n_dup + ['unrelated text'] * n_filler,
             'category': ['bestiary'] * total,
             'n_tokens': [5] * total,
+            'article_n_chars': [100] * total,
             'embedding': [np.array([1.0, 0.0], dtype=np.float32) for _ in range(total)],
         }
     )
@@ -448,6 +450,7 @@ def test_search_top_k_docs_widens_on_duplicate_doc_collapse(monkeypatch: pytest.
             'text': ['text'] * total,
             'category': ['bestiary'] * total,
             'n_tokens': [5] * total,
+            'article_n_chars': [100] * total,
             'embedding': [np.array([s, (1 - s**2) ** 0.5], dtype=np.float32) for s in scores],
         }
     )

@@ -79,6 +79,7 @@ def _make_chunks_df() -> pd.DataFrame:
             'text': ['Text alpha', 'Text beta', 'Text gamma'],
             'category': ['bestiary', 'bestiary', 'feats'],
             'n_tokens': [10, 9, 10],
+            'article_n_chars': [100, 90, 100],
             'embedding': [
                 np.array([1.0, 0.0], dtype=np.float32),
                 np.array([0.9, 0.1], dtype=np.float32),
@@ -106,12 +107,16 @@ def _write_test_files(tmp_path: Path, model: str, dim: int) -> tuple[Path, Path]
                 'https://example.com/gamma',
             ],
             'title': ['Alpha', 'Beta', 'Gamma'],
+            'category': ['test-category', 'test-category', 'test-category'],
+            'breadcrumb': [['Alpha'], ['Beta'], ['Gamma']],
+            'body_md': ['alpha body', 'beta body', 'gamma body'],
+            'n_chars': [10, 9, 10],
         }
     )
     docs_path = tmp_path / 'corpus.parquet'
     docs_df.to_parquet(docs_path, index=False)
 
-    chunks_df = _make_chunks_df().drop(columns=['title', 'url'])
+    chunks_df = _make_chunks_df().drop(columns=['title', 'url', 'article_n_chars'])
     chunks_path = tmp_path / 'chunks.parquet'
     chunks_df.to_parquet(chunks_path, index=False)
     manifest = _make_manifest(model=model, dim=dim, source_sha256=hashlib.sha256(docs_path.read_bytes()).hexdigest())

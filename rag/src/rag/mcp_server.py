@@ -12,7 +12,7 @@ from pydantic import BaseModel, Field, HttpUrl
 
 from rag.config import Settings, get_settings
 from rag.embedding import EmbedderUnavailableError, load_embedder
-from rag.models import ChunkHit
+from rag.models import Article, ChunkHit
 from rag.reranking import RerankerUnavailableError, load_reranker
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, StaleIndexError, load_retriever
 
@@ -49,12 +49,18 @@ class SearchQuery(BaseModel):
     ] = None
 
 
+class FetchQuery(BaseModel):
+    chunk_id: Annotated[str, Field(description='The chunk_id from search')]
+
+
 class ChunkSearchResult(BaseModel):
     rank: int = Field(ge=1, description='Rank position of this result (1-indexed)')
     score: float = Field(description='Score from Vector/BM25/Reranker')
+    chunk_id: str = Field(description='Pass to fetch_section to retrieve the full source article')
     title: str = Field(description='Full title of the source article')
     url: HttpUrl = Field(description='URL of the source article')
     body: str = Field(description='Content of the retrieved chunk')
+    article_n_chars: int = Field(description='Length in characters of the full source article (see fetch_section)')
 
 
 class SearchResults(BaseModel):
@@ -164,10 +170,33 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
 
     return SearchResults(
         results=[
-            ChunkSearchResult(rank=i + 1, score=h.score, title=h.title, url=h.url, body=h.text)
+            ChunkSearchResult(
+                rank=i + 1,
+                score=h.score,
+                chunk_id=h.chunk_id,
+                title=h.title,
+                url=h.url,
+                body=h.text,
+                article_n_chars=h.article_n_chars,
+            )
             for i, h in enumerate(hits)
         ]
     )
+
+
+@mcp.tool(
+    title='Fetch a full Article based on a chunkID',
+    annotations=ToolAnnotations(
+        read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
+    ),
+)
+async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> Article:
+    """Fetch a full Article based on a chunkID"""
+    app_ctx: AppContext = ctx.request_context.lifespan_context
+    article = app_ctx.retriever.get_article(fetch_query.chunk_id)
+    if article is None:
+        raise ToolError(f'Unknown chunk_id: {fetch_query.chunk_id}')
+    return article
 
 
 if __name__ == '__main__':

@@ -95,6 +95,7 @@ def _make_chunks_df() -> pd.DataFrame:
             'text': ['Text alpha', 'Text beta', 'Text gamma'],
             'category': ['bestiary', 'bestiary', 'feats'],
             'n_tokens': [10, 9, 10],
+            'article_n_chars': [100, 90, 100],
             'embedding': [
                 np.array([1.0, 0.0], dtype=np.float32),
                 np.array([0.9, 0.1], dtype=np.float32),

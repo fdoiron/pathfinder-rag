@@ -135,6 +135,7 @@ def _make_hit() -> ChunkHit:
         text='Text alpha',
         category='bestiary',
         n_tokens=10,
+        article_n_chars=100,
         score=0.9,
     )
 
@@ -393,6 +394,7 @@ def _fireball_hit() -> ChunkHit:
         text='deals damage in an area',
         category='spells',
         n_tokens=6,
+        article_n_chars=100,
         score=0.95,
     )
 

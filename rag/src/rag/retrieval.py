@@ -10,7 +10,7 @@ from pydantic import ValidationError
 
 from rag.config import Settings
 from rag.lexical import search_fts5
-from rag.models import ChunkHit, ChunksManifest, Embedder, Reranker
+from rag.models import Article, ChunkHit, ChunksManifest, Embedder, Reranker
 from rag.vector import search_vector
 
 logger = logging.getLogger(__name__)
@@ -46,6 +46,7 @@ class Retriever:
         df: pd.DataFrame,
         embedder: Embedder,
         manifest: ChunksManifest,
+        docs: pd.DataFrame | None = None,
         reranker: Reranker | None = None,
         fts_con: sqlite3.Connection | None = None,
         rrf_k: int = 60,
@@ -55,6 +56,7 @@ class Retriever:
         rrf_bm25_weight: float = 1.0,
     ) -> None:
         self._df = df.reset_index(drop=True)
+        self._docs = docs
         matrix = np.vstack(self._df['embedding'].to_list()).astype(np.float32)  # vert stack matrices
         if not np.isfinite(matrix).all():
             bad_rows = np.where(~np.isfinite(matrix).all(axis=1))[0]
@@ -155,6 +157,16 @@ class Retriever:
             hits.append(ChunkHit(**row, score=rank_score))
         return hits
 
+    def get_article(self, chunk_id: str) -> Article | None:
+        """Look up the full source article a chunk was cut from using chunk_id."""
+        if self._docs is None:
+            raise ValueError('get_article requires a Retriever built with docs (see load_retriever)')
+        pos = self._chunk_id_to_pos.get(chunk_id)
+        if pos is None:
+            return None
+        doc_id = self._df.iloc[pos]['doc_id']
+        return Article(doc_id=doc_id, **self._docs.loc[doc_id].to_dict())
+
 
 class ManifestMismatchError(RuntimeError):
     """Chunks were embedded with a different model or embedding dimension than the current settings."""
@@ -217,8 +229,15 @@ def load_retriever(
         raise FileNotFoundError(f'FTS5 index not found: {fts_path}. Rebuild chunks to generate it.')
     fts_con = sqlite3.connect(fts_path, check_same_thread=False)
 
-    docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
-    df = pd.read_parquet(chunks_file).merge(docs, on='doc_id', how='left', validate='many_to_one')
+    docs = pd.read_parquet(
+        settings.corpus_path, columns=['doc_id', 'url', 'title', 'category', 'breadcrumb', 'body_md', 'n_chars']
+    )
+    df = pd.read_parquet(chunks_file).merge(
+        docs[['doc_id', 'url', 'title', 'n_chars']].rename(columns={'n_chars': 'article_n_chars'}),
+        on='doc_id',
+        how='left',
+        validate='many_to_one',
+    )
 
     orphan_doc_ids = sorted(df.loc[df['title'].isna(), 'doc_id'].unique())
     if orphan_doc_ids:
@@ -254,6 +273,7 @@ def load_retriever(
         df,
         embedder,
         manifest,
+        docs=docs.set_index('doc_id'),
         reranker=reranker,
         fts_con=fts_con,
         rrf_k=settings.rrf_k,
