@@ -156,6 +156,11 @@ class SearchResults(BaseModel):
     message: str | None = None
 
 
+class ClassifiedToolError(ToolError):
+    def __init__(self, category: Literal['retryable', 'rephrase', 'fatal'], message: str):
+        super().__init__(f'[{category}] {message}')
+
+
 @dataclass
 class SearchJob:
     query: str
@@ -281,13 +286,13 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
         logger.debug(f'job enqueued, depth={app_ctx.gpu_queue.qsize()}/{app_ctx.gpu_queue.maxsize}')
     except asyncio.QueueFull:
         logger.warning(f'gpu_queue full (maxsize={app_ctx.gpu_queue.maxsize}), rejecting job')
-        raise ToolError(_STR['rag_search.busy_error']) from None
+        raise ClassifiedToolError('retryable', _STR['rag_search.busy_error']) from None
 
     try:
         hits = await job.future
     except Exception as e:
         logger.exception('search job failed')
-        raise ToolError(f'Search failed: {e}') from e
+        raise ClassifiedToolError('fatal', f'Search failed: {e}') from e
 
     if not hits:
         return SearchResults(results=[], message=_STR['rag_search.no_results_message'])
@@ -318,10 +323,18 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
 async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> ArticleWindow:
     app_ctx: AppContext = ctx.request_context.lifespan_context
     retriever = app_ctx.retriever
-    article = retriever.get_article(fetch_query.chunk_id)
+    try:
+        article = retriever.get_article(fetch_query.chunk_id)
+    except ValueError as e:
+        logger.exception('get_article failed unexpectedly')
+        raise ClassifiedToolError(
+            'fatal', f'Internal error retrieving article. This is a server side bug not a bad request: {e}'
+        ) from e
     chunk_text = retriever.get_chunk_text(fetch_query.chunk_id)
     if article is None or chunk_text is None:
-        raise ToolError(_STR['fetch_section.unknown_chunk_error'].format(chunk_id=fetch_query.chunk_id))
+        raise ClassifiedToolError(
+            'rephrase', _STR['fetch_section.unknown_chunk_error'].format(chunk_id=fetch_query.chunk_id)
+        )
 
     body = article.body_md
     max_chars = fetch_query.max_chars
