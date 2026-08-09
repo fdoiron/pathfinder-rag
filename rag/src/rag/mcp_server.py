@@ -1,4 +1,5 @@
 import asyncio
+import importlib.resources
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
@@ -22,11 +23,25 @@ logger = logging.getLogger(__name__)
 N_WORKERS = 2
 
 
+def _load_tool_strings() -> dict[str, str]:
+    """Tool titles/descriptions/field descriptions/error messages from prompts/mcp_tools.txt."""
+    text = importlib.resources.files('rag').joinpath('prompts', 'mcp_tools.txt').read_text(encoding='utf-8')
+    strings: dict[str, str] = {}
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        key, _, value = line.partition(': ')
+        strings[key] = value
+    return strings
+
+
+_STR = _load_tool_strings()
+
+
 class SearchQuery(BaseModel):
-    query: Annotated[str, Field(min_length=2, max_length=300, description='Keyword to search the RAG for')]
-    k: Annotated[
-        int, Field(ge=1, le=10, description='The Maximum number of chunks to return. May return less than k')
-    ] = 5
+    query: Annotated[str, Field(min_length=2, max_length=300, description=_STR['SearchQuery.query'])]
+    k: Annotated[int, Field(ge=1, le=10, description=_STR['SearchQuery.k'])] = 5
     # TODO: this list is duplicated from the corpus's category set with no sync check. Validate against chunks.parquet
     # at startup, or move to a manifest file
     category: Annotated[
@@ -45,19 +60,15 @@ class SearchQuery(BaseModel):
             'traits',
         ]
         | None,
-        Field(description='Filter the topmost level'),
+        Field(description=_STR['SearchQuery.category']),
     ] = None
 
 
 class FetchQuery(BaseModel):
-    chunk_id: Annotated[str, Field(description='The chunk_id from search')]
+    chunk_id: Annotated[str, Field(description=_STR['FetchQuery.chunk_id'])]
     max_chars: Annotated[
         int,
-        Field(
-            ge=1000,
-            le=60000,
-            description='Upper bound on the returned body. A longer article is narrowed to a window around the chunk',
-        ),
+        Field(ge=1000, le=60000, description=_STR['FetchQuery.max_chars']),
     ] = 12000
 
 
@@ -69,20 +80,20 @@ class ArticleWindow(BaseModel):
     url: HttpUrl
     category: str
     breadcrumb: list[str]
-    body_md: str = Field(description='Article body, or a window of it centred on the requested chunk')
-    n_chars: int = Field(description='Length of the FULL article body, not of the returned excerpt')
-    window_start: int = Field(description='Offset of the returned body within the full article (0 when whole)')
-    window_end: int = Field(description='End offset of the returned body, exclusive. Equals n_chars when whole')
+    body_md: str = Field(description=_STR['ArticleWindow.body_md'])
+    n_chars: int = Field(description=_STR['ArticleWindow.n_chars'])
+    window_start: int = Field(description=_STR['ArticleWindow.window_start'])
+    window_end: int = Field(description=_STR['ArticleWindow.window_end'])
 
 
 class ChunkSearchResult(BaseModel):
-    rank: int = Field(ge=1, description='Rank position of this result (1-indexed)')
-    score: float = Field(description='Score from Vector/BM25/Reranker')
-    chunk_id: str = Field(description='Pass to fetch_section to retrieve the full source article')
-    title: str = Field(description='Full title of the source article')
-    url: HttpUrl = Field(description='URL of the source article')
-    body: str = Field(description='Content of the retrieved chunk')
-    article_n_chars: int = Field(description='Length in characters of the full source article (see fetch_section)')
+    rank: int = Field(ge=1, description=_STR['ChunkSearchResult.rank'])
+    score: float = Field(description=_STR['ChunkSearchResult.score'])
+    chunk_id: str = Field(description=_STR['ChunkSearchResult.chunk_id'])
+    title: str = Field(description=_STR['ChunkSearchResult.title'])
+    url: HttpUrl = Field(description=_STR['ChunkSearchResult.url'])
+    body: str = Field(description=_STR['ChunkSearchResult.body'])
+    article_n_chars: int = Field(description=_STR['ChunkSearchResult.article_n_chars'])
 
 
 class SearchResults(BaseModel):
@@ -166,13 +177,13 @@ mcp = MCPServer('rag-search', lifespan=app_lifespan)
 
 
 @mcp.tool(
-    title='Search Pathfinder RAG',
+    title=_STR['rag_search.title'],
+    description=_STR['rag_search.description'],
     annotations=ToolAnnotations(
         read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
     ),
 )
 async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -> SearchResults:
-    """Search the RAG for pathfinder articles"""
     app_ctx: AppContext = ctx.request_context.lifespan_context
     job = SearchJob(
         query=search_query.query,
@@ -183,12 +194,12 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
     try:
         app_ctx.gpu_queue.put_nowait(job)
     except asyncio.QueueFull:
-        raise ToolError('busy, retry in a few seconds') from None
+        raise ToolError(_STR['rag_search.busy_error']) from None
 
     hits = await job.future
 
     if not hits:
-        return SearchResults(results=[], message='No results found for this query/category combination.')
+        return SearchResults(results=[], message=_STR['rag_search.no_results_message'])
 
     return SearchResults(
         results=[
@@ -207,19 +218,19 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
 
 
 @mcp.tool(
-    title='Fetch the source article for a chunkID',
+    title=_STR['fetch_section.title'],
+    description=_STR['fetch_section.description'],
     annotations=ToolAnnotations(
         read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
     ),
 )
 async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> ArticleWindow:
-    """Fetch the source article a chunk came from windowed around it if it is over max_chars"""
     app_ctx: AppContext = ctx.request_context.lifespan_context
     retriever = app_ctx.retriever
     article = retriever.get_article(fetch_query.chunk_id)
     chunk_text = retriever.get_chunk_text(fetch_query.chunk_id)
     if article is None or chunk_text is None:
-        raise ToolError(f'Unknown chunk_id: {fetch_query.chunk_id}')
+        raise ToolError(_STR['fetch_section.unknown_chunk_error'].format(chunk_id=fetch_query.chunk_id))
 
     body = article.body_md
     max_chars = fetch_query.max_chars
