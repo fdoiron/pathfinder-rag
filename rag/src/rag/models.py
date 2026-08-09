@@ -42,7 +42,7 @@ class ChunkHit(BaseModel):
     text: str
     category: str
     n_tokens: int
-    article_n_chars: int
+    full_article_length: int
     score: float
 
 

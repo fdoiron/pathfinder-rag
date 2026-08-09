@@ -93,7 +93,7 @@ class ChunkSearchResult(BaseModel):
     title: str = Field(description=_STR['ChunkSearchResult.title'])
     url: HttpUrl = Field(description=_STR['ChunkSearchResult.url'])
     body: str = Field(description=_STR['ChunkSearchResult.body'])
-    article_n_chars: int = Field(description=_STR['ChunkSearchResult.article_n_chars'])
+    full_article_length: int = Field(description=_STR['ChunkSearchResult.full_article_length'])
 
 
 class SearchResults(BaseModel):
@@ -210,7 +210,7 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
                 title=h.title,
                 url=h.url,
                 body=h.text,
-                article_n_chars=h.article_n_chars,
+                full_article_length=h.full_article_length,
             )
             for i, h in enumerate(hits)
         ]

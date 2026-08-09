@@ -240,7 +240,7 @@ def load_retriever(
         settings.corpus_path, columns=['doc_id', 'url', 'title', 'category', 'breadcrumb', 'body_md', 'n_chars']
     )
     df = pd.read_parquet(chunks_file).merge(
-        docs[['doc_id', 'url', 'title', 'n_chars']].rename(columns={'n_chars': 'article_n_chars'}),
+        docs[['doc_id', 'url', 'title', 'n_chars']].rename(columns={'n_chars': 'full_article_length'}),
         on='doc_id',
         how='left',
         validate='many_to_one',
