@@ -16,6 +16,7 @@ dependencies = [
     "sentence-transformers>=2.7.0",
     "torch>=2.1.0",
     "openai>=2.48.0",
+    "mcp[cli]>=2.0.0",
 ]
 
 [build-system]
@@ -50,6 +51,8 @@ select = ['E', 'F', 'I', 'B', 'A', 'UP', 'SIM', 'RUF', 'C4', 'PTH', 'PT', 'PD', 
 [tool.ruff.lint.per-file-ignores]
 # renderer callbacks share a fixed (element, content) interface
 "src/rag/parsing.py" = ['ARG001']
+# lifespan callable and worker id are fixed positional slots in their respective interfaces
+"src/rag/mcp_server.py" = ['ARG001']
 
 [tool.ruff.format]
 quote-style = 'single'

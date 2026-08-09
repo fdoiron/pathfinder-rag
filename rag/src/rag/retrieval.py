@@ -215,7 +215,7 @@ def load_retriever(
     fts_path = chunks_file.with_suffix('.fts5.db')
     if not fts_path.exists():
         raise FileNotFoundError(f'FTS5 index not found: {fts_path}. Rebuild chunks to generate it.')
-    fts_con = sqlite3.connect(fts_path)
+    fts_con = sqlite3.connect(fts_path, check_same_thread=False)
 
     docs = pd.read_parquet(settings.corpus_path, columns=['doc_id', 'url', 'title'])
     df = pd.read_parquet(chunks_file).merge(docs, on='doc_id', how='left', validate='many_to_one')
