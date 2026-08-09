@@ -369,6 +369,8 @@ Hidden because the converter's separator logic covered the common markup pattern
 
 Eval: [before](rag/eval/canonical/n34_vector_post-chunking-fix.json) → [after](rag/eval/canonical/n34_vector_post-glue-fix.json). `exact_name` recall@1 0.45 → 0.55.
 
+**TODO (open) reranker scores collapse into ties in bf16, and the ties are proping up the scores.** `_compute_logits` never leaves the model's dtype, so scores snap to bf16's ~0.0039 grid near 1.0 and the top of the pool ties exactly. Ties break by pool order, which groups chunks of one page (`rag search "red dragon" --rerank` returns the same page three times). Casting to fp32 is numerically correct but costs recall@1 0.669 → 0.622: the ties were accidentally deferring to the RRF ranking whenever the cross-encoder couldn't distinguish so the fix is to make that fallback explicit.
+
 ## License and attribution
 
 This repo's code is licensed under [Apache License 2.0](LICENSE). The content it parses is Open Game Content from d20pfsrd.com, itself drawn from Paizo's Pathfinder Roleplaying Game and a substantial amount of third-party OGL publishers, released under the [Open Game License v1.0a](LICENSE-OGL.txt). See [`LICENSE-THIRD-PARTY.md`](LICENSE-THIRD-PARTY.md) for the full attribution, including a (programmatically generated) list of sourcebooks cited. Pathfinder is a trademark of Paizo Inc. This is an unaffiliated fan/portfolio project.
