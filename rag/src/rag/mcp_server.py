@@ -39,15 +39,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 N_WORKERS = 2
 
-_otel_settings = get_settings()
-resource = Resource.create({'service.name': 'rag-search'})
-
-provider = TracerProvider(resource=resource)
-provider.add_span_processor(
-    BatchSpanProcessor(OTLPSpanExporter(endpoint=_otel_settings.otel_exporter_otlp_endpoint, insecure=True))
-)
-trace.set_tracer_provider(provider)
-
 
 def _format_data_point(dp: NumberDataPoint | HistogramDataPoint | ExponentialHistogramDataPoint) -> str:
     if isinstance(dp, NumberDataPoint):
@@ -66,13 +57,31 @@ def _compact_metric_formatter(data: MetricsData) -> str:
     return '\n'.join(lines) + '\n' if lines else ''
 
 
-metric_readers = []
-if _otel_settings.otel_console_export:
-    metric_readers.append(PeriodicExportingMetricReader(ConsoleMetricExporter(formatter=_compact_metric_formatter)))
+_telemetry_configured = False
 
-meter_provider = MeterProvider(resource=resource, metric_readers=metric_readers)
-metrics.set_meter_provider(meter_provider)
 
+def configure_telemetry(settings: Settings) -> None:
+    """Register this server's tracer and meter providers once per process."""
+    global _telemetry_configured
+    if _telemetry_configured:
+        return
+
+    resource = Resource.create({'service.name': 'rag-search'})
+    tracer_provider = TracerProvider(resource=resource)
+    tracer_provider.add_span_processor(
+        BatchSpanProcessor(OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True))
+    )
+    trace.set_tracer_provider(tracer_provider)
+
+    metric_readers = []
+    if settings.otel_console_export:
+        metric_readers.append(PeriodicExportingMetricReader(ConsoleMetricExporter(formatter=_compact_metric_formatter)))
+    metrics.set_meter_provider(MeterProvider(resource=resource, metric_readers=metric_readers))
+
+    _telemetry_configured = True
+
+
+# proxies until configure_telemetry() runs
 tracer = trace.get_tracer('rag-search.worker')
 meter = metrics.get_meter('rag-search')
 
@@ -177,6 +186,7 @@ class AppContext:
     retriever: Retriever
     gpu_queue: asyncio.Queue[SearchJob]
     worker_tasks: list[asyncio.Task[None]]
+    accepting: bool = True
 
 
 def make_queue_depth_callback(ctx: AppContext) -> Callable[[CallbackOptions], Iterable[Observation]]:
@@ -225,6 +235,7 @@ async def gpu_worker(worker_id: int, ctx: AppContext) -> None:
 @asynccontextmanager
 async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
     settings = get_settings()
+    configure_telemetry(settings)
 
     try:
         embedder = load_embedder(settings)
@@ -256,11 +267,16 @@ async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
     try:
         yield ctx
     finally:
+        ctx.accepting = False  # refuse new searches then give the ones already queued a bounded window to finish
+        try:
+            await asyncio.wait_for(ctx.gpu_queue.join(), timeout=settings.mcp_drain_timeout)
+        except TimeoutError:
+            # qsize() would read 0 here while searches are still in flight. Report the window instead
+            logger.warning(f'drain window of {settings.mcp_drain_timeout}s elapsed. Abandoning unfinished searches')
+        # cancel() can't interrupt a search already inside to_thread -> only stops the worker waiting for it
         for task in ctx.worker_tasks:
             task.cancel()
         await asyncio.gather(*ctx.worker_tasks, return_exceptions=True)
-        provider.shutdown()
-        meter_provider.shutdown()
 
 
 mcp = MCPServer(
@@ -279,6 +295,8 @@ mcp = MCPServer(
 )
 async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -> SearchResults:
     app_ctx: AppContext = ctx.request_context.lifespan_context
+    if not app_ctx.accepting:
+        raise ClassifiedToolError('retryable', _STR['rag_search.shutdown_error'])
     job = SearchJob(
         query=search_query.query,
         k=search_query.k,

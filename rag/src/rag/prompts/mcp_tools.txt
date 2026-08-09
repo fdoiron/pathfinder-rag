@@ -19,6 +19,7 @@ ChunkSearchResult.full_article_length: Length in characters of the full source a
 rag_search.title: Search Pathfinder RAG
 rag_search.description: Search the RAG for pathfinder articles
 rag_search.busy_error: busy, retry in a few seconds
+rag_search.shutdown_error: server is shutting down. Retry in a few seconds
 rag_search.no_results_message: No results found for this query/category combination.
 fetch_section.title: Fetch the source article for a chunkID
 fetch_section.description: Fetch the source article a chunk came from windowed around it if it is over max_chars
