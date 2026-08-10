@@ -6,7 +6,7 @@ import time
 from collections.abc import AsyncGenerator, Callable, Iterable
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, get_args
 
 from mcp.server._otel import OpenTelemetryMiddleware
 from mcp.server.auth.provider import AccessToken, TokenVerifier
@@ -89,16 +89,24 @@ tracer = trace.get_tracer('rag-search.worker')
 meter = metrics.get_meter('rag-search')
 
 
-# TODO : add validation / try except to loading of string otherwise bare keyerror
-def _load_tool_strings() -> dict[str, str]:
+class _ToolStrings(dict[str, str]):
+    """Names the source file on a miss so a typoed key is not a KeyError at import."""
+
+    def __missing__(self, key: str) -> str:
+        raise KeyError(f'{key!r} is not defined in rag/prompts/mcp_tools.txt')
+
+
+def _load_tool_strings() -> _ToolStrings:
     """Tool titles/descriptions/field descriptions/error messages from prompts/mcp_tools.txt."""
     text = importlib.resources.files('rag').joinpath('prompts', 'mcp_tools.txt').read_text(encoding='utf-8')
-    strings: dict[str, str] = {}
-    for line in text.splitlines():
-        line = line.strip()
+    strings = _ToolStrings()
+    for lineno, raw in enumerate(text.splitlines(), start=1):
+        line = raw.strip()
         if not line or line.startswith('#'):
             continue
-        key, _, value = line.partition(': ')
+        key, separator, value = line.partition(': ')
+        if not separator or not value:
+            raise ValueError(f'mcp_tools.txt line {lineno}: expected "key: value", got {line!r}')
         strings[key] = value
     return strings
 
@@ -106,29 +114,32 @@ def _load_tool_strings() -> dict[str, str]:
 _STR = _load_tool_strings()
 
 
+Category = Literal[
+    'alignment-description',
+    'basics-ability-scores',
+    'bestiary',
+    'classes',
+    'equipment',
+    'feats',
+    'gamemastering',
+    'magic-items',
+    'magic',
+    'races',
+    'skills',
+    'traits',
+]
+# duplicated from the corpus's own category set: app_lifespan checks it vs the loaded chunks
+CATEGORIES: frozenset[str] = frozenset(get_args(Category))
+
+
+class CategoryDriftError(RuntimeError):
+    """The categories rag_search advertises no longer exist in the corpus it searches."""
+
+
 class SearchQuery(BaseModel):
     query: Annotated[str, Field(min_length=2, max_length=300, description=_STR['SearchQuery.query'])]
     k: Annotated[int, Field(ge=1, le=10, description=_STR['SearchQuery.k'])] = 5
-    # TODO: this list is duplicated from the corpus's category set with no sync check. Validate against chunks.parquet
-    # at startup, or move to a manifest file
-    category: Annotated[
-        Literal[
-            'alignment-description',
-            'basics-ability-scores',
-            'bestiary',
-            'classes',
-            'equipment',
-            'feats',
-            'gamemastering',
-            'magic-items',
-            'magic',
-            'races',
-            'skills',
-            'traits',
-        ]
-        | None,
-        Field(description=_STR['SearchQuery.category']),
-    ] = None
+    category: Annotated[Category | None, Field(description=_STR['SearchQuery.category'])] = None
 
 
 class FetchQuery(BaseModel):
@@ -271,6 +282,13 @@ async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
     ) as e:
         logger.error(f'Error: {e}')
         raise e
+
+    if advertised_only := CATEGORIES - retriever.categories:
+        raise CategoryDriftError(
+            f'rag_search advertises categories absent from {settings.chunks_path}: {sorted(advertised_only)}'
+        )
+    if corpus_only := retriever.categories - CATEGORIES:
+        logger.warning(f'corpus categories rag_search does not offer as a filter: {sorted(corpus_only)}')
 
     ctx = AppContext(settings=settings, retriever=retriever, gpu_queue=asyncio.Queue(maxsize=8), worker_tasks=[])
     ctx.worker_tasks = [asyncio.create_task(gpu_worker(i, ctx)) for i in range(N_WORKERS)]

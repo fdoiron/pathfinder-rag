@@ -38,6 +38,11 @@ class Retriever:
     def manifest(self) -> ChunksManifest:
         return self._manifest
 
+    @property
+    def categories(self) -> frozenset[str]:
+        """Distinct categories present in the loaded chunks for callers that expose them as a filter, ie MCP Server"""
+        return frozenset(str(c) for c in self._df['category'].unique())
+
     def __len__(self) -> int:
         return len(self._df)
 
