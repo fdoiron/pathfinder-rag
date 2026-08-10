@@ -1,6 +1,7 @@
 import asyncio
 import importlib.resources
 import logging
+import secrets
 import time
 from collections.abc import AsyncGenerator, Callable, Iterable
 from contextlib import asynccontextmanager
@@ -8,6 +9,8 @@ from dataclasses import dataclass, field
 from typing import Annotated, Any, Literal
 
 from mcp.server._otel import OpenTelemetryMiddleware
+from mcp.server.auth.provider import AccessToken, TokenVerifier
+from mcp.server.auth.settings import AuthSettings
 from mcp.server.mcpserver import Context, MCPServer
 from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
@@ -27,7 +30,7 @@ from opentelemetry.sdk.metrics.export import (
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
-from pydantic import BaseModel, Field, HttpUrl
+from pydantic import BaseModel, Field, HttpUrl, SecretStr
 
 from rag.config import Settings, get_settings
 from rag.embedding import EmbedderUnavailableError, load_embedder
@@ -170,6 +173,18 @@ class ClassifiedToolError(ToolError):
         super().__init__(f'[{category}] {message}')
 
 
+class StaticTokenVerifier(TokenVerifier):
+    """Accepts a single shared bearer token compared in constant time."""
+
+    def __init__(self, token: SecretStr) -> None:
+        self._token = token.get_secret_value()
+
+    async def verify_token(self, token: str) -> AccessToken | None:
+        if not secrets.compare_digest(token, self._token):
+            return None
+        return AccessToken(token=token, client_id='rag-search', scopes=[])
+
+
 @dataclass
 class SearchJob:
     query: str
@@ -279,10 +294,22 @@ async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
         await asyncio.gather(*ctx.worker_tasks, return_exceptions=True)
 
 
+_auth_token = get_settings().mcp_auth_token
+if _auth_token is None:
+    logger.warning('RAG_MCP_AUTH_TOKEN unset: auth disabled. Every caller that can reach the port is authorized')
+
 mcp = MCPServer(
     'rag-search',
     lifespan=app_lifespan,
     middleware=[OpenTelemetryMiddleware()],
+    token_verifier=StaticTokenVerifier(_auth_token) if _auth_token else None,
+    # nominal metadata: no authorization server exists at issuer_url but the SDK requires it
+    auth=AuthSettings(
+        issuer_url=get_settings().mcp_server_url,
+        resource_server_url=get_settings().mcp_server_url,
+    )
+    if _auth_token
+    else None,
 )
 
 

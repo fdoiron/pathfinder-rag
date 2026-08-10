@@ -2,7 +2,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Annotated
 
-from pydantic import Field, NonNegativeInt, PositiveFloat, PositiveInt
+from pydantic import Field, NonNegativeInt, PositiveFloat, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -33,6 +33,8 @@ class Settings(BaseSettings):
     fts5_title_weight: PositiveFloat = 10.0  # bm25() weight for the chunk's heading vs. body text
     fts5_text_weight: PositiveFloat = 1.0
     mcp_drain_timeout: PositiveFloat = 10.0  # seconds to let queued searches finish on shutdown before abandoning them
+    mcp_auth_token: SecretStr | None = None  # None disables auth entirely
+    mcp_server_url: str = 'http://localhost:8000'  # this server's own identity in the OAuth resource metadata
     # None -> OTLPSpanExporter falls back to its own env lookup, defaulting to http://localhost:4317
     otel_exporter_otlp_endpoint: Annotated[str | None, Field(validation_alias='OTEL_EXPORTER_OTLP_ENDPOINT')] = None
     otel_console_export: bool = False  # RAG_OTEL_CONSOLE_EXPORT: print metrics via ConsoleMetricExporter
