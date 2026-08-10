@@ -316,9 +316,8 @@ mcp = MCPServer(
 @mcp.tool(
     title=_STR['rag_search.title'],
     description=_STR['rag_search.description'],
-    annotations=ToolAnnotations(
-        read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
-    ),
+    # destructive_hint/idempotent_hint are meaningful only when read_only_hint is false
+    annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
 )
 async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -> SearchResults:
     app_ctx: AppContext = ctx.request_context.lifespan_context
@@ -365,9 +364,8 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
 @mcp.tool(
     title=_STR['fetch_section.title'],
     description=_STR['fetch_section.description'],
-    annotations=ToolAnnotations(
-        read_only_hint=True, destructive_hint=False, idempotent_hint=True, open_world_hint=False
-    ),
+    # destructive_hint/idempotent_hint are spec-meaningful only when read_only_hint is false
+    annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
 )
 async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> ArticleWindow:
     app_ctx: AppContext = ctx.request_context.lifespan_context
