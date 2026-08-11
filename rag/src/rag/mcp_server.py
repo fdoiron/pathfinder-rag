@@ -40,7 +40,7 @@ from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, S
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-N_WORKERS = 2
+N_WORKERS = 1
 
 
 def _format_data_point(dp: NumberDataPoint | HistogramDataPoint | ExponentialHistogramDataPoint) -> str:
