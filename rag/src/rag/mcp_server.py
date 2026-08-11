@@ -191,7 +191,7 @@ class StaticTokenVerifier(TokenVerifier):
         self._token = token.get_secret_value()
 
     async def verify_token(self, token: str) -> AccessToken | None:
-        if not secrets.compare_digest(token, self._token):
+        if not secrets.compare_digest(token.encode(), self._token.encode()):
             return None
         return AccessToken(token=token, client_id='rag-search', scopes=[])
 
