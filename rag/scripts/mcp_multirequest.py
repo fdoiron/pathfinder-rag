@@ -1,5 +1,4 @@
 import asyncio
-import re
 from collections import Counter
 
 from mcp import ClientSession
@@ -50,23 +49,19 @@ QUERIES = [
 ]
 
 
-CLASSIFIED = re.compile(r'\[(retryable|rephrase|fatal)\]\s*(.*)', re.DOTALL)
-
-
 async def fire_one(session: ClientSession, args: dict) -> str:
-    """Outcome of one call: 'ok', or the ClassifiedToolError category the server sent back."""
+    """Outcome of one call: 'ok', the SearchResults.error_category the server sent back, or 'unclassified'
+    for a genuine protocol-level failure (bad arguments) that never reached rag_search's body."""
     result = await session.call_tool('rag_search', arguments={'search_query': args})
-    if not result.is_error:
-        return 'ok'
-
-    # A shed request is a normal JSON-RPC response carrying is_error and never a raised exception.
-    # Nothing is caught by try/except so the result has to be inspected.
-    text = result.content[0].text if result.content else ''
-    match = CLASSIFIED.search(text)
-    if match is None:
+    if result.is_error:
+        text = result.content[0].text if result.content else ''
         print(f'unclassified  {args["query"]!r}: {text}')
         return 'unclassified'
-    category, message = match.groups()
+
+    category = (result.structured_content or {}).get('error_category')
+    if category is None:
+        return 'ok'
+    message = (result.structured_content or {}).get('message')
     print(f'{category:<13} {args["query"]!r}: {message}')
     return category
 

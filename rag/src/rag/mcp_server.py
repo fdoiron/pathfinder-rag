@@ -177,6 +177,9 @@ class ChunkSearchResult(BaseModel):
 class SearchResults(BaseModel):
     results: list[ChunkSearchResult]
     message: str | None = None
+    error_category: Annotated[
+        Literal['retryable', 'rephrase', 'fatal'] | None, Field(description=_STR['SearchResults.error_category'])
+    ] = None
 
 
 class ClassifiedToolError(ToolError):
@@ -194,6 +197,10 @@ class StaticTokenVerifier(TokenVerifier):
         if not secrets.compare_digest(token.encode(), self._token.encode()):
             return None
         return AccessToken(token=token, client_id='rag-search', scopes=[])
+
+
+class SearchShedError(Exception):
+    """Set on a queued job's future when shutdown drains it unrun instead of ever being searched."""
 
 
 @dataclass
@@ -310,6 +317,13 @@ async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
         for task in ctx.worker_tasks:
             task.cancel()
         await asyncio.gather(*ctx.worker_tasks, return_exceptions=True)
+        while True:
+            try:
+                job = ctx.gpu_queue.get_nowait()
+            except asyncio.QueueEmpty:
+                break
+            if not job.future.done():
+                job.future.set_exception(SearchShedError())
 
 
 _auth_token = get_settings().mcp_auth_token
@@ -340,7 +354,7 @@ mcp = MCPServer(
 async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -> SearchResults:
     app_ctx: AppContext = ctx.request_context.lifespan_context
     if not app_ctx.accepting:
-        raise ClassifiedToolError('retryable', _STR['rag_search.shutdown_error'])
+        return SearchResults(results=[], message=_STR['rag_search.shutdown_error'], error_category='retryable')
     job = SearchJob(
         query=search_query.query,
         k=search_query.k,
@@ -352,13 +366,15 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
         logger.debug(f'job enqueued, depth={app_ctx.gpu_queue.qsize()}/{app_ctx.gpu_queue.maxsize}')
     except asyncio.QueueFull:
         logger.warning(f'gpu_queue full (maxsize={app_ctx.gpu_queue.maxsize}), rejecting job')
-        raise ClassifiedToolError('retryable', _STR['rag_search.busy_error']) from None
+        return SearchResults(results=[], message=_STR['rag_search.busy_error'], error_category='retryable')
 
     try:
         hits = await job.future
+    except SearchShedError:
+        return SearchResults(results=[], message=_STR['rag_search.shutdown_error'], error_category='retryable')
     except Exception as e:
         logger.exception('search job failed')
-        raise ClassifiedToolError('fatal', f'Search failed: {e}') from e
+        return SearchResults(results=[], message=f'Search failed: {e}', error_category='fatal')
 
     if not hits:
         return SearchResults(results=[], message=_STR['rag_search.no_results_message'])
