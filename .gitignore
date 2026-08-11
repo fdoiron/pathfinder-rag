@@ -2,6 +2,7 @@
 .DS_Store
 .vscode/
 .idea/
+*.code-workspace
 
 # logs anywhere in the repo
 *.log
