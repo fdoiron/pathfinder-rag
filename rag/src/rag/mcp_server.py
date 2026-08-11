@@ -16,20 +16,7 @@ from mcp.server.mcpserver.exceptions import ToolError
 from mcp.types import ToolAnnotations
 from opentelemetry import context as otel_context
 from opentelemetry import metrics, trace
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
 from opentelemetry.metrics import CallbackOptions, Observation
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics.export import (
-    ConsoleMetricExporter,
-    ExponentialHistogramDataPoint,
-    HistogramDataPoint,
-    MetricsData,
-    NumberDataPoint,
-    PeriodicExportingMetricReader,
-)
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from pydantic import BaseModel, Field, HttpUrl, SecretStr
 
 from rag.config import Settings, get_settings
@@ -37,52 +24,11 @@ from rag.embedding import EmbedderUnavailableError, load_embedder
 from rag.models import ChunkHit
 from rag.reranking import RerankerUnavailableError, load_reranker
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, Retriever, StaleIndexError, load_retriever
+from rag.telemetry import configure_telemetry
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 N_WORKERS = 1
-
-
-def _format_data_point(dp: NumberDataPoint | HistogramDataPoint | ExponentialHistogramDataPoint) -> str:
-    if isinstance(dp, NumberDataPoint):
-        return str(dp.value)
-    return f'count={dp.count} sum={dp.sum}'
-
-
-def _compact_metric_formatter(data: MetricsData) -> str:
-    lines = [
-        f'{m.name}={_format_data_point(dp)}'
-        for rm in data.resource_metrics
-        for sm in rm.scope_metrics
-        for m in sm.metrics
-        for dp in m.data.data_points
-    ]
-    return '\n'.join(lines) + '\n' if lines else ''
-
-
-_telemetry_configured = False
-
-
-def configure_telemetry(settings: Settings) -> None:
-    """Register this server's tracer and meter providers once per process."""
-    global _telemetry_configured
-    if _telemetry_configured:
-        return
-
-    resource = Resource.create({'service.name': 'rag-search'})
-    tracer_provider = TracerProvider(resource=resource)
-    tracer_provider.add_span_processor(
-        BatchSpanProcessor(OTLPSpanExporter(endpoint=settings.otel_exporter_otlp_endpoint, insecure=True))
-    )
-    trace.set_tracer_provider(tracer_provider)
-
-    metric_readers = []
-    if settings.otel_console_export:
-        metric_readers.append(PeriodicExportingMetricReader(ConsoleMetricExporter(formatter=_compact_metric_formatter)))
-    metrics.set_meter_provider(MeterProvider(resource=resource, metric_readers=metric_readers))
-
-    _telemetry_configured = True
-
 
 # proxies until configure_telemetry() runs
 tracer = trace.get_tracer('rag-search.worker')
@@ -268,7 +214,7 @@ async def gpu_worker(worker_id: int, ctx: AppContext) -> None:
 @asynccontextmanager
 async def app_lifespan(server: MCPServer) -> AsyncGenerator[AppContext]:
     settings = get_settings()
-    configure_telemetry(settings)
+    configure_telemetry(settings, 'rag-search', with_metrics=True)
 
     try:
         embedder = load_embedder(settings)
