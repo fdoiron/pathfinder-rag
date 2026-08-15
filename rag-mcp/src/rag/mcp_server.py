@@ -82,18 +82,23 @@ class CategoryDriftError(RuntimeError):
     """The categories rag_search advertises no longer exist in the corpus it searches."""
 
 
+# declared once and spread across both the flat tool signatures and the models they build
+QueryArg = Annotated[str, Field(min_length=2, max_length=300, description=_STR['SearchQuery.query'])]
+KArg = Annotated[int, Field(ge=5, le=10, description=_STR['SearchQuery.k'])]
+CategoryArg = Annotated[Category | None, Field(description=_STR['SearchQuery.category'])]
+ChunkIdArg = Annotated[str, Field(description=_STR['FetchQuery.chunk_id'])]
+MaxCharsArg = Annotated[int, Field(ge=1000, le=60000, description=_STR['FetchQuery.max_chars'])]
+
+
 class SearchQuery(BaseModel):
-    query: Annotated[str, Field(min_length=2, max_length=300, description=_STR['SearchQuery.query'])]
-    k: Annotated[int, Field(ge=1, le=10, description=_STR['SearchQuery.k'])] = 5
-    category: Annotated[Category | None, Field(description=_STR['SearchQuery.category'])] = None
+    query: QueryArg
+    k: KArg = 5
+    category: CategoryArg = None
 
 
 class FetchQuery(BaseModel):
-    chunk_id: Annotated[str, Field(description=_STR['FetchQuery.chunk_id'])]
-    max_chars: Annotated[
-        int,
-        Field(ge=1000, le=60000, description=_STR['FetchQuery.max_chars']),
-    ] = 12000
+    chunk_id: ChunkIdArg
+    max_chars: MaxCharsArg = 12000
 
 
 class ArticleWindow(BaseModel):
@@ -297,7 +302,13 @@ mcp = MCPServer(
     # destructive_hint/idempotent_hint are meaningful only when read_only_hint is false
     annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
 )
-async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -> SearchResults:
+async def rag_search(
+    query: QueryArg,
+    ctx: Context[AppContext, Any],
+    k: KArg = 5,
+    category: CategoryArg = None,
+) -> SearchResults:
+    search_query = SearchQuery(query=query, k=k, category=category)
     app_ctx: AppContext = ctx.request_context.lifespan_context
     if not app_ctx.accepting:
         return SearchResults(results=[], message=_STR['rag_search.shutdown_error'], error_category='retryable')
@@ -347,7 +358,12 @@ async def rag_search(search_query: SearchQuery, ctx: Context[AppContext, Any]) -
     # destructive_hint/idempotent_hint are spec-meaningful only when read_only_hint is false
     annotations=ToolAnnotations(read_only_hint=True, open_world_hint=False),
 )
-async def fetch_section(fetch_query: FetchQuery, ctx: Context[AppContext, Any]) -> ArticleWindow:
+async def fetch_section(
+    chunk_id: ChunkIdArg,
+    ctx: Context[AppContext, Any],
+    max_chars: MaxCharsArg = 12000,
+) -> ArticleWindow:
+    fetch_query = FetchQuery(chunk_id=chunk_id, max_chars=max_chars)
     app_ctx: AppContext = ctx.request_context.lifespan_context
     retriever = app_ctx.retriever
     try:
