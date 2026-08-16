@@ -57,6 +57,6 @@ addopts = '-m "not llm"'
 lint = 'ruff check .'
 fmt = 'ruff format .'
 fmt-check = 'ruff format --check .'
-typecheck = 'mypy src tests'
+typecheck = 'mypy src tests scripts'
 test = 'pytest -v'
 check = ['lint', 'fmt-check', 'typecheck', 'test']
