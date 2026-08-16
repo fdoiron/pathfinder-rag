@@ -72,7 +72,38 @@ you can combine a standard action (such as an attack) with movement [4].
     https://www.d20pfsrd.com/gamemastering/combat
 ```
 
-All three runs above against the real corpus with the current hybrid index, `qwen3:14b` served by a local `ollama serve`. `ask` output is not deterministic, the wording and the subset of excerpts cited will vary between runs.
+The same question through the agent instead, which calls the MCP server's tools itself rather than being handed one set of excerpts:
+
+```
+$ uv run pathfinder-agent ask "can I move and attack in the same round?"
+In Pathfinder 1e, you can move and attack in the same round under normal circumstances by using
+your **move action** and **standard action**. Here's how:
+
+1. **Standard Movement and Attack**:
+   - You can move up to your full speed (using a **move action**) and still perform a **standard
+     action** (such as attacking) in the same round.
+   - If you move **double your speed** (by using both your move actions), you cannot take any
+     other actions besides moving.
+
+   *Source*: [Combat > Movement, Position, and Distance > Tactical Movement](https://www.d20pfsrd.com/gamemastering/combat#TOC-Tactical-Movement)
+   > *"Generally, you can move your speed in a round and still do something (take a move action
+   > and a standard action)."*
+
+2. **Charging**:
+   - When charging, you **must move before attacking**, moving at least 10 feet (2 squares)
+     toward the target. You can move up to **double your speed**.
+
+   *Source*: [Combat > Special Attacks > Charge > Movement During a Charge](https://www.d20pfsrd.com/gamemastering/combat#TOC-Movement-During-a-Charge)
+
+[... a third section on the Mobile Melee variant rule, and a Key Takeaways summary, trimmed here ...]
+
+rag_search {'query': 'move and attack same round', 'category': 'gamemastering', 'k': 3}
+rag_search {'category': 'gamemastering', 'k': 5, 'query': 'move and attack same round'}
+```
+
+The two `rag_search` lines at the bottom are the agent's tool-call trace, printed after the answer. Two known failures are visible in that one run and both are scoped as `E8`. The two searches are the same search twice: the first was rejected because `k=3` is below the schema's `ge=5` bound, so a whole hop went on discovering the bound. And every `#TOC-` anchor in those citations is fabricated. Across the 381 runs in [Agent loop evaluation](#agent-loop-evaluation) the tools returned 407 distinct URLs and not one carried a fragment as they are not present in the chunked corpus: the pages are real and the section #TOC- are the model's own invention. It also answers at far greater length than the question strictly requires which nothing in the system prompt currently discourages.
+
+All four runs above against the real corpus with the current hybrid index, `qwen3:14b` served by a local `ollama serve`. `ask` output is not deterministic, the wording and the subset of excerpts cited will vary between runs.
 
 `[4]` cites the `Standard Action` section: the baseline rule that a move action plus a standard action needs no feat at all, found from the `fetch_k=50` reranked pool. Retrieval doesn't always find the correct chunk; see [Answer-level evaluation](#answer-level-evaluation) for the aggregate pattern of confident answers with incomplete retrieval.
 
@@ -219,7 +250,7 @@ Two deployables, one per uv project. The chat page is the only piece above that 
 
 ## Evaluation
 
-127 hand verified queries in `rag-mcp/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). This section is organized by major improvement over the basic vector retrieval. Each subsection isolates one change (retrieval method, reranking, and future ones like chunk sizing or long-article handling) with its own before/after. Current best: hybrid retrieval plus reranking, `k=50`:
+127 hand verified queries in `rag-mcp/eval/queries.jsonl`, split into three types (`exact_name`, `paraphrase`, `rules_reasoning`), scored at the URL level (a document counts as found if any of its chunks lands in the retrieved set). The first three subsections are organized by major improvement over basic vector retrieval, each isolating one change (retrieval method, reranking, and future ones like chunk sizing or long article handling) with its own before/after. [Agent loop evaluation](#agent-loop-evaluation) is a different measurement on the same truth set: it scores the agent path rather than a retrieval change, so it has no before/after and reports whether the model used its tools at all. Current best retrieval: hybrid plus reranking, `k=50`:
 
 | Type | n | Recall@1 | Recall@3 | Recall@5 | Recall@50 | MRR |
 |---|---|---|---|---|---|---|
@@ -290,6 +321,36 @@ The demo at the top of this README was one of the silent misses under unweighted
 
 Full per-query results: [answer eval, hybrid k=5, weighted RRF](rag-mcp/eval/canonical/n127_answer_eval_hybrid.json). The "up from" figures above compare against the same run under unweighted (1:1) RRF: [answer eval, hybrid k=5, unweighted RRF](rag-mcp/eval/canonical/n127_answer_eval_hybrid_unweighted.json).
 
+### Agent loop evaluation
+
+`rag evaluate-answers` scores single-shot `ask` so it says nothing about whether the agent actually uses its tools or not. `agent/scripts/loop_eval.py` runs `run_agent` over the same 127 query truth set at three times per question against a live MCP server and `qwen3:14b` on Ollama. Each run is scored for whether it searched at all, whether the answer cited a page the eval set marks correct, whether it refused, and how many of its cited URLs no tool ever returned. 381 runs:
+
+| Type | n | Searched | Cited | Refused | Fabricated |
+|---|---|---|---|---|---|
+| **Overall** | 381 | 0.89 | 0.77 | 0.00 | 0.15 |
+| `exact_name` | 165 | 0.92 | 0.85 | 0.00 | 0.12 |
+| `paraphrase` | 114 | 0.94 | 0.75 | 0.00 | 0.07 |
+| `rules_reasoning` | 102 | 0.80 | 0.67 | 0.00 | 0.30 |
+
+`Cited` asks the same question the [Answer-level evaluation](#answer-level-evaluation) table asks, measured on the agent path instead of the single-shot one so the two roughly line up: overall 0.71 → 0.77, `paraphrase` 0.53 → 0.75, `rules_reasoning` 0.74 → 0.67. Some of that gap belongs to `E3` rather than to the loop, because the answer-level run predates the reranker. `paraphrase` is where multi-hop retrieval shows improvement and `rules_reasoning` is the one type the loop makes worse. It is also the type least likely to search (0.80) and by a wide margin the most likely to fabricate (0.30, roughly 2.5x the other two).
+
+Splitting the 381 runs by whether any tool was called at all explains the whole fabrication column:
+
+| | n | Fabricated | Cited |
+|---|---|---|---|
+| ran at least one search | 340 | 0.05 | 0.83 |
+| never searched | 41 | 1.00 | 0.27 |
+
+Every one of the 41 runs that skipped searching invented at least one URL. `What is a giant vulture's intelligence score` is representative: three runs, zero searches, 4.9 seconds each and three different fabricated URLs for the same creature, one of them on an invented `www2.` subdomain. The fabrication rate is a restatement of the "no toold call rate": a fix for one is a fix for both. Scoped as `E8`.
+
+Refusal is at zero. The single-shot path refuses on 10% of queries. The agent refused on 0 of 381 and never emitted `NO_COVERAGE_REPLY`. Set against a 0.15 fabrication rate, the loop answers confidently in the cases where the single-shot path would have declined.
+
+`fetch_section` has never completed successfully. It was called twice across 381 runs and both calls were rejected before reaching the retriever, on `max_chars=500` against a `ge=1000` bound. The model was asking for a small excerpt and the schema demanded a large one, which is the same shape as `rag_search`'s `k` floor rejecting 109 of 473 searches (23.0%) in this run. Both are argument bounds written for a human caller that the model reads and ignores and both cost a hop each time.
+
+Loop behaviour over the same runs: 2.16 hops per run, 17.2s average with p95 at 27.0s and a 39.3s maximum against a 120s walltime. Two runs tripped `agent_context_token_budget` at 5613 and 4157 estimated tool-result tokens against a 4000 budget, the first time that limit has bound anything, and that was at `k=5`. One run lost its LLM to the 30s hop timeout and stopped there because `execute_tool`'s retry policy covers tool calls while an LLM timeout ends the run outright.
+
+Full per-run results: [loop eval baseline, 127 queries x 3](agent/eval/canonical/n127_loop_eval_baseline.jsonl). One JSON object per run, carrying the answer, the model's reasoning at every hop and the whole transcript including what each tool returned, so every number above can be recomputed from it. This run predates any prompt work and is the baseline `E8` gets measured against. It does not record which `agent_system.txt` and `mcp_tools.txt` produced it, so hashing both prompt files into each run record, the way `ChunksManifest` hashes the corpus parquet, is scoped with `E8`.
+
 ## Roadmap
 
 MVP milestones, all completed:
@@ -341,8 +402,8 @@ MVP milestones, all completed:
 - **`doc_id`/URL level eval truth, not at chunk level.** `queries.jsonl` is hand made and expensive to build. If it referenced chunk ids, every re-chunk would invalidate it. Retrieval returns chunks, but hits get collapsed to their document URL before scoring, so re-chunking, re-embedding, or swapping the model never touches the truth file.
 - **Manifest guards serving.** `ChunksManifest` records the embedding model, dimension, parser version, chunk params and sha256 of the corpus parquet the chunks were produced from, next to `chunks.parquet`. `load_retriever` refuses to load if the configured settings don't match what's on disk or if the corpus has been rebuilt since (hash drift). A mismatched index fails at load time instead of quietly returning garbage scores.
 - **Thin CLI over plain functions.** `rag search`, `rag evaluate` and `rag ask` parse args, call one internal function (`retriever.search`, `evaluate_query`, `answer_question`), and print. No logic lives in the typer layer. The MCP server's tool handlers (E4) call the same functions.
-- **Citation resolution is ours, not the model's.** `answer_question` builds the numbered excerpt list itself. `[n]` in the model's reply maps back to position `n` in that list, so a citation can never point at a document that wasn't retrieved. The model can still cite a real excerpt that doesn't support its claim, that's what an answer level eval (E2) would catch.
-- **Single shot retrieval, not agentic tool use.** `rag ask` runs exactly one search per question instead of handing the model `search` as a tool it calls itself. Agentic retrieval helps multi hop questions but turns one retrieval into a variable number of calls, which breaks the clean attribution the eval harness depends on. Staged as E5, once E4 exposed an MCP tool surface to hang it off of.
+- **Citation resolution is ours, not the model's.** `answer_question` builds the numbered excerpt list itself. `[n]` in the model's reply maps back to position `n` in that list, so a citation can never point at a document that wasn't retrieved. The model can still cite a real excerpt that doesn't support its claim, which is what the answer level eval (E2) catches.
+- **`rag ask` stays single shot and the agent loop is a separate path.** `rag ask` runs exactly one search per question rather than handing the model `search` as a tool it calls itself. Agentic retrieval helps multi hop questions but turns one retrieval into a variable number of calls, which breaks the clean attribution `evaluate-answers` depends on. Both paths now exist and are scored separately: `rag ask` in [Answer-level evaluation](#answer-level-evaluation), where one search per question keeps a citation traceable to the excerpts it was given, and `pathfinder-agent ask` (E5) in [Agent loop evaluation](#agent-loop-evaluation), where the interesting question is whether the model calls the tools at all. Keeping them apart is what lets the retrieval numbers stay attributable to retrieval.
 - **BM25 in SQLite FTS5.** The lexical index is a file (`chunks.fts5.db`) written by `build-corpus` next to `chunks.parquet`. It avoids having an Elasticsearch/OpenSearch process to run, configure and keep alive for a CLI that is otherwise all batch steps. FTS5 comes with the standard library's `sqlite3`. Being a file means it joins the artifact set the manifest already checks: `load_retriever` refuses to start without it the same way it refuses a stale corpus hash.
 - **RRF instead of weighted score fusion.** A cosine similarity in `[-1, 1]` and an FTS5 `bm25()` score (negative, unbounded, corpus dependent) share no scale. `a*vector + b*bm25` needs a normalization step that has to be fitted, and refitted whenever the corpus changes. RRF discards the scores and fuses positions instead, `1/(rrf_k + rank)` summed across lists. No normalization or tuning is required beyond `rrf_k`. The cost is "how far ahead" gets discarded along with the scale which is the regression documented in [Hybrid retrieval](#hybrid-retrieval). Fusion runs over a pool of `max(k, 50)` candidates per list, so the fused order is itself a function of `k`: a page outside the 50-candidate pool at `k=5` can enter the pool at `k=100` and change ranks even inside the top 5.
 - **Title is its own FTS5 column and weighted 10:1 over body text.** The index stores `heading_path[0]` as a `title` column separate from `text`, so `bm25()` can score a hit in the page's name above the same word buried in its body. `exact_name` queries are a page title by definition. A feat page's body repeats the generic combat vocabulary of every other feat page. A landmine: `bm25()` takes one weight per column in declared order, including `UNINDEXED` ones. Skipping a slot shifts every following weight onto the wrong column and fails silently instead of erroring.
@@ -350,14 +411,24 @@ MVP milestones, all completed:
 - **Reranker reads relevance off the base model's own yes/no next-token logits, not a fitted classification head.** `Qwen/Qwen3-Reranker-0.6B` ships as a causal LM; a `SequenceClassification` conversion approximates its native yes/no prediction with a head fitted on top of it. `LocalReranker` uses the checkpoint's own usage pattern instead (`AutoModelForCausalLM` + `logits_to_keep=1`, which skips materializing full-vocab logits for every position when only the last one is scored): log-softmax over the "yes"/"no" next-token logits is the relevance score. `Reranker` is a `Protocol` (`rag-mcp/src/rag/models.py`), the same shape as `Embedder`, so `Retriever` depends on "anything with a `.rerank()` method" and tests fake it with no GPU. See [Post mortem](#post-mortem-draft) for why (the seq-cls path was tried first, saturated, and was reverted).
 - **`fetch_k` sizes the rerank pool separately from the result count; `reranker_batch_size` bounds the forward pass; rerank defaults on.** Reranking only has value if there's a wider pool to promote a buried answer out of, so `search`/`ask` expose `fetch_k` (defaults to `settings.rerank_fetch_k`) to fetch and rerank more candidates than `k` before cutting down. `reranker_batch_size` slices that pool into fixed-size batches instead of scoring it as one padded tensor, which is what made `k=50` measurable at all instead of a CUDA OOM (see [Post mortem](#post-mortem-draft)). `search`, `ask`, `evaluate` and `evaluate-answers` all default `--rerank` to `True`: at n=127, `k=50` it moves MRR 0.62 → 0.77 (see [Reranker](#reranker)) for the cost of one extra local forward pass per query.
 - **`evaluate`'s widening loop re-reranks its entire candidate pool from scratch on every widen. This was left as-is.** `search_top_k_docs` doubles `fetch_k` until `k` unique URLs collapse out, and each widen calls `retriever.search` fresh, which reranks the entire new pool including chunks already scored on the prior iteration. At `k=50` this used to be a hard CUDA OOM (fine at `k=20`) because the whole widened pool went through the reranker as one padded batch. `reranker_batch_size` batching fixed this issue. Every forward pass is now bounded at `reranker_batch_size × max_length` regardless of pool size, and `rag evaluate --k 50 --rerank` completes fine against the full 127-query set. What is left after that fix is redundant compute but not a crash. A pathological widener still reruns the reranker over overlapping pools uncapped up to the full corpus. The fix (keep top-N chunks per unique URL by fused order before reranking, capping the batch at `k*N` instead of the whole widened pool) is scoped, but it is not precision neutral: pruning to top-N per URL before the reranker sees the pool can drop the chunk the reranker would have scored highest on any page with more than N chunks in the pool. It's exact only for pages with ≤N pool chunks which is a reasonable trade for the memory bound. Left unfixed anyway: `search_top_k_docs` has exactly one caller (`evaluate`), so `search`/`ask` never hit this path at all and no query in the 127-query eval set has actually triggered pathological widening in practice.
+- **Tool failures cross the process boundary as a category but not as prose.** `rag_search` returns `error_category` on the result model and `fetch_section` raises `ClassifiedToolError`, both carrying one of `retryable`, `rephrase` or `fatal`. The client branches on the class instead of pattern matching an error string: `retryable` is retried with backoff, `rephrase` is handed back to the model with an instruction to fix its arguments and try again, `fatal` ends the run. Prose would have worked until the wording changed. It also survives the MCP SDK rewrapping every non-`MCPError` exception into `Error executing tool {name}: {message}`, which is what broke the client's original regex (see [Post mortem](#post-mortem-draft)).
+- **One GPU worker behind a bounded queue that sheds load rather than queues forever.** Search is GPU bound and the embedder and reranker are not safe to run concurrently in one process, so requests are serialized through a single worker task fed by an `asyncio.Queue(maxsize=8)`. A full queue returns `retryable` immediately instead of accepting work it cannot start, which is a decision to fail fast under load rather than let a caller time out holding a slot. Shutdown gives queued jobs a bounded drain window and then fails the rest explicitly so a client gets an error rather than a hang.
+- **Tool titles, descriptions and error strings are a versioned text file.** `rag-mcp/src/rag/prompts/mcp_tools.txt` holds every string the model reads, in the same way `prompts/ask.txt` holds the single shot prompt. Tool descriptions are prompt engineering and change independently of the code, so they belong next to the other prompts and in their own diffs. A typoed key raises at import naming the file rather than showing up as a `KeyError` at request time.
+- **The agent owns the retry policy and the SDK is configured not to.** `make_llm_client` sets `max_retries=0` because the OpenAI SDK's default of 2 would spend three hops before the loop ever saw a failure, and `timeout` is `agent_hop_timeout` so the per hop bound is the SDK's own mechanism instead of a second one wrapped around it. Timeouts layer the same way: each tool call gets `min(agent_hop_timeout, time left on the walltime)`, so an almost exhausted run cannot start a 30 second call it has no time to finish.
+- **The context budget is estimated as `len(text) // 4` rather than tokenized.** Counting exactly would mean importing `transformers` into the agent purely to count, which is a heavy dependency for a number that only decides when to stop calling tools. When the estimate trips, or iterations run out, the loop drops the tools and instructs the model to answer from what it already has or reply with `NO_COVERAGE_REPLY` verbatim, so an exhausted run refuses instead of answering from nothing. `AgentResult.stopped_reason` records which of those happened, which is what makes an interrupted run distinguishable from an answer in both the CLI's exit code and the eval.
+- **Everything the tools return is treated as untrusted and delimited.** Tool results are page text from a public wiki, so the loop wraps them in `<tool_result>` tags and neutralizes any closing tag inside the text before it goes into the prompt and the system prompt states that only text inside those tags is retrieved data and it is never an instruction. The model has forged those tags in its own output during testing, which is the case the escaping exists for.
 
 ## Testing
 
-`ruff check`, `ruff format --check`, and `mypy` in strict mode, 500+ tests. The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
+`ruff check`, `ruff format --check`, and `mypy` in strict mode across all three packages, 588 tests (537 in `rag-mcp`, 46 in `agent`, 5 in `scraper`). The parsing suite covers golden file tests over 15 fixtures, invariant tests parametrized on the 15 fixtures (no unescaped HTML, no license boilerplate, rendered table's rows match its header's column count), and unit tests for every converter rule, heading retagging edge case, and drop filter reason. Chunking, embedding, retrieval, eval and `answer_question` are all tested by faking the boundary they touch (a fake tokenizer/`SentenceTransformer`/OpenAI chat client), no GPU, no network, no downloaded weights required to run the suite. One real end to end test per GPU dependent module is marked `@pytest.mark.gpu` and skipped by default.
+
+The agent package fakes the same way: a stand in `ClientSession` with scripted `list_tools`/`call_tool` and a stand in chat client replaying canned completions, so the loop's error taxonomy, retry policy, context budget, wall time and stop reasons are all covered without a server or a model. Its live model test is marked `@pytest.mark.llm` and skipped by default, the same way `gpu` is in `rag-mcp`.
+
+CI runs the same four steps per package on every push and pull request, one job each for `rag-mcp`, `scraper` and `agent`.
 
 ```bash
-cd rag
-uv run poe check   #in order:  ruff check ., ruff format --check ., mypy src tests, pytest
+cd rag-mcp   # or agent, or scraper
+uv run poe check   #in order:  ruff check ., ruff format --check ., mypy, pytest
 ```
 
 ## Post mortem (draft)
