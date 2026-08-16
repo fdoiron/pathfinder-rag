@@ -1,6 +1,6 @@
 [![CI](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml)
 
-A retrieval augmented question/answering pipeline over the Pathfinder 1e tabletop ruleset. It scrapes ~24k rule pages from [d20pfsrd.com](https://www.d20pfsrd.com/), parses them into markdown with a hand written converter, chunks and embeds them locally, and serves cited answers through a `rag ask` CLI backed by a local LLM. This is a portfolio project to demonstrate a full pipeline: data ingestion, evaluated retrieval, and generation, end to end, with the service/container phases designed and staged as what's next.
+A retrieval augmented question/answering pipeline over the Pathfinder 1e tabletop ruleset. It scrapes ~24k rule pages from [d20pfsrd.com](https://www.d20pfsrd.com/), parses them into markdown with a hand written converter, chunks and embeds them locally, and answers rules questions with citations back to the page they came from. Retrieval is hybrid (vector plus BM25 fused with Reciprocal Rank Fusion, then reranked) and is exposed two ways: a single shot `rag ask` CLI, and an MCP server offering it as tools that a separate agent client calls in a multi hop loop until it can answer. This is a portfolio project covering the whole path from data ingestion through evaluated retrieval to an evaluated agent loop, with the chat surface and container phases designed and staged as what's next.
 
 ## Demo
 
@@ -78,7 +78,9 @@ All three runs above against the real corpus with the current hybrid index, `qwe
 
 ## What works right now
 
-Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion), reranking and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask`, `rag evaluate` and `rag evaluate-answers` all take `--method {vector,bm25,hybrid}` and `--rerank/--no-rerank` (on by default, a local Qwen3-Reranker re-scores a candidate pool before cutting to `k`; `search`/`ask` also expose `--fetch-k` to size that pool) and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know. Containers are not built yet, they're staged in [Future expansions](#future-expansions).
+Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion), reranking and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask`, `rag evaluate` and `rag evaluate-answers` all take `--method {vector,bm25,hybrid}` and `--rerank/--no-rerank` (on by default, a local Qwen3-Reranker re-scores a candidate pool before cutting to `k`; `search`/`ask` also expose `--fetch-k` to size that pool) and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know.
+
+The same retrieval is served over MCP. `rag-mcp` runs a streamable-http server exposing `rag_search` and `fetch_section` as tools, behind optional static bearer auth, with OpenTelemetry traces and metrics and a single GPU worker fronted by a bounded queue that sheds load rather than piling up. `pathfinder-agent` is a separate uv project that connects to it and runs a multi hop tool calling loop with per hop and wall clock timeouts, a tool result token budget, bounded retries with backoff, and `<tool_result>` delimiting on everything the server returns. `pathfinder-agent ask "question"` is the agent equivalent of `rag ask`, and `agent/scripts/loop_eval.py` measures how that loop behaves across the truth set (see [Agent loop evaluation](#agent-loop-evaluation)). The chat page and the containers are not built yet, they're staged in [Future expansions](#future-expansions).
 
 24,098 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
@@ -87,7 +89,7 @@ Dropped pages (208 total):
 - 1 page where the original URL was too long and was hashed so the source URL couldn't be reconstructed
 
 ```
-$ cd rag
+$ cd rag-mcp
 $ uv run rag build-corpus ../scraper/data/html
 INFO:root:Parsing HTML files from ../scraper/data/html
 WARNING:rag.parsing:dropped 'bestiary__monster-listings__aberrations__dark-young': body too short (19 < 100 chars)
@@ -103,7 +105,7 @@ wrote manifest to data/chunks.manifest.json
 
 ## Quickstart
 
-The scraped HTML corpus is not included in the repo (24k files). You need to run the scraper first, or point `build-corpus` at your own directory of d20pfsrd.com HTML pages. `rag ask` also needs a local Ollama server with a model pulled. Whichever command uses the embedder first (`build-corpus` or `search`) downloads ~1.2 GB of Qwen3-Embedding-0.6B weights from Hugging Face Hub as a one time cost. `search`, `ask`, `evaluate` and `evaluate-answers` also default to `--rerank`, which downloads another ~1.2 GB (Qwen3-Reranker-0.6B) the first time; pass `--no-rerank` to skip it. Cached afterwards.
+The scraped HTML corpus is not included in the repo (24k files). You need to run the scraper first, or point `build-corpus` at your own directory of d20pfsrd.com HTML pages. `rag ask` and the agent both need a local Ollama server with a model pulled, and the agent additionally needs the MCP server running. Whichever command uses the embedder first (`build-corpus` or `search`) downloads ~1.2 GB of Qwen3-Embedding-0.6B weights from Hugging Face Hub as a one time cost. `search`, `ask`, `evaluate` and `evaluate-answers` also default to `--rerank`, which downloads another ~1.2 GB (Qwen3-Reranker-0.6B) the first time; pass `--no-rerank` to skip it. Cached afterwards.
 
 ```bash
 git clone https://github.com/fdoiron/pathfinder-rag.git
@@ -117,7 +119,7 @@ uv run python discover_urls.py # discovers and filters the URL list to scrape, w
 uv run scrapy crawl d20pfsrd
 
 # 2. parse, chunk and embed into a searchable corpus
-cd ../rag
+cd ../rag-mcp
 uv sync
 uv run rag build-corpus ../scraper/data/html
 
@@ -136,18 +138,34 @@ uv run rag evaluate eval/queries.jsonl
 # (rerank is on by default here; the README's answer-level table predates the reranker, pass --no-rerank to match it)
 uv run rag evaluate-answers eval/queries.jsonl
 
-# 7. run the test suite (doesn't require the scraped corpus)
+# 7. run the MCP server, serving rag_search and fetch_section over streamable-http on :8000
+# (loads the embedder, the reranker and the FTS index before it binds, close to a minute)
+uv run python src/rag/mcp_server.py
+
+# 8. in a second terminal, ask the agent instead of the single shot CLI
+# it dials the server from step 7 and calls tools until it can answer
+cd ../agent
+uv sync
+uv run pathfinder-agent ask "can I move and attack in the same round?"
+
+# 9. measure how the loop behaves over the truth set (needs the server and Ollama up)
+uv run python scripts/loop_eval.py --questions-file ../rag-mcp/eval/queries.jsonl --repeats 3
+
+# 10. run the test suite in any package (doesn't require the scraped corpus)
 uv run pytest
 ```
+
+The MCP server reads `.env` from the process working directory, so start it from `rag-mcp/`. Setting `RAG_MCP_AUTH_TOKEN` there turns on static bearer auth and the agent picks the same variable up for the `Authorization` header. Leaving it unset disables auth entirely, which is fine on loopback and logged as a warning at startup.
 
 ## Repo layout
 
 - `scraper/` : Scrapy spider + URL discovery, scrapes d20pfsrd.com into `scraper/data/html/`
-- `rag-mcp/` : parsing, chunking, embedding, retrieval, eval and the `rag` CLI; everything downstream of the scraped HTML
+- `rag-mcp/` : parsing, chunking, embedding, retrieval, eval, the `rag` CLI and the MCP server; everything downstream of the scraped HTML
+- `agent/` : `pathfinder-agent`, the MCP client running the tool calling loop, plus the loop eval instrument
 
 ## Architecture
 
-**Current state**, everything is a batch step or a CLI call, no services of its own, the only long running process is Ollama:
+**Current state**, the corpus build is a batch step and everything downstream is either a CLI call or a local service:
 
 ```
 scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
@@ -159,33 +177,45 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
     data/: corpus.parquet (23,890 articles), chunks.parquet (129,361 chunks + embeddings),
            chunks.fts5.db (SQLite FTS5 lexical index), manifest
                               │
-      rag search "query" in process embedder + numpy cosine over chunks, BM25 over the
-                          FTS5 index, the two rankings fused with RRF
-                              │
-              rag ask "question" search → prompt → Ollama (localhost, OpenAI compatible)
-                              │
-                    cited answer + d20pfsrd URLs
+                ┌─────────────┴─────────────┐
+                ▼                           ▼
+   rag search / rag ask              rag-mcp server (streamable-http, :8000)
+   in process retrieval,             rag_search + fetch_section as MCP tools,
+   one search per question           bearer auth, OTel, 1 GPU worker + bounded queue
+                │                            │
+                │                            ▼
+                │                 pathfinder-agent ask
+                │                 multi hop loop, calls tools until it can answer
+                │                            │
+                └────────────┬───────────────┘
+                             ▼
+                  cited answer + d20pfsrd URLs
+
+  both paths generate with Ollama (localhost, OpenAI compatible)
 ```
 
 **Target service architecture**, see [MVP Expansions](#mvp-expansions):
 
 ```
-┌─────────────┐     REST      ┌──────────────┐    REST (OpenAI-compat)   ┌─────────────┐
-│  frontend   │ ────────────▶│   rag-api    │ ────────────────────────▶│  llm        │
-│ (Streamlit/ │               │ (FastAPI +   │                           │ (vLLM or    │
-│  Chainlit)  │               │  MCP server) │        REST               │  Ollama)    │
-└─────────────┘               │              │ ────────────┐             └─────────────┘
-                              └──────────────┘             ▼
-                                    ▲              ┌─────────────┐
-                             reads  │              │  embedder   │
-                             corpus │              │ (TEI)       │
-                             volume │              └─────────────┘
-┌─────────────┐   writes     ┌──────┴───────┐
-│  scraper    │ ───────────▶│ data volume  │   scraper runs as a batch Job,
-│ (batch Job) │              │ (parquet +   │   NOT a long running service
-└─────────────┘              │  manifests)  │
-                             └──────────────┘
+┌──────────────┐  HTTP + SSE  ┌────────────────────┐   MCP over        ┌────────────────────┐
+│  chat page   │ ──────────▶ │  pathfinder-agent  │ streamable-http   │   rag-mcp server   │
+│  (static,    │ ◀────────── │  POST /ask + the   │ ───────────────▶ │  rag_search        │
+│  served by   │   progress   │  agent loop        │                   │  fetch_section     │
+│  the agent)  │   events     └────────────────────┘                   └────────────────────┘
+└──────────────┘                        │                                        │ reads
+                                        │ OpenAI compatible                      ▼
+                                        ▼                               ┌──────────────────┐
+                                 ┌─────────────┐                        │   data volume    │
+                                 │   Ollama    │                        │  parquet + fts5  │
+                                 └─────────────┘                        │  + manifest      │
+                                                                        └──────────────────┘
+┌─────────────┐   writes
+│  scraper    │ ──────────▶ the same data volume, as a batch Job rather than a service
+│ (batch Job) │
+└─────────────┘
 ```
+
+Two deployables, one per uv project. The chat page is the only piece above that does not exist yet.
 
 ## Evaluation
 
