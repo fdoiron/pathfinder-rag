@@ -2,6 +2,7 @@
 .DS_Store
 .vscode/
 .idea/
+*.code-workspace
 
 # logs anywhere in the repo
 *.log
@@ -10,3 +11,6 @@
 notes.md
 docs/
 todo.txt
+
+# secrets at any depth (RAG_MCP_AUTH_TOKEN is here in dev)
+.env

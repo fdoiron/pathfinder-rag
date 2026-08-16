@@ -1,6 +1,0 @@
-.env
-*.envgcp-service-account-file.json
-.venv/
-__pycache__/
-data/
-.git/

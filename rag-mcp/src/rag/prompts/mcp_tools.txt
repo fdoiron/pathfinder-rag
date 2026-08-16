@@ -1,0 +1,27 @@
+# Strings the MCP client reads to decide what to call and how to read  results: tool titles, descriptions, field descriptions, error messages.
+
+SearchQuery.query: Keyword to search the RAG for
+SearchQuery.k: The Maximum number of chunks to return. May return less than k
+SearchQuery.category: Filter the topmost level
+FetchQuery.chunk_id: The chunk_id from search
+FetchQuery.max_chars: Upper bound on the returned body. A longer article is narrowed to a window around the chunk
+ArticleWindow.body_md: Article body, or a window of it centred on the requested chunk
+ArticleWindow.n_chars: Length of the FULL article body, not of the returned excerpt
+ArticleWindow.window_start: Offset of the returned body within the full article (0 when whole)
+ArticleWindow.window_end: End offset of the returned body, exclusive. Equals n_chars when whole
+ChunkSearchResult.rank: Rank position of this result (1-indexed)
+ChunkSearchResult.score: Score from Vector/BM25/Reranker
+ChunkSearchResult.chunk_id: Pass to fetch_section to retrieve the full source article
+ChunkSearchResult.title: Full title of the source article
+ChunkSearchResult.url: URL of the source article
+ChunkSearchResult.body: Content of the retrieved chunk
+ChunkSearchResult.full_article_length: Length in characters of the full source article (see fetch_section)
+SearchResults.error_category: Set only when results is empty due to a failure. retryable: try again shortly. rephrase: the arguments were wrong, correct them and call again. fatal: do not retry
+rag_search.title: Search Pathfinder RAG
+rag_search.description: Search the RAG for pathfinder articles
+rag_search.busy_error: busy, retry in a few seconds
+rag_search.shutdown_error: server is shutting down. Retry in a few seconds
+rag_search.no_results_message: No results found for this query/category combination.
+fetch_section.title: Fetch the source article for a chunkID
+fetch_section.description: Fetch the source article a chunk came from windowed around it if it is over max_chars
+fetch_section.unknown_chunk_error: Unknown chunk_id: {chunk_id}

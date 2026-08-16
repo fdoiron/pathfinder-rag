@@ -1,6 +1,6 @@
 This project’s corpus is built from [d20pfsrd.com](https://www.d20pfsrd.com/), a fan-run aggregation of Open Game Content for the Pathfinder Roleplaying Game (1st Edition), released under the [Open Game License v1.0a](https://www.d20pfsrd.com/extras/legal/) (OGL), the full text of which is included in this repo as [`LICENSE-OGL.txt`](LICENSE-OGL.txt). None of the rules text was written by this project’s author. The content originates from Paizo Inc. / Paizo Publishing, LLC's official Pathfinder RPG line and a large amount of third-party OGL content that d20pfsrd.com includes into the same categories (bestiary, feats, etc).
 
-This repo contains code and does not republish a copy of the source site, with one exception: the 15 HTML fixtures under `rag/tests/fixtures/HTML/` are verbatim copies of individual d20pfsrd.com pages, retained to test the HTML to markdown parser against real markup. Each fixture still carries its own section15 OGL notice and remains Open Game Content subject to the OGL, same as the rest of the site. The scraped HTML (scraper/data/html) is gitignored and the parsed corpus (data/*.parquet) is built locally and not distributed publicly. “rag build-corpus” regenerates the parsed corpus from a fresh crawl.
+This repo contains code and does not republish a copy of the source site, with one exception: the 15 HTML fixtures under `rag-mcp/tests/fixtures/HTML/` are verbatim copies of individual d20pfsrd.com pages, retained to test the HTML to markdown parser against real markup. Each fixture still carries its own section15 OGL notice and remains Open Game Content subject to the OGL, same as the rest of the site. The scraped HTML (scraper/data/html) is gitignored and the parsed corpus (data/*.parquet) is built locally and not distributed publicly. “rag build-corpus” regenerates the parsed corpus from a fresh crawl.
 
 ## Artwork
 
@@ -8,7 +8,7 @@ Per d20pfsrd.com's own legal terms, all artwork and illustrations on the site ar
 
 ## Section 15
 
-Every d20pfsrd.com page has its own OGL Section 15 (div.section15) that lists the sourcebook(s) the page is drawn from. parse_page (rag/src/rag/parsing.py) removes the section15 block from body_md as it is not rules content and would be noisy for retrieval. The resulting text is still Open Game Content and still subject to the OGL.
+Every d20pfsrd.com page has its own OGL Section 15 (div.section15) that lists the sourcebook(s) the page is drawn from. parse_page (rag-mcp/src/rag/parsing.py) removes the section15 block from body_md as it is not rules content and would be noisy for retrieval. The resulting text is still Open Game Content and still subject to the OGL.
 
 The last crawl of 24,080 pages contains 22,199 citations which can be found in [`LICENSE-THIRD-PARTY-SOURCES.txt`](LICENSE-THIRD-PARTY-SOURCES.txt). In addition to Paizo, there is a large list of third-party OGL publishers: Green Ronin (Advanced Bestiary), Frog God Games (Rappan Athuk), Necromancer Games, Open Design, Kobold Press, and many other independent publishers. The most cited sourcebooks :
 

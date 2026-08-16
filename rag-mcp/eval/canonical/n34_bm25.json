@@ -1,0 +1,800 @@
+{
+  "created_at": "2026-07-31T23:18:28.851049Z",
+  "manifest": {
+    "source_file": "data/corpus.parquet",
+    "source_sha256": "344739c9c617f3f4a9dfad7071ddb056ff25f93efa5c22cf5b80ee9c052d19bc",
+    "n_articles": 23890,
+    "n_chunks": 129361,
+    "min_body_length": 100,
+    "tokenizer_model": "Qwen/Qwen3-Embedding-0.6B",
+    "max_tokens": 450,
+    "overlap": 50,
+    "fts5_tokenchar": false,
+    "fts5_title_weight": 10.0,
+    "fts5_text_weight": 1.0,
+    "parser_version": "1",
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+    "embedding_dim": 1024,
+    "embedding_dtype": "torch.bfloat16",
+    "query_prompt": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+    "created_at": "2026-07-31T23:14:48.494726Z"
+  },
+  "method": "bm25",
+  "k": 5,
+  "summary": {
+    "n_queries": 34,
+    "recall_at": {
+      "1": 0.20588235294117646,
+      "3": 0.29411764705882354,
+      "5": 0.29411764705882354
+    },
+    "mrr": 0.25
+  },
+  "by_type": {
+    "exact_name": {
+      "n_queries": 11,
+      "recall_at": {
+        "1": 0.5454545454545454,
+        "3": 0.8181818181818182,
+        "5": 0.8181818181818182
+      },
+      "mrr": 0.6818181818181818
+    },
+    "paraphrase": {
+      "n_queries": 12,
+      "recall_at": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0
+      },
+      "mrr": 0.0
+    },
+    "rules_reasoning": {
+      "n_queries": 11,
+      "recall_at": {
+        "1": 0.09090909090909091,
+        "3": 0.09090909090909091,
+        "5": 0.09090909090909091
+      },
+      "mrr": 0.09090909090909091
+    }
+  },
+  "by_category": {
+    "bestiary": {
+      "n_queries": 2,
+      "recall_at": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0
+      },
+      "mrr": 0.0
+    },
+    "classes": {
+      "n_queries": 4,
+      "recall_at": {
+        "1": 0.25,
+        "3": 0.25,
+        "5": 0.25
+      },
+      "mrr": 0.25
+    },
+    "feats": {
+      "n_queries": 6,
+      "recall_at": {
+        "1": 0.3333333333333333,
+        "3": 0.5,
+        "5": 0.5
+      },
+      "mrr": 0.4166666666666667
+    },
+    "gamemastering": {
+      "n_queries": 8,
+      "recall_at": {
+        "1": 0.125,
+        "3": 0.25,
+        "5": 0.25
+      },
+      "mrr": 0.1875
+    },
+    "magic": {
+      "n_queries": 13,
+      "recall_at": {
+        "1": 0.23076923076923078,
+        "3": 0.3076923076923077,
+        "5": 0.3076923076923077
+      },
+      "mrr": 0.2692307692307692
+    },
+    "skills": {
+      "n_queries": 1,
+      "recall_at": {
+        "1": 0.0,
+        "3": 0.0,
+        "5": 0.0
+      },
+      "mrr": 0.0
+    }
+  },
+  "results": [
+    {
+      "query": "power attack",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat",
+          "title": "Power Attack (Combat)",
+          "score": -8.227956196649513
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/d/divine-power",
+          "title": "Divine Power",
+          "score": -8.224661852553496
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/variant-magic-rules/akashic-magic/feats/chakra-power-akashic",
+          "title": "Chakra Power (Akashic)",
+          "score": -7.985754605324763
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/fighter/archetypes/paizo-fighter-archetypes/two-handed-fighter",
+          "title": "Two-Handed Fighter",
+          "score": -7.689375727429251
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/feat-tree",
+          "title": "Feat Tree",
+          "score": -7.602938627132898
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "cleave",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/cleave-combat/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/racial-feats/cleave-through-combat-dwarf",
+          "title": "Cleave Through (Combat, Dwarf)",
+          "score": -9.879128798795326
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/cleave-combat",
+          "title": "Cleave (Combat)",
+          "score": -9.751838901426265
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/great-cleave-combat",
+          "title": "Great Cleave (Combat)",
+          "score": -9.733553606941095
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/magic-weapons/specific-magic-weapons/rabbit-s-blade",
+          "title": "Rabbit’s Blade",
+          "score": -8.628023107510511
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats",
+          "title": "Combat Feats",
+          "score": -8.613993774560324
+        }
+      ],
+      "rank": 2,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "query": "vital strike",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/vital-strike-combat/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/vital-strike-combat",
+          "title": "Vital Strike (Combat)",
+          "score": -16.437178837882506
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/gravitational-vital-strike-combat",
+          "title": "Gravitational Vital Strike (Combat)",
+          "score": -16.183950338289772
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/greater-vital-strike-combat",
+          "title": "Greater Vital Strike (Combat)",
+          "score": -16.038534640118453
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/improved-vital-strike-combat",
+          "title": "Improved Vital Strike (Combat)",
+          "score": -15.911935267855494
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/improved-devastating-strike-combat",
+          "title": "Improved Devastating Strike (Combat)",
+          "score": -15.152871476051605
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "magic missile",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/m/magic-missile/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/m/magic-missile",
+          "title": "Magic Missile",
+          "score": -15.832894300582433
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/unique-monsters/cr-6/human-ghost-wizard-8",
+          "title": "The Splatter Man (Human Ghost Wizard 8)",
+          "score": -12.183362340985386
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/outsiders/elemental/mihstu-tohc",
+          "title": "Mihstu (3pp)",
+          "score": -11.99662336916254
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/wizard/arcane-schools/paizo-arcane-schools/classic-arcane-schools/evocation",
+          "title": "Evocation",
+          "score": -11.881426953301673
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/magic-weapons/magic-weapon-special-abilities/veering",
+          "title": "Veering",
+          "score": -11.812837666570651
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "haste",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/haste/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/wondrous-items/c-d/drums-of-haste",
+          "title": "Drums of Haste",
+          "score": -11.139590312705689
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/h/haste",
+          "title": "Haste",
+          "score": -11.100740247117667
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/humanoids/bandit-knight",
+          "title": "Bandit Knight",
+          "score": -8.885162010287338
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/vermin/karz-slug",
+          "title": "Karz Slug",
+          "score": -8.604939754100643
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/vermin/karz-slug-queen",
+          "title": "Karz Slug Queen",
+          "score": -8.4713540113052
+        }
+      ],
+      "rank": 2,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "query": "rage powers",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers",
+          "title": "Rage Powers",
+          "score": -17.489898426819366
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers/rage-powers-blood",
+          "title": "Rage Powers: Blood",
+          "score": -16.92730272675853
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/barbarian",
+          "title": "Barbarian",
+          "score": -15.685592273093933
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/hybrid-classes/skald/archetypes/paizo-skald-archetypes/totem-channeler-skald-archetype",
+          "title": "Totem Channeler",
+          "score": -14.817887337654003
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/core-classes/barbarian/archetypes/paizo-barbarian-archetypes/giant-stalker-barbarian-archetype",
+          "title": "Giant Stalker",
+          "score": -14.718458175588253
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "attack of opportunity",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/target-of-opportunity-combat-teamwork",
+          "title": "Target of Opportunity (Combat, Teamwork)",
+          "score": -10.691593132427919
+        },
+        {
+          "url": "https://www.d20pfsrd.com/gamemastering/combat",
+          "title": "Combat",
+          "score": -10.682561866256528
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/deceitful-incompetence-combat",
+          "title": "Deceitful Incompetence (Combat)",
+          "score": -10.120289818786134
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/intrepid-rescuer-combat",
+          "title": "Intrepid Rescuer (Combat)",
+          "score": -9.593185878062933
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/plants/bodythief",
+          "title": "Bodythief",
+          "score": -9.562310967268886
+        }
+      ],
+      "rank": 2,
+      "reciprocal_rank": 0.5
+    },
+    {
+      "query": "grapple combat maneuver",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/improved-grapple-combat",
+          "title": "Improved Grapple (Combat)",
+          "score": -19.878626750231575
+        },
+        {
+          "url": "https://www.d20pfsrd.com/traits/exemplar-traits/artist-of-battle-in-all-forms",
+          "title": "Artist of Battle in All Forms (Combat Exemplar)",
+          "score": -17.59681450723777
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/t/telekinetic-maneuver",
+          "title": "Telekinetic Maneuver",
+          "score": -17.482603054501716
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/bushwhack-combat",
+          "title": "Bushwhack (Combat)",
+          "score": -17.456106591940188
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats/death-roll-combat",
+          "title": "Death Roll (Combat)",
+          "score": -17.421822673685778
+        }
+      ],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "summon monster I",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/summon-monster"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/s/summon-monster",
+          "title": "Summon Monster",
+          "score": -24.340647664587415
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/s/summon-minor-monster",
+          "title": "Summon Minor Monster",
+          "score": -22.579887685752116
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/general-feats/summon-good-monster",
+          "title": "Summon Good Monster",
+          "score": -20.633502038430002
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/s/summon-genie",
+          "title": "Summon Genie",
+          "score": -20.447334518646606
+        },
+        {
+          "url": "https://www.d20pfsrd.com/gamemastering/other-rules/unchained-rules/simple-monster-creation",
+          "title": "Simple Monster Creation",
+          "score": -19.82456533052192
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "outsider creature type",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/outsiders"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/feats/general-feats/favored-enemy-spellcasting",
+          "title": "Favored Enemy Spellcasting",
+          "score": -13.821434087488708
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/damnation-feats/fiendskin-damnation",
+          "title": "Fiendskin (Damnation)",
+          "score": -12.619179154979708
+        },
+        {
+          "url": "https://www.d20pfsrd.com/classes/base-classes/summoner/archetypes/paizo-summoner-archetypes/first-worlder",
+          "title": "First Worlder",
+          "score": -11.753105249772178
+        },
+        {
+          "url": "https://www.d20pfsrd.com/gamemastering/other-rules/creating-new-races",
+          "title": "Creating New Races",
+          "score": -11.415653301950556
+        },
+        {
+          "url": "https://www.d20pfsrd.com/bestiary/monster-listings/templates/sonic-creature-cr-3",
+          "title": "Sonic Creature (CR +3)[3pp]",
+          "score": -11.304701213694592
+        }
+      ],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "polymorph any object",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/p/polymorph-any-object/"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/magic/all-spells/p/polymorph-any-object",
+          "title": "Polymorph Any Object",
+          "score": -21.785143695438947
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/variant-magic-rules/spheres-of-power/rituals",
+          "title": "Rituals",
+          "score": -18.397749298950774
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/wondrous-items/e-g/gauntlets-form-fixing",
+          "title": "Gauntlets, Form-Fixing",
+          "score": -15.129439063487682
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/magic-weapons/magic-weapon-special-abilities/transformative-greater",
+          "title": "Transformative Greater",
+          "score": -15.023237928693609
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic-items/wondrous-items/e-g/elixir-of-two-worlds",
+          "title": "Elixir of Two Worlds",
+          "score": -14.513838309763132
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "spell that throws an exploding ball of fire",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fireball/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "feat that lets you hit harder by taking a penalty to accuracy",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "spell that makes someone attack faster and move faster",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/haste"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "ability where a warrior gets furious and stronger but tires out after",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "condition where you can't see and miss things around you",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "spell that turns you invisible",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/formulae-lists-alchemist",
+          "title": "Alchemist/Investigator Formulae",
+          "score": -13.698284027242286
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/magus-spell-list",
+          "title": "Magus",
+          "score": -13.311101526647786
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/psychic",
+          "title": "Psychic",
+          "score": -13.022968286820483
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/occultist",
+          "title": "Occultist",
+          "score": -12.484116906383363
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/spell-lists-sorcerer-and-wizard",
+          "title": "Sorcerer/Wizard",
+          "score": -12.024705732341818
+        }
+      ],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "the most basic healing spell a cleric starts with",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "spell that heals the most damage at once",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/cure-critical-wounds/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "creature type for undead things like zombies and skeletons",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/undead/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "class feature that lets a rogue deal bonus damage from sneaking",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "spell that puts up a wall of stone to block enemies",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/w/wall-of-stone/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "ability that lets a wizard cast spells without material components",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/general-feats/eschew-materials"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "how do you avoid provoking an attack of opportunity when moving",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/acrobatics/",
+        "https://www.d20pfsrd.com/feats/combat-feats/mobility-combat/",
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "how does flanking work and what bonus does it give",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "what happens if you're grappled and try to cast a spell",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "do two-weapon fighting penalties stack with power attack",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/two-weapon-fighting-combat/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "can you full attack after a charge",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "retrieved_items": [
+        {
+          "url": "https://www.d20pfsrd.com/gamemastering/combat",
+          "title": "Combat",
+          "score": -16.31216105640984
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/variant-magic-rules/spheres-of-power/using-the-spheres",
+          "title": "Using The Spheres",
+          "score": -15.943101537852012
+        },
+        {
+          "url": "https://www.d20pfsrd.com/gamemastering/other-rules/stamina-and-combat-tricks-optional-rules",
+          "title": "Stamina and Combat Tricks Optional Rules",
+          "score": -14.404814518261798
+        },
+        {
+          "url": "https://www.d20pfsrd.com/feats/combat-feats",
+          "title": "Combat Feats",
+          "score": -14.090626424983867
+        },
+        {
+          "url": "https://www.d20pfsrd.com/magic/spell-lists-and-domains/magus-spell-list",
+          "title": "Magus",
+          "score": -12.615259195674525
+        }
+      ],
+      "rank": 1,
+      "reciprocal_rank": 1.0
+    },
+    {
+      "query": "how do you calculate combat maneuver defense",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat/#Combat_Maneuver_Defense"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "what saves does a fireball allow and against what",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fireball/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "does invisibility end if you attack someone",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "can a paladin still smite evil if they fall",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/paladin/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "how does spell resistance interact with touch attacks",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/special-abilities"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    },
+    {
+      "query": "can I move and attack in the same round",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat/"
+      ],
+      "retrieved_items": [],
+      "rank": null,
+      "reciprocal_rank": 0.0
+    }
+  ]
+}

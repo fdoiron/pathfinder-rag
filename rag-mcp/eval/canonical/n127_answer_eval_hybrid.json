@@ -1,0 +1,2069 @@
+{
+  "created_at": "2026-08-02T20:54:31.558736Z",
+  "manifest": {
+    "source_file": "data/corpus.parquet",
+    "source_sha256": "344739c9c617f3f4a9dfad7071ddb056ff25f93efa5c22cf5b80ee9c052d19bc",
+    "n_articles": 23890,
+    "n_chunks": 129361,
+    "min_body_length": 100,
+    "tokenizer_model": "Qwen/Qwen3-Embedding-0.6B",
+    "max_tokens": 450,
+    "overlap": 50,
+    "fts5_tokenchar": false,
+    "parser_version": "1",
+    "embedding_model": "Qwen/Qwen3-Embedding-0.6B",
+    "embedding_dim": 1024,
+    "embedding_dtype": "torch.bfloat16",
+    "query_prompt": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:",
+    "created_at": "2026-07-31T23:14:48.494726Z"
+  },
+  "method": "hybrid",
+  "k": 5,
+  "rrf_k": 60,
+  "rrf_vector_weight": 15.0,
+  "rrf_bm25_weight": 1.0,
+  "fts5_title_weight": 10.0,
+  "fts5_text_weight": 1.0,
+  "summary": {
+    "n_queries": 127,
+    "retrieval_rate": 0.7952755905511811,
+    "citation_rate": 0.7086614173228346,
+    "refusal_rate": 0.10236220472440945,
+    "invented_citation_rate": 0.0
+  },
+  "by_type": {
+    "exact_name": {
+      "n_queries": 55,
+      "retrieval_rate": 0.8727272727272727,
+      "citation_rate": 0.8181818181818182,
+      "refusal_rate": 0.05454545454545454,
+      "invented_citation_rate": 0.0
+    },
+    "paraphrase": {
+      "n_queries": 38,
+      "retrieval_rate": 0.5526315789473685,
+      "citation_rate": 0.5263157894736842,
+      "refusal_rate": 0.13157894736842105,
+      "invented_citation_rate": 0.0
+    },
+    "rules_reasoning": {
+      "n_queries": 34,
+      "retrieval_rate": 0.9411764705882353,
+      "citation_rate": 0.7352941176470589,
+      "refusal_rate": 0.14705882352941177,
+      "invented_citation_rate": 0.0
+    }
+  },
+  "by_category": {
+    "basics-ability-scores": {
+      "n_queries": 1,
+      "retrieval_rate": 1.0,
+      "citation_rate": 1.0,
+      "refusal_rate": 0.0,
+      "invented_citation_rate": 0.0
+    },
+    "bestiary": {
+      "n_queries": 10,
+      "retrieval_rate": 0.8,
+      "citation_rate": 0.7,
+      "refusal_rate": 0.0,
+      "invented_citation_rate": 0.0
+    },
+    "classes": {
+      "n_queries": 24,
+      "retrieval_rate": 0.9166666666666666,
+      "citation_rate": 0.7916666666666666,
+      "refusal_rate": 0.08333333333333333,
+      "invented_citation_rate": 0.0
+    },
+    "feats": {
+      "n_queries": 17,
+      "retrieval_rate": 0.5294117647058824,
+      "citation_rate": 0.4117647058823529,
+      "refusal_rate": 0.17647058823529413,
+      "invented_citation_rate": 0.0
+    },
+    "gamemastering": {
+      "n_queries": 28,
+      "retrieval_rate": 0.9285714285714286,
+      "citation_rate": 0.75,
+      "refusal_rate": 0.14285714285714285,
+      "invented_citation_rate": 0.0
+    },
+    "magic": {
+      "n_queries": 38,
+      "retrieval_rate": 0.7105263157894737,
+      "citation_rate": 0.7105263157894737,
+      "refusal_rate": 0.10526315789473684,
+      "invented_citation_rate": 0.0
+    },
+    "magic-items": {
+      "n_queries": 2,
+      "retrieval_rate": 1.0,
+      "citation_rate": 1.0,
+      "refusal_rate": 0.0,
+      "invented_citation_rate": 0.0
+    },
+    "skills": {
+      "n_queries": 7,
+      "retrieval_rate": 0.8571428571428571,
+      "citation_rate": 0.8571428571428571,
+      "refusal_rate": 0.0,
+      "invented_citation_rate": 0.0
+    }
+  },
+  "results": [
+    {
+      "query": "power attack",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "cleave",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/cleave-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "vital strike",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/vital-strike-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "magic missile",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/m/magic-missile"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "haste",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/haste"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "rage powers",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian/rage-powers"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "attack of opportunity",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "grapple combat maneuver",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "summon monster I",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/summon-monster"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "outsider creature type",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/outsiders"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "polymorph any object",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/p/polymorph-any-object"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "improved critical",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/improved-critical-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "weapon finesse",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/weapon-finesse-combat"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "dodge feat",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/dodge-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "combat reflexes",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/combat-reflexes-combat"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "point blank shot",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/point-blank-shot-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "toughness feat",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/general-feats/toughness"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "spring attack",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/spring-attack-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "whirlwind attack",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/whirlwind-attack-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "iron will feat",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/general-feats/iron-will"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "fireball spell",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fireball"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "lightning bolt",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/l/lightning-bolt"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "cure light wounds",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "cure critical wounds",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/cure-critical-wounds"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "invisibility spell",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "greater invisibility",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "wall of stone",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/w/wall-of-stone"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "wall of fire",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/w/wall-of-fire"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "dispel magic",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/d/dispel-magic"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "teleport spell",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/t/teleport"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "fly spell",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fly"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "stoneskin",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/stoneskin"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "mirror image",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/m/mirror-image"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "hold person",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/hold-person"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "charm person",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/charm-person"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "barbarian rage",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "sneak attack rogue",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "paladin smite evil",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/paladin"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "ranger favored enemy",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/ranger"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "wizard arcane bond",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/wizard"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "sorcerer bloodline",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/sorcerer/bloodlines"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "monk flurry of blows",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/monk"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "druid wild shape",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/druid"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "cleric channel energy",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/cleric"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "bard bardic performance",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/bard"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "fatigued condition",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "exhausted condition",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "shaken condition",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "flat-footed condition",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "prone condition",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "undead creature type",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/undead"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "construct creature type",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/constructs"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "acrobatics skill",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/acrobatics"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "stealth skill",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/stealth"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "eschew materials feat",
+      "type": "exact_name",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/general-feats/eschew-materials"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that throws an exploding ball of fire",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fireball"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "feat that lets you hit harder by taking a penalty to accuracy",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that makes someone attack faster and move faster",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/haste"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "ability where a warrior gets furious and stronger but tires out after",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "condition where you can't see and miss things around you",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that turns you invisible",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "the most basic healing spell a cleric starts with",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/c/cure-light-wounds"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that heals the most damage at once",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/heal"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "creature type for undead things like zombies and skeletons",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/undead"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "class feature that lets a rogue deal bonus damage from sneaking",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that puts up a wall of stone to block enemies",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/w/wall-of-stone"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "ability that lets a wizard cast spells without material components",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/general-feats/eschew-materials"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that lets you talk to animals",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/speak-with-animals"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "ability that lets a druid turn into an animal",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/druid"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that creates illusory duplicates of yourself",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/m/mirror-image"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that removes curses or negative magic effects",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/b/break-enchantment"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "ability to instantly move somewhere far away with magic",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/t/teleport"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "feat that improves your chance of scoring a critical hit",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/improved-critical-combat"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "class ability where a monk gets extra unarmed attacks",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/monk"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "ability that lets a paladin hit evil creatures much harder",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/paladin"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "feature that lets a ranger fight a specific type of enemy better",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/ranger"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that hardens your skin like stone against attacks",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/stoneskin"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "condition where you're tired and take a penalty to physical stats",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "condition after being knocked down that makes you easier to hit in melee",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that lets a caster see through walls",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/s/see-through-stone"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "feat that lets you move through a threatened square safely",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/feats/combat-feats/mobility-combat"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "skill that lets you move through a threatened square safely",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/acrobatics"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "class feature where a bard inspires allies through music",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/bard"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "spell that paralyzes a humanoid target",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/h/hold-person"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "skill used to sneak around undetected",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/stealth"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "skill used to balance, tumble, or avoid falling",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/acrobatics"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "type of creature that is mindless and made of inanimate materials",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/constructs"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "what are the rules for half-dragons?",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/templates/half-dragon"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "I rolled a 41 on my rod of wonder what does that do",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic-items/rods/rod-of-wonder"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "What is a giant vulture's intelligence score",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/animals/giant-vulture"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what does Shoes of Lightning Leaping do",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic-items/wondrous-items/r-z/shoes-of-lightning-leaping"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how big is a sea serpent",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/magical-beasts/sea-serpent"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "whats the intelligence of a swan",
+      "type": "paraphrase",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/animals/birds/swan-trumpeter"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how do you avoid provoking an attack of opportunity when moving",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how does flanking work and what bonus does it give",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what happens if you're grappled and try to cast a spell",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat",
+        "https://www.d20pfsrd.com/magic"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "do two-weapon fighting penalties stack with power attack",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat",
+        "https://www.d20pfsrd.com/feats/combat-feats/power-attack-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "can you full attack after a charge",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "how do you calculate combat maneuver defense",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what saves does a fireball allow and against what",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/f/fireball"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "does invisibility end if you attack someone",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic/all-spells/i/invisibility"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "can a paladin still smite evil if they fall",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/paladin"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how does spell resistance interact with touch attacks",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic",
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "can I move and attack in the same round",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "does concealment stack with cover for miss chance",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "how does a wizard prepare spells each day and can they change them",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what happens to a monk's flurry of blows if wearing armor",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/monk"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "can you cast a spell while threatened without provoking an attack",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic",
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how does a rogue qualify to deal sneak attack damage",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/rogue"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what happens if a druid's wild shape form dies or is dispelled",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/druid",
+        "https://www.d20pfsrd.com/magic/all-spells/b/beast-shape"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "how do multiple attacks of opportunity in one round work with combat reflexes",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat",
+        "https://www.d20pfsrd.com/feats/combat-feats/combat-reflexes-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "does a critical hit multiply extra damage dice like sneak attack",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how does a barbarian's fatigue after rage interact with fatigued condition already in effect",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/barbarian",
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "can a paralyzed creature be automatically hit by melee attacks",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions"
+      ],
+      "expected_url_retrieved": false,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "how does spell failure chance work when casting in armor",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/magic",
+        "https://www.d20pfsrd.com/equipment/armor"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what is the difference between a fortitude, reflex, and will save in practice",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how does channel energy affect undead versus living creatures",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/classes/core-classes/cleric"
+      ],
+      "expected_url_retrieved": false,
+      "refused": false,
+      "citation_results": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "can you use vital strike with a charge attack",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat",
+        "https://www.d20pfsrd.com/feats/combat-feats/vital-strike-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how do size categories affect combat maneuver checks",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what happens to your caster level if you're at negative hit points",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": true,
+      "citation_results": [],
+      "cited_correct_source": false,
+      "invented_citation": false
+    },
+    {
+      "query": "How do you kill a lich",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/bestiary/monster-listings/templates/lich"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "what check do I need when traversing wilderness",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/environment/wilderness"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "How would I assess if a ship is likely to sink",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/other-rules/ship-combat"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "how long does it take to retrain a feat",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/basics-ability-scores/more-character-options/retraining"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "whats the knowledge dc to ID creatures",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/knowledge"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "is escaping a grapple with escape artist an action",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/skills/escape-artist"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    },
+    {
+      "query": "can you cast a spell while grappled",
+      "type": "rules_reasoning",
+      "expected_urls": [
+        "https://www.d20pfsrd.com/gamemastering/conditions",
+        "https://www.d20pfsrd.com/magic"
+      ],
+      "expected_url_retrieved": true,
+      "refused": false,
+      "citation_results": [
+        false,
+        true
+      ],
+      "cited_correct_source": true,
+      "invented_citation": false
+    }
+  ]
+}
