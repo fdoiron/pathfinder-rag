@@ -5,7 +5,7 @@ import re
 import time
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any, Literal, cast
+from typing import Any, cast
 
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
@@ -20,10 +20,10 @@ from openai.types.chat import (
     ChatCompletionMessageParam,
 )
 from opentelemetry import trace
-from pydantic import BaseModel
 
 from pathfinder_agent.config import Settings
 from pathfinder_agent.llm import LLMUnavailableError, translate_llm_errors
+from pathfinder_agent.models import AgentResult, ClassifiedToolResult, ToolCallRecord
 from pathfinder_agent.telemetry import configure_telemetry
 
 logger = logging.getLogger(__name__)
@@ -40,24 +40,6 @@ FORCED_ANSWER_INSTRUCTION = (
     'the URL for each claim. If those results do not answer the question, reply exactly:\n'
     f'{NO_COVERAGE_REPLY}'
 )
-
-
-class ToolCallRecord(BaseModel):
-    name: str
-    args: dict[str, Any]
-
-
-class AgentResult(BaseModel):
-    text: str
-    tool_calls: list[ToolCallRecord]
-    stopped_reason: Literal[
-        'answer', 'max_iters', 'wall_clock', 'context_budget', 'fatal_tool_error', 'llm_unavailable'
-    ]
-
-
-class ClassifiedToolResult(BaseModel):
-    text: str
-    error_category: Literal['retryable', 'rephrase', 'fatal'] | None
 
 
 class RetryableToolError(Exception):

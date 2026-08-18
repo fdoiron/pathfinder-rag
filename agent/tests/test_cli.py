@@ -6,9 +6,9 @@ import pytest
 from mcp.shared.exceptions import MCPError
 from typer.testing import CliRunner
 
-from pathfinder_agent.agent import AgentResult, ToolCallRecord
 from pathfinder_agent.cli import MCPUnavailableError, app, leaf_causes, run_question
 from pathfinder_agent.config import Settings
+from pathfinder_agent.models import AgentResult, ToolCallRecord
 
 runner = CliRunner()
 

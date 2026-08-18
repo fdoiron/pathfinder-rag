@@ -5,9 +5,10 @@ from typing import Annotated
 
 import typer
 
-from pathfinder_agent.agent import AgentResult, open_mcp_session, run_agent
+from pathfinder_agent.agent import open_mcp_session, run_agent
 from pathfinder_agent.config import Settings, get_settings
 from pathfinder_agent.llm import make_llm_client
+from pathfinder_agent.models import AgentResult
 
 app = typer.Typer()
 logging.basicConfig(level=logging.INFO)
