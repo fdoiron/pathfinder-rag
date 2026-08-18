@@ -178,7 +178,7 @@ async def run_agent(
                     )
                 )
 
-            budget_exceeded = tool_token_count > settings.agent_context_token_budget
+            budget_exceeded = tool_token_count > settings.agent_tool_result_token_budget
             if not answer_forced and (budget_exceeded or attempt == max_iters):
                 answer_forced = True
                 available_tools = []

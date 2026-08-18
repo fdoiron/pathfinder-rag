@@ -40,7 +40,7 @@ def _settings(**overrides: Any) -> Settings:
         'agent_max_iters': 4,
         'agent_hop_timeout': 5.0,
         'agent_wall_clock_timeout': 30.0,
-        'agent_context_token_budget': 4000,
+        'agent_tool_result_token_budget': 4000,
         'agent_max_tool_attempts': 2,
         'agent_retry_backoff_base': 0.001,  # PositiveFloat -> real sleep below test resolution
     }
@@ -328,7 +328,7 @@ async def test_run_agent_stops_calling_tools_once_the_token_budget_is_spent() ->
     llm = FakeLLM([_tool_hop(), _answer('You make a CMB check.')])
     session = FakeSession([_tool_result('x' * 400)])  # ~100 estimated tokens
 
-    result = await _run(llm, session, _settings(agent_context_token_budget=10))
+    result = await _run(llm, session, _settings(agent_tool_result_token_budget=10))
 
     assert result.stopped_reason == 'context_budget'
     assert llm.tools_seen[-1] == []

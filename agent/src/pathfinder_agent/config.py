@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     agent_max_iters: PositiveInt = 8  # tool calling hops before giving up regardless of wall clock
     agent_hop_timeout: PositiveFloat = 30.0  # seconds allowed for one LLM call or one tool call, also the SDK timeout
     agent_wall_clock_timeout: PositiveFloat = 120.0  # seconds for the whole loop. Overrides max_iters
-    agent_context_token_budget: PositiveInt = 4000  # estimated tool-result tokens before the loop stops calling tools
+    agent_tool_result_token_budget: PositiveInt = 4000  # estimated tool-result tokens before the loop stops calling tools
     agent_max_tool_attempts: PositiveInt = 2  # tool attempts (1 initial + retries) for retryable error/hop timeout
     agent_retry_backoff_base: PositiveFloat = 1.0  # seconds, doubles by retry
     agent_system_prompt_path: Path | None = None  # override for the packaged prompts/agent_system.txt for tests

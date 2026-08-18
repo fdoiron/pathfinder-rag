@@ -92,7 +92,7 @@ def tool_turns(transcript: list[Any]) -> list[str]:
 
 
 def count_tool_tokens(transcript: list[Any]) -> int:
-    """Same len//4 estimate run_agent charges against agent_context_token_budget."""
+    """Same len//4 estimate run_agent charges against agent_tool_result_token_budget."""
     return sum(len(turn) // 4 for turn in tool_turns(transcript))
 
 
@@ -301,7 +301,7 @@ def report(runs: list[Run], questions: list[EvalQuestion], settings: Settings) -
     )
     typer.echo(
         f'tool tokens per run avg {mean(tokens):>7.0f}   max {max(tokens):>6.0f}   '
-        f'budget {settings.agent_context_token_budget}'
+        f'budget {settings.agent_tool_result_token_budget}'
     )
     for tool, called, bad in ((SEARCH_TOOL, searched, search_failed), (FETCH_TOOL, fetched, fetch_failed)):
         typer.echo(f'{tool:<19} Σ called {called:>4}  Σ failed {bad:>4}  {_rate(bad, called)}')
