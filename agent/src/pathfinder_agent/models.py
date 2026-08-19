@@ -4,6 +4,7 @@ from typing import Any, Literal
 from pydantic import BaseModel
 
 StoppedReason = Literal['answer', 'max_iters', 'wall_clock', 'context_budget', 'fatal_tool_error', 'llm_unavailable']
+ToolOutcome = Literal['ok', 'failed']
 
 
 class ToolCallRecord(BaseModel):
@@ -22,6 +23,11 @@ class ClassifiedToolResult(BaseModel):
     error_category: Literal['retryable', 'rephrase', 'fatal'] | None
 
 
+class ExecutedToolResult(BaseModel):
+    text: str
+    outcome: ToolOutcome
+
+
 class RunStarted(BaseModel):
     type: Literal['run_started'] = 'run_started'
     question: str
@@ -38,6 +44,7 @@ class ToolFinished(BaseModel):
     type: Literal['tool_finished'] = 'tool_finished'
     call_id: str
     name: str
+    outcome: ToolOutcome
 
 
 class RunFinished(BaseModel):

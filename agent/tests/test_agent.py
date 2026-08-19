@@ -24,6 +24,7 @@ from pathfinder_agent.agent import (
     wrap_tool_result,
 )
 from pathfinder_agent.config import Settings
+from pathfinder_agent.models import AgentEvent, EventCallback, ToolFinished, ToolStarted
 
 REQUEST = httpx.Request('POST', 'http://llm.test/v1/chat/completions')
 SEARCH_TOOL = Tool(name='rag_search', description='Search the RAG', inputSchema={'type': 'object'})
@@ -56,10 +57,10 @@ def _tool_result(text: str, *, is_error: bool = False, error_category: str | Non
 
 
 def _tool_call(
-    name: str = 'rag_search', arguments: str = '{"query": "grapple"}'
+    name: str = 'rag_search', arguments: str = '{"query": "grapple"}', call_id: str = 'call-1'
 ) -> ChatCompletionMessageFunctionToolCall:
     return ChatCompletionMessageFunctionToolCall(
-        id='call-1', type='function', function=Function(name=name, arguments=arguments)
+        id=call_id, type='function', function=Function(name=name, arguments=arguments)
     )
 
 
@@ -77,9 +78,25 @@ def _answer(text: str) -> ChatCompletion:
     return _completion(ChatCompletionMessage(role='assistant', content=text))
 
 
-def _tool_hop(name: str = 'rag_search', arguments: str = '{"query": "grapple"}') -> ChatCompletion:
-    message = ChatCompletionMessage(role='assistant', content=None, tool_calls=[_tool_call(name, arguments)])
+def _tool_hop(
+    name: str = 'rag_search', arguments: str = '{"query": "grapple"}', call_id: str = 'call-1'
+) -> ChatCompletion:
+    message = ChatCompletionMessage(role='assistant', content=None, tool_calls=[_tool_call(name, arguments, call_id)])
     return _completion(message, finish_reason='tool_calls')
+
+
+class EventLog:
+    """An on_event sink that keeps what run_agent emitted, in order."""
+
+    def __init__(self) -> None:
+        self.events: list[AgentEvent] = []
+
+    async def __call__(self, event: AgentEvent) -> None:
+        self.events.append(event)
+
+    @property
+    def types(self) -> list[str]:
+        return [event.type for event in self.events]
 
 
 class FakeSession:
@@ -129,7 +146,11 @@ class FakeLLM:
 
 
 async def _run(
-    llm: FakeLLM, session: FakeSession, settings: Settings | None = None, question: str = 'How does grappling work?'
+    llm: FakeLLM,
+    session: FakeSession,
+    settings: Settings | None = None,
+    question: str = 'How does grappling work?',
+    on_event: EventCallback | None = None,
 ) -> Any:
     return await run_agent(
         question=question,
@@ -137,6 +158,7 @@ async def _run(
         llm_client=cast(AsyncOpenAI, llm),
         settings=settings or _settings(),
         system_prompt='system',
+        on_event=on_event,
     )
 
 
@@ -211,11 +233,12 @@ async def test_translate_mcp_tools_maps_the_schema_onto_the_openai_shape() -> No
 async def test_execute_tool_appends_the_correction_hint_and_does_not_retry_a_rephrase() -> None:
     session = FakeSession([_tool_result('Unknown chunk_id: bogus#001', error_category='rephrase')])
 
-    text = await execute_tool(
+    executed = await execute_tool(
         _tool_call(), {}, cast(ClientSession, session), _settings(), deadline=time.monotonic() + 30
     )
 
-    assert text == f'Unknown chunk_id: bogus#001\n{REPHRASE_INSTRUCTION}'
+    assert executed.text == f'Unknown chunk_id: bogus#001\n{REPHRASE_INSTRUCTION}'
+    assert executed.outcome == 'failed'
     assert len(session.calls) == 1
 
 
@@ -233,11 +256,12 @@ async def test_execute_tool_does_not_retry_a_fatal_error() -> None:
 async def test_execute_tool_retries_a_retryable_error_and_returns_the_later_success() -> None:
     session = FakeSession([_tool_result('busy', error_category='retryable'), _tool_result('Grappling rules...')])
 
-    text = await execute_tool(
+    executed = await execute_tool(
         _tool_call(), {}, cast(ClientSession, session), _settings(), deadline=time.monotonic() + 30
     )
 
-    assert text == 'Grappling rules...'
+    assert executed.text == 'Grappling rules...'
+    assert executed.outcome == 'ok'
     assert len(session.calls) == 2
 
 
@@ -379,3 +403,60 @@ async def test_run_agent_hands_malformed_tool_arguments_back_to_the_model() -> N
     assert result.tool_calls == []  # nothing was actually called so nothing is reported
     assert session.calls == []
     assert 'Invalid JSON arguments' in llm.messages_seen[-1][-1]['content']
+
+
+# run_agent events
+@pytest.mark.anyio
+async def test_run_agent_brackets_each_hop_and_reports_whether_it_returned_data() -> None:
+    llm = FakeLLM(
+        [
+            _tool_hop(arguments='{"query": "red dragon", "k": 1}', call_id='call-1'),
+            _tool_hop(arguments='{"query": "red dragon", "k": 5}', call_id='call-2'),
+            _answer('A red dragon is a chromatic dragon.'),
+        ]
+    )
+    session = FakeSession(
+        [
+            _tool_result('k must be >= 5', error_category='rephrase'),
+            _tool_result('Red Dragon: CR 10, chromatic.'),
+        ]
+    )
+    log = EventLog()
+
+    result = await _run(llm, session, on_event=log)
+
+    assert log.types == [
+        'run_started',
+        'tool_started',
+        'tool_finished',
+        'tool_started',
+        'tool_finished',
+        'run_finished',
+    ]
+    started = [event for event in log.events if isinstance(event, ToolStarted)]
+    finished = [event for event in log.events if isinstance(event, ToolFinished)]
+    assert [event.call_id for event in started] == [event.call_id for event in finished]
+    assert [event.args['k'] for event in started] == [1, 5]
+    assert [event.outcome for event in finished] == ['failed', 'ok']  # the rejected call is not a completed search
+    assert result.stopped_reason == 'answer'
+
+
+@pytest.mark.anyio
+async def test_run_agent_emits_no_hop_for_tool_arguments_it_could_not_parse() -> None:
+    llm = FakeLLM([_tool_hop(arguments='{"query": '), _answer('You make a CMB check.')])
+    log = EventLog()
+
+    await _run(llm, FakeSession([_tool_result('never reached')]), on_event=log)
+
+    assert log.types == ['run_started', 'run_finished']  # the model never reached the server, so there is no hop
+
+
+@pytest.mark.anyio
+async def test_run_agent_leaves_a_fatal_hop_unclosed_for_the_terminal_event_to_close() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('never reached')])
+    session = FakeSession([_tool_result('index is corrupt', error_category='fatal')])
+    log = EventLog()
+
+    await _run(llm, session, on_event=log)
+
+    assert log.types == ['run_started', 'tool_started', 'run_finished']

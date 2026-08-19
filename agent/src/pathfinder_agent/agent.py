@@ -28,6 +28,7 @@ from pathfinder_agent.models import (
     AgentResult,
     ClassifiedToolResult,
     EventCallback,
+    ExecutedToolResult,
     RunFinished,
     RunStarted,
     ToolCallRecord,
@@ -81,7 +82,7 @@ async def execute_tool(
     mcp_session: ClientSession,
     settings: Settings,
     deadline: float,
-) -> str:
+) -> ExecutedToolResult:
     delay = settings.agent_retry_backoff_base
     attempts = settings.agent_max_tool_attempts
     attempt = 0
@@ -104,13 +105,13 @@ async def execute_tool(
                     span.set_attribute('tool.error_category', result.error_category)
 
                 if result.error_category == 'rephrase':
-                    return f'{result.text}\n{REPHRASE_INSTRUCTION}'
+                    return ExecutedToolResult(text=f'{result.text}\n{REPHRASE_INSTRUCTION}', outcome='failed')
                 elif result.error_category == 'retryable':
                     raise RetryableToolError(result.text)
                 elif result.error_category:
                     raise RuntimeError(f'Fatal tool error: {result.text}')
                 else:
-                    return result.text
+                    return ExecutedToolResult(text=result.text, outcome='ok')
             except RuntimeError as e:
                 span.record_exception(e)
                 raise
@@ -263,18 +264,20 @@ async def run_agent(
                     args = json.loads(call.function.arguments)
                     tool_calls.append(ToolCallRecord(name=call.function.name, args=args))
                 except json.JSONDecodeError as e:
+                    logger.warning(f'Invalid JSON arguments from the model: {e}')
                     text = f'[rephrase] Invalid JSON arguments: {e}'
                 except Exception as e:
                     return await finish(fatal_tool_failure(e))
                 else:
                     await emit(ToolStarted(call_id=call.id, name=call.function.name, args=args))
                     try:
-                        text = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
+                        executed = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
                     except WallClockExpired:
                         return await finish(timed_out())
                     except Exception as e:
                         return await finish(fatal_tool_failure(e))
-                    await emit(ToolFinished(call_id=call.id, name=call.function.name))
+                    text = executed.text
+                    await emit(ToolFinished(call_id=call.id, name=call.function.name, outcome=executed.outcome))
 
                 tool_token_count += len(text) // 4  # Approximation to avoid loading embedder
                 messages.append(
