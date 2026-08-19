@@ -22,9 +22,9 @@ from openai.types.chat import ChatCompletion
 from pydantic import AliasChoices, BaseModel, Field
 
 from pathfinder_agent.agent import NO_COVERAGE_REPLY, open_mcp_session, run_agent
-from pathfinder_agent.cli import leaf_causes, load_system_prompt
 from pathfinder_agent.config import Settings, get_settings
 from pathfinder_agent.llm import make_llm_client
+from pathfinder_agent.runner import leaf_causes, load_system_prompt
 
 
 class EvalQuestion(BaseModel):
