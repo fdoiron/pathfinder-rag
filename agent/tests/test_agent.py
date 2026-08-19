@@ -24,7 +24,7 @@ from pathfinder_agent.agent import (
     wrap_tool_result,
 )
 from pathfinder_agent.config import Settings
-from pathfinder_agent.models import AgentEvent, EventCallback, ToolFinished, ToolStarted
+from pathfinder_agent.models import AgentEvent, EventCallback, ModelReasoning, ToolFinished, ToolStarted
 
 REQUEST = httpx.Request('POST', 'http://llm.test/v1/chat/completions')
 SEARCH_TOOL = Tool(name='rag_search', description='Search the RAG', inputSchema={'type': 'object'})
@@ -74,8 +74,10 @@ def _completion(message: ChatCompletionMessage, finish_reason: str = 'stop') -> 
     )
 
 
-def _answer(text: str) -> ChatCompletion:
-    return _completion(ChatCompletionMessage(role='assistant', content=text))
+def _answer(text: str, reasoning: str | None = None) -> ChatCompletion:
+    # reasoning is not an OpenAI field. Ollama returns it alongside the reply
+    extra = {'reasoning': reasoning} if reasoning is not None else {}
+    return _completion(ChatCompletionMessage(role='assistant', content=text, **extra))
 
 
 def _tool_hop(
@@ -460,3 +462,26 @@ async def test_run_agent_leaves_a_fatal_hop_unclosed_for_the_terminal_event_to_c
     await _run(llm, session, on_event=log)
 
     assert log.types == ['run_started', 'tool_started', 'run_finished']
+
+
+@pytest.mark.anyio
+async def test_run_agent_emits_the_reasoning_a_hop_came_back_with() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.', reasoning='The user wants the grapple rules.')])
+    log = EventLog()
+
+    await _run(llm, FakeSession([]), on_event=log)
+
+    assert log.types == ['run_started', 'model_reasoning', 'run_finished']
+    reasoning = next(event for event in log.events if isinstance(event, ModelReasoning))
+    assert reasoning.text == 'The user wants the grapple rules.'
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize('reasoning', [None, '', '   '], ids=['absent', 'empty', 'blank'])
+async def test_run_agent_emits_no_reasoning_when_the_backend_sends_none(reasoning: str | None) -> None:
+    llm = FakeLLM([_answer('You make a CMB check.', reasoning=reasoning)])
+    log = EventLog()
+
+    await _run(llm, FakeSession([]), on_event=log)
+
+    assert log.types == ['run_started', 'run_finished']

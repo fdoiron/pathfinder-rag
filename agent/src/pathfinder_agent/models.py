@@ -33,6 +33,11 @@ class RunStarted(BaseModel):
     question: str
 
 
+class ModelReasoning(BaseModel):
+    type: Literal['model_reasoning'] = 'model_reasoning'
+    text: str
+
+
 class ToolStarted(BaseModel):
     type: Literal['tool_started'] = 'tool_started'
     call_id: str
@@ -58,6 +63,6 @@ class RunFailed(BaseModel):
     message: str
 
 
-AgentEvent = RunStarted | ToolStarted | ToolFinished | RunFinished
+AgentEvent = RunStarted | ModelReasoning | ToolStarted | ToolFinished | RunFinished
 QueueItem = AgentEvent | RunFailed
 EventCallback = Callable[[AgentEvent], Awaitable[None]]

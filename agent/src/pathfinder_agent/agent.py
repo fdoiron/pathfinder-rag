@@ -29,6 +29,7 @@ from pathfinder_agent.models import (
     ClassifiedToolResult,
     EventCallback,
     ExecutedToolResult,
+    ModelReasoning,
     RunFinished,
     RunStarted,
     ToolCallRecord,
@@ -241,6 +242,12 @@ async def run_agent(
                 )
 
             msg = response.choices[0].message
+
+            # Reasoning is mot an OpenAI field: Ollama returns the chain of thought alongside the reply so it
+            # is read off the dump rather than an attribute and skipped when the backend has none.
+            reasoning = msg.model_dump(exclude_none=True).get('reasoning')
+            if isinstance(reasoning, str) and reasoning.strip():
+                await emit(ModelReasoning(text=reasoning))
 
             if not msg.tool_calls:
                 messages.append({'role': 'assistant', 'content': msg.content})

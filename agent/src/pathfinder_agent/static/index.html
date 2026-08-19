@@ -128,6 +128,37 @@
         }
       }
 
+      .reason {
+        font-size: 0.85rem;
+        color: var(--muted);
+        border-left: 2px solid var(--line);
+        padding-left: 0.75rem;
+      }
+
+      .reason summary {
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .reason summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .reason summary::before {
+        content: '\25b8';
+        display: inline-block;
+        width: 1rem;
+      }
+
+      .reason[open] summary::before {
+        content: '\25be';
+      }
+
+      .reason p {
+        white-space: pre-wrap;
+        margin: 0.4rem 0 0;
+      }
+
       .answer {
         white-space: pre-wrap;
         background: var(--card);
@@ -324,6 +355,15 @@
           case 'run_started':
             syncThinking(turn); // 'sending' becomes 'thinking': the server has the question
             break;
+
+          case 'model_reasoning': {
+            const box = el('details', 'reason');
+            box.append(el('summary', undefined, 'reasoning'));
+            box.append(el('p', undefined, event.text));
+            turn.steps.append(box);
+            syncThinking(turn); // keep the live box below the hop that just landed
+            break;
+          }
 
           case 'tool_started': {
             const box = el('div', 'step');
