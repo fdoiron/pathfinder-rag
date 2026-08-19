@@ -1,9 +1,11 @@
 import asyncio
 import logging
 from collections.abc import AsyncGenerator
+from pathlib import Path
 from typing import Annotated
 
 from fastapi import Depends, FastAPI
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
@@ -51,3 +53,6 @@ async def ask(ask_request: AskRequest, settings: Annotated[Settings, Depends(get
             await asyncio.gather(task, return_exceptions=True)
 
     return EventSourceResponse(consumer())
+
+
+app.mount('/', StaticFiles(directory=Path(__file__).parent / 'static', html=True), name='static')
