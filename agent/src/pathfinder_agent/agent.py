@@ -23,7 +23,17 @@ from opentelemetry import trace
 
 from pathfinder_agent.config import Settings
 from pathfinder_agent.llm import LLMUnavailableError, translate_llm_errors
-from pathfinder_agent.models import AgentResult, ClassifiedToolResult, ToolCallRecord
+from pathfinder_agent.models import (
+    AgentEvent,
+    AgentResult,
+    ClassifiedToolResult,
+    EventCallback,
+    RunFinished,
+    RunStarted,
+    ToolCallRecord,
+    ToolFinished,
+    ToolStarted,
+)
 from pathfinder_agent.telemetry import configure_telemetry
 
 logger = logging.getLogger(__name__)
@@ -141,7 +151,12 @@ def wrap_tool_result(text: str) -> str:
 
 
 async def run_agent(
-    question: str, mcp_session: ClientSession, llm_client: AsyncOpenAI, settings: Settings, system_prompt: str
+    question: str,
+    mcp_session: ClientSession,
+    llm_client: AsyncOpenAI,
+    settings: Settings,
+    system_prompt: str,
+    on_event: EventCallback | None = None,
 ) -> AgentResult:
 
     messages: list[ChatCompletionMessageParam] = [
@@ -156,27 +171,50 @@ async def run_agent(
     budget_exceeded = False
     answer_forced = False
 
+    async def emit(event: AgentEvent) -> None:
+        if on_event:
+            await on_event(event)
+
     with tracer.start_as_current_span('run_agent') as span:
         span.set_attribute('agent.model', settings.llm_model)
         span.set_attribute('agent.max_iters', max_iters)
 
-        def finish(result: AgentResult) -> AgentResult:
+        async def finish(result: AgentResult) -> AgentResult:
             span.set_attribute('agent.stopped_reason', result.stopped_reason)
             span.set_attribute('agent.iterations', attempt)
             span.set_attribute('agent.tool_calls', len(result.tool_calls))
+            await emit(RunFinished(text=result.text, stopped_reason=result.stopped_reason))
             return result
 
-        available_tools = await translate_mcp_tools(mcp_session=mcp_session)
+        def timed_out() -> AgentResult:
+            return AgentResult(
+                text='The run took too long and had to stop before finishing.',
+                tool_calls=tool_calls,
+                stopped_reason='wall_clock',
+            )
+
+        def fatal_tool_failure(e: Exception) -> AgentResult:
+            logger.error(f'Fatal tool error: {e}')
+            span.record_exception(e)
+            return AgentResult(
+                text=f'The search tool failed and the run could not continue: {e}',
+                tool_calls=tool_calls,
+                stopped_reason='fatal_tool_error',
+            )
+
+        await emit(RunStarted(question=question))
+        try:
+            available_tools = await asyncio.wait_for(
+                translate_mcp_tools(mcp_session=mcp_session),
+                timeout=min(settings.agent_hop_timeout, deadline - time.monotonic()),
+            )
+        except TimeoutError:
+            return await finish(timed_out())
+
         while attempt < max_iters:
             attempt += 1
             if time.monotonic() > deadline:
-                return finish(
-                    AgentResult(
-                        text='The run took too long and had to stop before finishing.',
-                        tool_calls=tool_calls,
-                        stopped_reason='wall_clock',
-                    )
-                )
+                return await finish(timed_out())
 
             budget_exceeded = tool_token_count > settings.agent_tool_result_token_budget
             if not answer_forced and (budget_exceeded or attempt == max_iters):
@@ -193,7 +231,7 @@ async def run_agent(
             except LLMUnavailableError as e:
                 logger.error(f'LLM unavailable: {e}')
                 span.record_exception(e)
-                return finish(
+                return await finish(
                     AgentResult(
                         text=f'The LLM could not be reached: {e}',
                         tool_calls=tool_calls,
@@ -207,7 +245,9 @@ async def run_agent(
                 messages.append({'role': 'assistant', 'content': msg.content})
                 stopped_reason = 'context_budget' if budget_exceeded else 'max_iters' if answer_forced else 'answer'
 
-                return finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason=stopped_reason))
+                return await finish(
+                    AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason=stopped_reason)
+                )
 
             tool_call_params = cast(
                 list[ChatCompletionMessageFunctionToolCallParam | ChatCompletionMessageCustomToolCallParam],
@@ -219,29 +259,22 @@ async def run_agent(
                 try:
                     if not isinstance(call, ChatCompletionMessageFunctionToolCall):
                         raise RuntimeError(f'Unsupported tool call type: {type(call).__name__}')
+
                     args = json.loads(call.function.arguments)
                     tool_calls.append(ToolCallRecord(name=call.function.name, args=args))
-                    text = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
                 except json.JSONDecodeError as e:
                     text = f'[rephrase] Invalid JSON arguments: {e}'
-                except WallClockExpired:
-                    return finish(
-                        AgentResult(
-                            text='The run took too long and had to stop before finishing.',
-                            tool_calls=tool_calls,
-                            stopped_reason='wall_clock',
-                        )
-                    )
                 except Exception as e:
-                    logger.error(f'Fatal tool error: {e}')
-                    span.record_exception(e)
-                    return finish(
-                        AgentResult(
-                            text=f'The search tool failed and the run could not continue: {e}',
-                            tool_calls=tool_calls,
-                            stopped_reason='fatal_tool_error',
-                        )
-                    )
+                    return await finish(fatal_tool_failure(e))
+                else:
+                    await emit(ToolStarted(call_id=call.id, name=call.function.name, args=args))
+                    try:
+                        text = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
+                    except WallClockExpired:
+                        return await finish(timed_out())
+                    except Exception as e:
+                        return await finish(fatal_tool_failure(e))
+                    await emit(ToolFinished(call_id=call.id, name=call.function.name))
 
                 tool_token_count += len(text) // 4  # Approximation to avoid loading embedder
                 messages.append(
@@ -252,7 +285,7 @@ async def run_agent(
                     }
                 )
 
-        return finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason='max_iters'))
+        return await finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason='max_iters'))
 
 
 @asynccontextmanager

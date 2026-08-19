@@ -1,3 +1,4 @@
+from collections.abc import Awaitable, Callable
 from typing import Any, Literal
 
 from pydantic import BaseModel
@@ -19,3 +20,37 @@ class AgentResult(BaseModel):
 class ClassifiedToolResult(BaseModel):
     text: str
     error_category: Literal['retryable', 'rephrase', 'fatal'] | None
+
+
+class RunStarted(BaseModel):
+    type: Literal['run_started'] = 'run_started'
+    question: str
+
+
+class ToolStarted(BaseModel):
+    type: Literal['tool_started'] = 'tool_started'
+    call_id: str
+    name: str
+    args: dict[str, object]
+
+
+class ToolFinished(BaseModel):
+    type: Literal['tool_finished'] = 'tool_finished'
+    call_id: str
+    name: str
+
+
+class RunFinished(BaseModel):
+    type: Literal['run_finished'] = 'run_finished'
+    text: str
+    stopped_reason: StoppedReason
+
+
+class RunFailed(BaseModel):
+    type: Literal['run_failed'] = 'run_failed'
+    message: str
+
+
+AgentEvent = RunStarted | ToolStarted | ToolFinished | RunFinished
+QueueItem = AgentEvent | RunFailed
+EventCallback = Callable[[AgentEvent], Awaitable[None]]

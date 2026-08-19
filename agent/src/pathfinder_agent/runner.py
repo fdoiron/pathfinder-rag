@@ -3,7 +3,7 @@ import importlib.resources
 from pathfinder_agent.agent import open_mcp_session, run_agent
 from pathfinder_agent.config import Settings
 from pathfinder_agent.llm import make_llm_client
-from pathfinder_agent.models import AgentResult
+from pathfinder_agent.models import AgentResult, EventCallback
 
 
 class MCPUnavailableError(RuntimeError):
@@ -27,7 +27,7 @@ def leaf_causes(exc: BaseException) -> list[BaseException]:
     return [exc]
 
 
-async def run_question(question: str, settings: Settings) -> AgentResult:
+async def run_question(question: str, settings: Settings, on_event: EventCallback | None = None) -> AgentResult:
     llm_client = make_llm_client(settings=settings)
     system_prompt = load_system_prompt(settings)
 
@@ -39,6 +39,7 @@ async def run_question(question: str, settings: Settings) -> AgentResult:
                 llm_client=llm_client,
                 settings=settings,
                 system_prompt=system_prompt,
+                on_event=on_event,
             )
     except ExceptionGroup as eg:
         causes = '; '.join(f'{type(e).__name__}: {e}' for e in leaf_causes(eg))
