@@ -24,7 +24,7 @@ from pathfinder_agent.agent import (
     wrap_tool_result,
 )
 from pathfinder_agent.config import Settings
-from pathfinder_agent.models import AgentEvent, EventCallback, ModelReasoning, ToolFinished, ToolStarted
+from pathfinder_agent.models import AgentEvent, EventCallback, ModelReasoning, ToolFinished, ToolStarted, Turn
 
 REQUEST = httpx.Request('POST', 'http://llm.test/v1/chat/completions')
 SEARCH_TOOL = Tool(name='rag_search', description='Search the RAG', inputSchema={'type': 'object'})
@@ -152,6 +152,7 @@ async def _run(
     session: FakeSession,
     settings: Settings | None = None,
     question: str = 'How does grappling work?',
+    history: list[Turn] | None = None,
     on_event: EventCallback | None = None,
 ) -> Any:
     return await run_agent(
@@ -160,6 +161,7 @@ async def _run(
         llm_client=cast(AsyncOpenAI, llm),
         settings=settings or _settings(),
         system_prompt='system',
+        history=history,
         on_event=on_event,
     )
 
@@ -485,3 +487,47 @@ async def test_run_agent_emits_no_reasoning_when_the_backend_sends_none(reasonin
     await _run(llm, FakeSession([]), on_event=log)
 
     assert log.types == ['run_started', 'run_finished']
+
+
+@pytest.mark.anyio
+async def test_run_agent_sends_only_the_system_prompt_and_question_without_history() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.')])
+
+    await _run(llm, FakeSession([]))
+
+    assert llm.messages_seen[0] == [
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'How does grappling work?'},
+    ]
+
+
+@pytest.mark.anyio
+async def test_run_agent_replays_history_between_the_system_prompt_and_the_question() -> None:
+    llm = FakeLLM([_answer('Its AC is 26.')])
+    history = [
+        Turn(question='What is a red dragon?', answer='A chromatic dragon.'),
+        Turn(question='How big is it?', answer='Huge at adult age.'),
+    ]
+
+    await _run(llm, FakeSession([]), question="What's its AC?", history=history)
+
+    assert llm.messages_seen[0] == [
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'What is a red dragon?'},
+        {'role': 'assistant', 'content': 'A chromatic dragon.'},
+        {'role': 'user', 'content': 'How big is it?'},
+        {'role': 'assistant', 'content': 'Huge at adult age.'},
+        {'role': 'user', 'content': "What's its AC?"},
+    ]
+
+
+@pytest.mark.anyio
+async def test_run_agent_keeps_history_ahead_of_the_tool_messages_it_appends() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('Its AC is 26.')])
+    session = FakeSession([_tool_result('AC 26')])
+    history = [Turn(question='What is a red dragon?', answer='A chromatic dragon.')]
+
+    await _run(llm, session, question="What's its AC?", history=history)
+
+    roles = [message['role'] for message in llm.messages_seen[-1]]
+    assert roles == ['system', 'user', 'assistant', 'user', 'assistant', 'tool']

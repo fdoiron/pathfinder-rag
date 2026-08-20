@@ -35,6 +35,7 @@ from pathfinder_agent.models import (
     ToolCallRecord,
     ToolFinished,
     ToolStarted,
+    Turn,
 )
 from pathfinder_agent.telemetry import configure_telemetry
 
@@ -158,13 +159,15 @@ async def run_agent(
     llm_client: AsyncOpenAI,
     settings: Settings,
     system_prompt: str,
+    history: list[Turn] | None = None,
     on_event: EventCallback | None = None,
 ) -> AgentResult:
 
-    messages: list[ChatCompletionMessageParam] = [
-        {'role': 'system', 'content': system_prompt},
-        {'role': 'user', 'content': question},
-    ]
+    messages: list[ChatCompletionMessageParam] = [{'role': 'system', 'content': system_prompt}]
+    for turn in history or []:
+        messages.append({'role': 'user', 'content': turn.question})
+        messages.append({'role': 'assistant', 'content': turn.answer})
+    messages.append({'role': 'user', 'content': question})
     deadline = time.monotonic() + settings.agent_wall_clock_timeout
     max_iters = settings.agent_max_iters
     attempt = 0

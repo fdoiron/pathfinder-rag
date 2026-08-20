@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from pathfinder_agent.config import Settings, get_settings
-from pathfinder_agent.models import AgentEvent, QueueItem, RunFailed
+from pathfinder_agent.models import MAX_HISTORY_TURNS, AgentEvent, QueueItem, RunFailed, Turn
 from pathfinder_agent.runner import run_question
 
 app = FastAPI()
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class AskRequest(BaseModel):
     question: Annotated[str, Field(min_length=1, max_length=1000)]
+    history: Annotated[list[Turn], Field(max_length=MAX_HISTORY_TURNS)] = []
 
 
 @app.post('/ask')
@@ -33,7 +34,12 @@ async def ask(ask_request: AskRequest, settings: Annotated[Settings, Depends(get
 
     async def producer() -> None:
         try:
-            await run_question(question=ask_request.question, settings=settings, on_event=on_event)
+            await run_question(
+                question=ask_request.question,
+                settings=settings,
+                history=ask_request.history,
+                on_event=on_event,
+            )
         except Exception:
             logger.exception('run failed for /ask')
             await queue.put(RunFailed(message='The run failed before it could answer.'))

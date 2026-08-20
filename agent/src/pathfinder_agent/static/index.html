@@ -297,6 +297,22 @@
       const input = document.getElementById('q');
       const send = document.getElementById('send');
 
+      // Trimmed to the same bounds AskRequest declares, so an over-long conversation keeps
+      // working instead of turning into a 422 the user cannot act on. An entry that fails
+      // validation is not recoverable from the page: it stays in the array and every later
+      // question is rejected with it.
+      const MAX_HISTORY_TURNS = 10;
+      const MAX_ANSWER_CHARS = 4000;
+      const TRUNCATION_MARKER = ' …[truncated]';
+      const history = [];
+
+      // The marker is inside the bound, not on top of it, and tells the model the answer it is
+      // reading back is not the whole one.
+      function historyAnswer(text) {
+        if (text.length <= MAX_ANSWER_CHARS) return text;
+        return text.slice(0, MAX_ANSWER_CHARS - TRUNCATION_MARKER.length) + TRUNCATION_MARKER;
+      }
+
       function el(tag, className, text) {
         const node = document.createElement(tag);
         if (className) node.className = className;
@@ -355,7 +371,7 @@
 
         log.append(turn);
         turn.scrollIntoView({ block: 'end', behavior: 'smooth' });
-        return { turn, steps, thinking, boxes: new Map() };
+        return { turn, steps, thinking, question, boxes: new Map() };
       }
 
       // The model is working whenever no tool is in flight: before the first hop, between
@@ -429,6 +445,11 @@
             turn.turn.append(answerNode(event.text));
             if (event.stopped_reason !== 'answer') {
               turn.turn.append(el('div', 'stopped', `stopped: ${event.stopped_reason}`));
+            } else if (event.text) {
+              // A partial or failed run would replay its apology as an assistant turn, and an
+              // empty one trips min_length on the way back in
+              history.push({ question: turn.question, answer: historyAnswer(event.text) });
+              history.splice(0, history.length - MAX_HISTORY_TURNS);
             }
             break;
 
@@ -481,7 +502,7 @@
           const response = await fetch('/ask', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question }),
+            body: JSON.stringify({ question, history }),
           });
           // FastAPI answers 422 for an empty or over-long question, and that body is not SSE
           if (!response.ok) throw new Error(`the server answered ${response.status}`);

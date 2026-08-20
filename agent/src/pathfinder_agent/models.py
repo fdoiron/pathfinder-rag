@@ -1,10 +1,19 @@
 from collections.abc import Awaitable, Callable
-from typing import Any, Literal
+from typing import Annotated, Any, Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 StoppedReason = Literal['answer', 'max_iters', 'wall_clock', 'context_budget', 'fatal_tool_error', 'llm_unavailable']
 ToolOutcome = Literal['ok', 'failed']
+
+# The client holds the history and sends it back. Both the count and the fields are bounded.
+#  static/index.html trims to the same MAX_HISTORY_TURNS before posting.
+MAX_HISTORY_TURNS = 10
+
+
+class Turn(BaseModel):
+    question: Annotated[str, Field(min_length=1, max_length=1000)]
+    answer: Annotated[str, Field(min_length=1, max_length=4000)]
 
 
 class ToolCallRecord(BaseModel):
