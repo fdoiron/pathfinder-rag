@@ -107,6 +107,39 @@
         text-decoration: line-through;
       }
 
+      details.step {
+        display: block;
+      }
+
+      details.step > summary {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      details.step > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details.step > summary::before {
+        content: '\25b8';
+        flex: none;
+      }
+
+      details.step[open] > summary::before {
+        content: '\25be';
+      }
+
+      .args {
+        margin: 0.4rem 0 0 1.55rem;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--muted);
+      }
+
       .note {
         color: var(--bad);
         font-size: 0.8rem;
@@ -366,9 +399,12 @@
           }
 
           case 'tool_started': {
-            const box = el('div', 'step');
-            box.append(el('span', 'dot'));
-            box.append(el('span', 'label', stepLabel(event.name, event.args)));
+            const box = el('details', 'step');
+            const head = el('summary');
+            head.append(el('span', 'dot'));
+            head.append(el('span', 'label', stepLabel(event.name, event.args)));
+            box.append(head);
+            box.append(el('pre', 'args', JSON.stringify(event.args, null, 2)));
             turn.steps.append(box);
             turn.boxes.set(event.call_id, box);
             syncThinking(turn);
@@ -381,7 +417,7 @@
             box.classList.add('done');
             if (event.outcome === 'failed') {
               box.classList.add('failed');
-              box.append(el('span', 'note', 'returned nothing'));
+              box.querySelector('summary').append(el('span', 'note', 'returned nothing'));
             }
             syncThinking(turn);
             break;
