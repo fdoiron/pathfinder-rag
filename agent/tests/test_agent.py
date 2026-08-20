@@ -531,3 +531,38 @@ async def test_run_agent_keeps_history_ahead_of_the_tool_messages_it_appends() -
 
     roles = [message['role'] for message in llm.messages_seen[-1]]
     assert roles == ['system', 'user', 'assistant', 'user', 'assistant', 'tool']
+
+
+@pytest.mark.anyio
+async def test_call_mcp_tool_treats_an_unmarked_error_as_the_models_to_correct() -> None:
+    rejection = 'Error executing tool rag_search: 1 validation error for rag_searchArguments\nk'
+    session = FakeSession([_tool_result(rejection, is_error=True)])
+
+    result = await call_mcp_tool(cast(ClientSession, session), 'rag_search', {'k': 1})
+
+    assert result.error_category == 'rephrase'
+
+
+@pytest.mark.anyio
+async def test_run_agent_reports_a_schema_rejected_hop_as_failed() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('I could not search that.')])
+    rejection = "Error executing tool rag_search: 1 validation error\ncategory\n  Input should be 'monster'"
+    session = FakeSession([_tool_result(rejection, is_error=True)])
+    log = EventLog()
+
+    await _run(llm, session, on_event=log)
+
+    finished = next(event for event in log.events if isinstance(event, ToolFinished))
+    assert finished.outcome == 'failed'
+
+
+@pytest.mark.anyio
+async def test_run_agent_tells_the_model_to_correct_arguments_the_schema_rejected() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('I could not search that.')])
+    session = FakeSession([_tool_result('Error executing tool rag_search: 1 validation error', is_error=True)])
+
+    await _run(llm, session)
+
+    tool_message = llm.messages_seen[-1][-1]
+    assert tool_message['role'] == 'tool'
+    assert REPHRASE_INSTRUCTION in tool_message['content']

@@ -75,6 +75,10 @@ async def call_mcp_tool(session: ClientSession, name: str, args: dict[str, Any])
             error_category = 'rephrase'
         elif '[fatal]' in text:
             error_category = 'fatal'
+        else:
+            # The MCP layer validates arguments above the tool body, so a schema rejection carries
+            # a pydantic message and none of the markers. Those are the model's to correct.
+            error_category = 'rephrase'
     return ClassifiedToolResult(text=text, error_category=error_category)
 
 
