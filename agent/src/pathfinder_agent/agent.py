@@ -13,6 +13,7 @@ from mcp.shared._httpx_utils import create_mcp_http_client
 from mcp.types import TextContent
 from openai import AsyncOpenAI
 from openai.types.chat import (
+    ChatCompletion,
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageCustomToolCallParam,
     ChatCompletionMessageFunctionToolCall,
@@ -22,7 +23,7 @@ from openai.types.chat import (
 from opentelemetry import trace
 
 from pathfinder_agent.config import Settings
-from pathfinder_agent.llm import LLMUnavailableError, translate_llm_errors
+from pathfinder_agent.llm import LLMTimeoutError, LLMUnavailableError, translate_llm_errors
 from pathfinder_agent.models import (
     AgentEvent,
     AgentResult,
@@ -135,6 +136,46 @@ async def execute_tool(
     raise AssertionError('unreachable: loop always returns or raises before exhausting attempt < attempts')
 
 
+async def call_llm(
+    llm_client: AsyncOpenAI,
+    messages: list[ChatCompletionMessageParam],
+    tools: list[ChatCompletionFunctionToolParam],
+    settings: Settings,
+    deadline: float,
+) -> ChatCompletion:
+    """Call the LLM, retrying a hop timeout with backoff.
+
+    Ollama queues a request it has no free slot for and says nothing, so a timeout is the only
+    signal that the model is loaded but busy. Everything else LLMUnavailableError covers is a
+    standing condition (no server, no such model) that a retry cannot change.
+    """
+    delay = settings.agent_retry_backoff_base
+    attempts = settings.agent_max_llm_attempts
+    attempt = 0
+
+    while True:
+        attempt += 1
+        time_left = deadline - time.monotonic()
+        with tracer.start_as_current_span('call_llm') as span:
+            span.set_attribute('llm.attempts', attempt)
+            try:
+                with translate_llm_errors(settings):
+                    return await llm_client.chat.completions.create(
+                        model=settings.llm_model,
+                        messages=messages,
+                        tools=tools,
+                        timeout=min(settings.agent_hop_timeout, max(0.0, time_left)),
+                    )
+            except LLMTimeoutError as e:  # subclass of LLMUnavailableError, so it has to be caught first
+                span.record_exception(e)
+                time_left = deadline - time.monotonic()
+                if attempt >= attempts or time_left <= delay:  # no point burning the backoff to arrive late
+                    raise
+                logger.warning(f'LLM timed out: {e}. Attempt {attempt} of {attempts}.')
+                await asyncio.sleep(delay)
+                delay = delay * 2
+
+
 async def translate_mcp_tools(mcp_session: ClientSession) -> list[ChatCompletionFunctionToolParam]:
     result = await mcp_session.list_tools()
     return [
@@ -232,10 +273,13 @@ async def run_agent(
                 messages.append({'role': 'system', 'content': FORCED_ANSWER_INSTRUCTION})
 
             try:
-                with translate_llm_errors(settings):
-                    response = await llm_client.chat.completions.create(
-                        model=settings.llm_model, messages=messages, tools=available_tools
-                    )
+                response = await call_llm(
+                    llm_client=llm_client,
+                    messages=messages,
+                    tools=available_tools,
+                    settings=settings,
+                    deadline=deadline,
+                )
 
             except LLMUnavailableError as e:
                 logger.error(f'LLM unavailable: {e}')

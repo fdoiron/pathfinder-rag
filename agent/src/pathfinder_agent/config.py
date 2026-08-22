@@ -21,6 +21,7 @@ class Settings(BaseSettings):
         4000  # estimated tool-result tokens before the loop stops calling tools
     )
     agent_max_tool_attempts: PositiveInt = 2  # tool attempts (1 initial + retries) for retryable error/hop timeout
+    agent_max_llm_attempts: PositiveInt = 2  # LLM attempts (1 initial + retries) for a hop timeout
     agent_retry_backoff_base: PositiveFloat = 1.0  # seconds, doubles by retry
     agent_system_prompt_path: Path | None = None  # override for the packaged prompts/agent_system.txt for tests
     interaction_log_path: Path | None = None  # JSONL of every event the page draws. None disables logging

@@ -7,7 +7,7 @@ import httpx
 import pytest
 from mcp import ClientSession
 from mcp.types import CallToolResult, ListToolsResult, TextContent, Tool
-from openai import APIConnectionError, AsyncOpenAI
+from openai import APIConnectionError, APITimeoutError, AsyncOpenAI
 from openai.types.chat import ChatCompletion, ChatCompletionMessage, ChatCompletionMessageFunctionToolCall
 from openai.types.chat.chat_completion import Choice
 from openai.types.chat.chat_completion_message_function_tool_call import Function
@@ -132,13 +132,22 @@ class FakeLLM:
         self._responses = responses
         self.tools_seen: list[list[Any]] = []
         self.messages_seen: list[list[Any]] = []
+        self.timeouts_seen: list[float | None] = []
         self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
 
     @property
     def hops(self) -> int:
         return len(self.tools_seen)
 
-    async def _create(self, *, model: str, messages: list[Any], tools: list[Any]) -> ChatCompletion:  # noqa: ARG002
+    async def _create(
+        self,
+        *,
+        model: str,  # noqa: ARG002
+        messages: list[Any],
+        tools: list[Any],
+        timeout: float | None = None,
+    ) -> ChatCompletion:
+        self.timeouts_seen.append(timeout)
         self.tools_seen.append(list(tools))
         self.messages_seen.append(list(messages))
         item = self._responses[min(self.hops - 1, len(self._responses) - 1)]
@@ -566,3 +575,55 @@ async def test_run_agent_tells_the_model_to_correct_arguments_the_schema_rejecte
     tool_message = llm.messages_seen[-1][-1]
     assert tool_message['role'] == 'tool'
     assert REPHRASE_INSTRUCTION in tool_message['content']
+
+
+# call_llm
+@pytest.mark.anyio
+async def test_run_agent_retries_a_hop_that_timed_out_waiting_on_a_busy_model() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST), _answer('You make a CMB check.')])
+
+    result = await _run(llm, FakeSession([]))
+
+    assert result.stopped_reason == 'answer'
+    assert llm.hops == 2
+
+
+@pytest.mark.anyio
+async def test_run_agent_gives_up_once_the_llm_attempts_are_spent() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST)])
+
+    result = await _run(llm, FakeSession([]), settings=_settings(agent_max_llm_attempts=3))
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 3
+
+
+@pytest.mark.anyio
+async def test_run_agent_does_not_retry_an_llm_that_is_simply_not_there() -> None:
+    llm = FakeLLM([APIConnectionError(request=REQUEST)])
+
+    result = await _run(llm, FakeSession([]), settings=_settings(agent_max_llm_attempts=3))
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 1
+
+
+@pytest.mark.anyio
+async def test_run_agent_bounds_each_llm_attempt_by_the_wall_clock_left() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.')])
+
+    await _run(llm, FakeSession([]), settings=_settings(agent_hop_timeout=30.0, agent_wall_clock_timeout=5.0))
+
+    assert llm.timeouts_seen[0] is not None
+    assert llm.timeouts_seen[0] <= 5.0
+
+
+@pytest.mark.anyio
+async def test_run_agent_does_not_burn_the_backoff_to_arrive_after_the_deadline() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST)])
+    settings = _settings(agent_max_llm_attempts=3, agent_retry_backoff_base=5.0, agent_wall_clock_timeout=1.0)
+
+    result = await _run(llm, FakeSession([]), settings=settings)
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 1
