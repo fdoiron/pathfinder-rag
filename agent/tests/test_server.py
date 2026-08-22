@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import Any, cast
 
 import pytest
@@ -66,9 +67,9 @@ def _stub_run_question(
     return calls
 
 
-async def _drain(request: AskRequest) -> list[dict[str, str]]:
+async def _drain(request: AskRequest, settings: Settings | None = None) -> list[dict[str, str]]:
     """The frames the SSE generator yields, without going through a socket."""
-    response = await ask(request, Settings())
+    response = await ask(request, settings or Settings())
     return [cast(dict[str, str], frame) async for frame in response.body_iterator]
 
 
@@ -188,3 +189,68 @@ def test_the_page_is_served_from_the_root_behind_the_endpoint() -> None:
 
     assert response.status_code == 200
     assert '/ask' in response.text
+
+
+# the interaction log
+def _log_lines(path: Path) -> list[dict[str, Any]]:
+    return [json.loads(line) for line in path.read_text(encoding='utf-8').splitlines()]
+
+
+@pytest.mark.anyio
+async def test_the_log_records_every_event_the_page_was_sent(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    _stub_run_question(monkeypatch)
+    log = tmp_path / 'interactions.log'
+
+    frames = await _drain(AskRequest(question=QUESTION), Settings(interaction_log_path=log))
+
+    assert [entry['event']['type'] for entry in _log_lines(log)] == [frame['event'] for frame in frames]
+
+
+@pytest.mark.anyio
+async def test_the_log_keeps_the_question_and_the_answer_it_came_back_with(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _stub_run_question(monkeypatch)
+    log = tmp_path / 'interactions.log'
+
+    await _drain(AskRequest(question=QUESTION), Settings(interaction_log_path=log))
+
+    events = [entry['event'] for entry in _log_lines(log)]
+    assert events[0]['question'] == QUESTION
+    assert events[-1]['text'] == 'You make a CMB check.'
+    assert events[-1]['stopped_reason'] == 'answer'
+
+
+@pytest.mark.anyio
+async def test_the_log_records_a_run_that_failed(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    _stub_run_question(monkeypatch, events=HOP[:1], error=RuntimeError('died'))
+    log = tmp_path / 'interactions.log'
+
+    await _drain(AskRequest(question=QUESTION), Settings(interaction_log_path=log))
+
+    assert [entry['event']['type'] for entry in _log_lines(log)] == ['run_started', 'run_failed']
+
+
+@pytest.mark.anyio
+async def test_the_log_tags_one_run_with_one_id_and_two_runs_with_two(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    _stub_run_question(monkeypatch)
+    log = tmp_path / 'interactions.log'
+    settings = Settings(interaction_log_path=log)
+
+    await _drain(AskRequest(question=QUESTION), settings)
+    await _drain(AskRequest(question='And a follow up?'), settings)
+
+    runs = [entry['run'] for entry in _log_lines(log)]
+    assert len(set(runs)) == 2
+    assert len(set(runs[: len(HOP)])) == 1
+
+
+@pytest.mark.anyio
+async def test_no_log_is_written_when_no_path_is_configured(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    _stub_run_question(monkeypatch)
+
+    await _drain(AskRequest(question=QUESTION), Settings())
+
+    assert list(tmp_path.iterdir()) == []

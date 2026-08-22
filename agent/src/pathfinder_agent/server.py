@@ -1,6 +1,9 @@
 import asyncio
+import json
 import logging
+import uuid
 from collections.abc import AsyncGenerator
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Annotated
 
@@ -20,6 +23,26 @@ logging.getLogger('httpx2').setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 
+_log_lock = asyncio.Lock()
+
+
+async def log_event(settings: Settings, run_id: str, event: QueueItem) -> None:
+    """Append one event to the interaction log, the same serialization the page receives."""
+    if settings.interaction_log_path is None:
+        return
+    line = json.dumps(
+        {
+            'ts': datetime.now(UTC).isoformat(timespec='seconds'),
+            'run': run_id,
+            'event': json.loads(event.model_dump_json()),
+        },
+        ensure_ascii=False,
+    )
+    async with _log_lock:  # two questions at once would otherwise interleave mid line
+        with settings.interaction_log_path.open('a', encoding='utf-8') as log:
+            log.write(line + '\n')
+
+
 class AskRequest(BaseModel):
     question: Annotated[str, Field(min_length=1, max_length=1000)]
     history: Annotated[list[Turn], Field(max_length=MAX_HISTORY_TURNS)] = []
@@ -28,8 +51,10 @@ class AskRequest(BaseModel):
 @app.post('/ask')
 async def ask(ask_request: AskRequest, settings: Annotated[Settings, Depends(get_settings)]) -> EventSourceResponse:
     queue: asyncio.Queue[QueueItem | None] = asyncio.Queue()
+    run_id = uuid.uuid4().hex[:8]
 
     async def on_event(event: AgentEvent) -> None:
+        await log_event(settings, run_id, event)
         await queue.put(event)
 
     async def producer() -> None:
@@ -42,7 +67,9 @@ async def ask(ask_request: AskRequest, settings: Annotated[Settings, Depends(get
             )
         except Exception:
             logger.exception('run failed for /ask')
-            await queue.put(RunFailed(message='The run failed before it could answer.'))
+            failed = RunFailed(message='The run failed before it could answer.')
+            await log_event(settings, run_id, failed)
+            await queue.put(failed)
         finally:
             await queue.put(None)
 

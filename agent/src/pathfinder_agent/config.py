@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     agent_max_tool_attempts: PositiveInt = 2  # tool attempts (1 initial + retries) for retryable error/hop timeout
     agent_retry_backoff_base: PositiveFloat = 1.0  # seconds, doubles by retry
     agent_system_prompt_path: Path | None = None  # override for the packaged prompts/agent_system.txt for tests
+    interaction_log_path: Path | None = None  # JSONL of every event the page draws. None disables logging
 
     # None -> OTLPSpanExporter falls back to its own env lookup, defaulting to http://localhost:4317
     otel_exporter_otlp_endpoint: Annotated[str | None, Field(validation_alias='OTEL_EXPORTER_OTLP_ENDPOINT')] = None
