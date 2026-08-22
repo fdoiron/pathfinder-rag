@@ -5,6 +5,7 @@ uv run python scripts/loop_eval.py --repeats 3
 """
 
 import asyncio
+import hashlib
 import json
 import re
 import time
@@ -73,6 +74,11 @@ def _unwrap(content: str) -> str:
 
 def _urls(text: str) -> set[str]:
     return {match.rstrip('.,;:!?)\'"').rstrip('/') for match in URL_RE.findall(text)}
+
+
+def prompt_digest(path: Path) -> str:
+    """sha256 of a prompt file so a run record says which text produced it rather than only when."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
 
 
 def is_failure(content: str) -> bool:
@@ -179,7 +185,12 @@ class RecordingLLM:
 
 
 async def sweep(
-    settings: Settings, questions: list[EvalQuestion], repeats: int, runs: list[Run], out_path: Path
+    settings: Settings,
+    questions: list[EvalQuestion],
+    repeats: int,
+    runs: list[Run],
+    out_path: Path,
+    prompts: dict[str, str],
 ) -> None:
     """Append a Run per completed loop"""
     recorder = RecordingLLM(make_llm_client(settings=settings))
@@ -223,6 +234,7 @@ async def sweep(
                     )
 
                     record = {
+                        'prompts': prompts,
                         'question': entry.question,
                         'type': entry.type,
                         'repeat': i + 1,
@@ -350,6 +362,9 @@ def main(
     ),
     repeats: Annotated[int, typer.Option(min=1, help='runs per question')] = 3,
     run_dir: Annotated[Path, typer.Option(help='directory to save loop eval run results')] = Path('eval/runs'),
+    mcp_tools_file: Annotated[
+        Path, typer.Option(help='the server tool prompts, hashed into each record', exists=True, readable=True)
+    ] = Path('../rag-mcp/src/rag/prompts/mcp_tools.txt'),
 ) -> None:
     settings = get_settings()
     try:
@@ -358,13 +373,22 @@ def main(
         typer.echo(f'Error loading questions: {e}', err=True)
         raise typer.Exit(1) from e
 
+    system_prompt_file = settings.agent_system_prompt_path or (
+        Path(__file__).resolve().parent.parent / 'src/pathfinder_agent/prompts/agent_system.txt'
+    )
+    prompts = {
+        'agent_system': prompt_digest(system_prompt_file),
+        'mcp_tools': prompt_digest(mcp_tools_file),
+    }
+
     run_dir.mkdir(parents=True, exist_ok=True)
     out_path = run_dir / f'{datetime.now():%Y-%m-%dT%H-%M-%S}_loop_eval.jsonl'
     typer.echo(f'{len(questions)} questions x {repeats} against {settings.mcp_server_url} / {settings.llm_model}')
+    typer.echo(f'prompts  agent_system {prompts["agent_system"]}  mcp_tools {prompts["mcp_tools"]}')
 
     runs: list[Run] = []
     try:
-        asyncio.run(sweep(settings, questions, repeats, runs, out_path))
+        asyncio.run(sweep(settings, questions, repeats, runs, out_path, prompts))
     except KeyboardInterrupt:
         typer.echo('\ninterrupted, reporting what finished', err=True)
     except ExceptionGroup as eg:
