@@ -99,9 +99,9 @@ class FakeContext:
     request_context: FakeRequestContext
 
 
-def _app_ctx(retriever: FakeRetriever, *, maxsize: int = 8, accepting: bool = True) -> AppContext:
+def _app_ctx(retriever: FakeRetriever, *, maxsize: int = 8, accepting: bool = True, search_k: int = 5) -> AppContext:
     return AppContext(
-        settings=Settings(),
+        settings=Settings(mcp_search_k=search_k),
         retriever=cast(Retriever, retriever),
         gpu_queue=asyncio.Queue(maxsize=maxsize),
         worker_tasks=[],
@@ -167,7 +167,7 @@ async def test_rag_search_ranks_and_maps_the_hits() -> None:
     worker = await _with_worker(app_ctx)
 
     try:
-        results = await rag_search(query='how does stealth work', ctx=_ctx(app_ctx), k=5)
+        results = await rag_search(query='how does stealth work', ctx=_ctx(app_ctx))
     finally:
         worker.cancel()
 
@@ -178,6 +178,20 @@ async def test_rag_search_ranks_and_maps_the_hits() -> None:
     assert results.results[0].full_article_length == 4000
     assert retriever.searches[0]['category'] is None
     assert retriever.searches[0]['k'] == 5
+
+
+@pytest.mark.anyio
+async def test_rag_search_takes_k_from_settings_and_not_from_the_caller() -> None:
+    retriever = FakeRetriever(hits=[_hit('skills__stealth#001', 0.9)])
+    app_ctx = _app_ctx(retriever, search_k=9)
+    worker = await _with_worker(app_ctx)
+
+    try:
+        await rag_search(query='how does stealth work', ctx=_ctx(app_ctx))
+    finally:
+        worker.cancel()
+
+    assert retriever.searches[0]['k'] == 9
 
 
 @pytest.mark.anyio

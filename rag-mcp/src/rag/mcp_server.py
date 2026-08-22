@@ -17,7 +17,7 @@ from mcp.types import ToolAnnotations
 from opentelemetry import context as otel_context
 from opentelemetry import metrics, trace
 from opentelemetry.metrics import CallbackOptions, Observation
-from pydantic import BaseModel, Field, HttpUrl, SecretStr
+from pydantic import BaseModel, Field, HttpUrl, PositiveInt, SecretStr
 
 from rag.config import Settings, get_settings
 from rag.embedding import EmbedderUnavailableError, load_embedder
@@ -84,7 +84,6 @@ class CategoryDriftError(RuntimeError):
 
 # declared once and spread across both the flat tool signatures and the models they build
 QueryArg = Annotated[str, Field(min_length=2, max_length=300, description=_STR['SearchQuery.query'])]
-KArg = Annotated[int, Field(ge=5, le=10, description=_STR['SearchQuery.k'])]
 CategoryArg = Annotated[Category | None, Field(description=_STR['SearchQuery.category'])]
 ChunkIdArg = Annotated[str, Field(description=_STR['FetchQuery.chunk_id'])]
 MaxCharsArg = Annotated[int, Field(ge=1000, le=60000, description=_STR['FetchQuery.max_chars'])]
@@ -92,7 +91,7 @@ MaxCharsArg = Annotated[int, Field(ge=1000, le=60000, description=_STR['FetchQue
 
 class SearchQuery(BaseModel):
     query: QueryArg
-    k: KArg = 5
+    k: PositiveInt
     category: CategoryArg = None
 
 
@@ -305,11 +304,10 @@ mcp = MCPServer(
 async def rag_search(
     query: QueryArg,
     ctx: Context[AppContext, Any],
-    k: KArg = 5,
     category: CategoryArg = None,
 ) -> SearchResults:
-    search_query = SearchQuery(query=query, k=k, category=category)
     app_ctx: AppContext = ctx.request_context.lifespan_context
+    search_query = SearchQuery(query=query, k=app_ctx.settings.mcp_search_k, category=category)
     if not app_ctx.accepting:
         return SearchResults(results=[], message=_STR['rag_search.shutdown_error'], error_category='retryable')
     job = SearchJob(

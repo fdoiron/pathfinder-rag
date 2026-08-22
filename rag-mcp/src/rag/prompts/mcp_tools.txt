@@ -1,7 +1,6 @@
 # Strings the MCP client reads to decide what to call and how to read  results: tool titles, descriptions, field descriptions, error messages.
 
 SearchQuery.query: Keyword to search the RAG for
-SearchQuery.k: The Maximum number of chunks to return. May return less than k
 SearchQuery.category: Filter the topmost level
 FetchQuery.chunk_id: The chunk_id from search
 FetchQuery.max_chars: Upper bound on the returned body. A longer article is narrowed to a window around the chunk
