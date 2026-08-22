@@ -6,9 +6,10 @@ import pytest
 from mcp.shared.exceptions import MCPError
 from typer.testing import CliRunner
 
-from pathfinder_agent.agent import AgentResult, ToolCallRecord
-from pathfinder_agent.cli import MCPUnavailableError, app, leaf_causes, run_question
+from pathfinder_agent.cli import app
 from pathfinder_agent.config import Settings
+from pathfinder_agent.models import AgentResult, ToolCallRecord
+from pathfinder_agent.runner import MCPUnavailableError, leaf_causes, run_question
 
 runner = CliRunner()
 
@@ -36,7 +37,7 @@ def _stub_session(monkeypatch: pytest.MonkeyPatch, error: BaseException) -> None
     def explode(settings: Settings) -> Any:  # noqa: ARG001
         raise error
 
-    monkeypatch.setattr('pathfinder_agent.cli.open_mcp_session', explode)
+    monkeypatch.setattr('pathfinder_agent.runner.open_mcp_session', explode)
 
 
 def _stub_run_question(monkeypatch: pytest.MonkeyPatch, outcome: AgentResult | Exception) -> None:

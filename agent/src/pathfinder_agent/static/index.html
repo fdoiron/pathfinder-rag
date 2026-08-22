@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pathfinder 1e rules assistant</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root {
+        --bg: #fbfaf7;
+        --fg: #1d1a16;
+        --muted: #6d675f;
+        --line: #e4ded4;
+        --card: #ffffff;
+        --accent: #8a4b2a;
+        --bad: #a33329;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #16140f;
+          --fg: #ece7de;
+          --muted: #9b948a;
+          --line: #2f2a22;
+          --card: #201d17;
+          --accent: #d99356;
+          --bad: #e0705f;
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--fg);
+        font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      }
+
+      main {
+        max-width: 46rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 9rem;
+      }
+
+      header {
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      h1 {
+        font-size: 1.05rem;
+        margin: 0;
+      }
+
+      header p {
+        margin: 0.25rem 0 0;
+        color: var(--muted);
+        font-size: 0.85rem;
+      }
+
+      .turn {
+        margin-top: 2rem;
+      }
+
+      .question {
+        font-weight: 600;
+      }
+
+      .steps {
+        display: grid;
+        gap: 0.35rem;
+        margin: 0.75rem 0;
+      }
+
+      .step {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .dot {
+        flex: none;
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background: var(--accent);
+        animation: pulse 1.1s ease-in-out infinite;
+      }
+
+      .step.done .dot {
+        animation: none;
+        opacity: 0.4;
+      }
+
+      .step.failed .dot {
+        background: var(--bad);
+        opacity: 1;
+      }
+
+      .step.failed .label {
+        text-decoration: line-through;
+      }
+
+      details.step {
+        display: block;
+      }
+
+      details.step > summary {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        cursor: pointer;
+        list-style: none;
+      }
+
+      details.step > summary::-webkit-details-marker {
+        display: none;
+      }
+
+      details.step > summary::before {
+        content: '\25b8';
+        flex: none;
+      }
+
+      details.step[open] > summary::before {
+        content: '\25be';
+      }
+
+      .args {
+        margin: 0.4rem 0 0 1.55rem;
+        font-size: 0.8rem;
+        white-space: pre-wrap;
+        word-break: break-word;
+        color: var(--muted);
+      }
+
+      .note {
+        color: var(--bad);
+        font-size: 0.8rem;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.25;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .dot {
+          animation: none;
+        }
+      }
+
+      .reason {
+        font-size: 0.85rem;
+        color: var(--muted);
+        border-left: 2px solid var(--line);
+        padding-left: 0.75rem;
+      }
+
+      .reason summary {
+        cursor: pointer;
+        list-style: none;
+      }
+
+      .reason summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .reason summary::before {
+        content: '\25b8';
+        display: inline-block;
+        width: 1rem;
+      }
+
+      .reason[open] summary::before {
+        content: '\25be';
+      }
+
+      .reason p {
+        white-space: pre-wrap;
+        margin: 0.4rem 0 0;
+      }
+
+      .answer {
+        white-space: pre-wrap;
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 0.6rem;
+        padding: 0.9rem 1rem;
+      }
+
+      .answer a {
+        color: var(--accent);
+        overflow-wrap: anywhere;
+      }
+
+      .stopped,
+      .error {
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+      }
+
+      .stopped {
+        color: var(--muted);
+      }
+
+      .error {
+        color: var(--bad);
+      }
+
+      #composer {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-top: 1px solid var(--line);
+        background: var(--bg);
+        padding: 0.85rem 1rem;
+      }
+
+      #composer div {
+        display: flex;
+        gap: 0.5rem;
+        max-width: 46rem;
+        margin: 0 auto;
+      }
+
+      #q,
+      #send {
+        font: inherit;
+        border-radius: 0.5rem;
+        border: 1px solid var(--line);
+        padding: 0.6rem 0.9rem;
+      }
+
+      #q {
+        flex: 1;
+        min-width: 0;
+        background: var(--card);
+        color: var(--fg);
+      }
+
+      #send {
+        border-color: transparent;
+        background: var(--accent);
+        color: #fff;
+        cursor: pointer;
+      }
+
+      #q:disabled,
+      #send:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+    </style>
+  </head>
+
+  <body>
+    <main>
+      <header>
+        <h1>Pathfinder 1e rules assistant</h1>
+        <p>Answers are drawn from d20pfsrd.com and cite the page they came from.</p>
+      </header>
+      <div id="log"></div>
+    </main>
+
+    <form id="composer">
+      <div>
+        <input
+          id="q"
+          name="q"
+          type="text"
+          placeholder="How do combat maneuvers work?"
+          maxlength="1000"
+          autocomplete="off"
+          required
+          autofocus
+        />
+        <button id="send" type="submit">Ask</button>
+      </div>
+    </form>
+
+    <script>
+      const log = document.getElementById('log');
+      const form = document.getElementById('composer');
+      const input = document.getElementById('q');
+      const send = document.getElementById('send');
+
+      // Trimmed to the same bounds AskRequest declares, so an over-long conversation keeps
+      // working instead of turning into a 422 the user cannot act on. An entry that fails
+      // validation is not recoverable from the page: it stays in the array and every later
+      // question is rejected with it.
+      const MAX_HISTORY_TURNS = 10;
+      const MAX_ANSWER_CHARS = 4000;
+      const TRUNCATION_MARKER = ' …[truncated]';
+      const history = [];
+
+      // The marker is inside the bound, not on top of it, and tells the model the answer it is
+      // reading back is not the whole one.
+      function historyAnswer(text) {
+        if (text.length <= MAX_ANSWER_CHARS) return text;
+        return text.slice(0, MAX_ANSWER_CHARS - TRUNCATION_MARKER.length) + TRUNCATION_MARKER;
+      }
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+      }
+
+      // The model writes markdown whether or not it is asked to, so the three forms it
+      // actually emits are recognised here: [label](url), **bold**, and a bare url. Anything
+      // else stays literal.
+      const MARKUP = new RegExp(
+        [
+          /\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/, // 1 label, 2 href
+          /\*\*([^*\n]+)\*\*/, // 3 bold
+          /(https?:\/\/[^\s<>()]*[^\s<>().,;:!?'"])/, // 4 bare url
+        ]
+          .map((part) => part.source)
+          .join('|'),
+        'g'
+      );
+
+      function linkNode(href, label) {
+        const anchor = el('a', undefined, label);
+        anchor.href = href; // only ever group 2 or 4, both anchored to http(s), so no scheme to inject
+        anchor.target = '_blank';
+        anchor.rel = 'noopener noreferrer';
+        return anchor;
+      }
+
+      // The answer is model output, so every string here goes in through textContent and the
+      // nodes are built by hand. Nothing is ever parsed as markup.
+      function answerNode(text) {
+        const node = el('div', 'answer');
+        let last = 0;
+        for (const match of text.matchAll(MARKUP)) {
+          const [whole, label, href, bold, bare] = match;
+          node.append(text.slice(last, match.index));
+          node.append(bold === undefined ? linkNode(href ?? bare, label ?? bare) : el('strong', undefined, bold));
+          last = match.index + whole.length;
+        }
+        node.append(text.slice(last));
+        return node;
+      }
+
+      function newTurn(question) {
+        const turn = el('div', 'turn');
+        turn.append(el('div', 'question', question));
+        const steps = el('div', 'steps');
+        turn.append(steps);
+
+        // drawn before the POST goes out, so the question is acknowledged with no round trip
+        const thinking = el('div', 'step');
+        thinking.append(el('span', 'dot'));
+        thinking.append(el('span', 'label', 'sending'));
+        steps.append(thinking);
+
+        log.append(turn);
+        turn.scrollIntoView({ block: 'end', behavior: 'smooth' });
+        return { turn, steps, thinking, question, boxes: new Map() };
+      }
+
+      // The model is working whenever no tool is in flight: before the first hop, between
+      // hops, and while it writes the answer. That is derivable from the stream, so it needs
+      // no event of its own. Appending moves the box, which keeps it below the finished hops.
+      function syncThinking(turn) {
+        const busy = [...turn.boxes.values()].some((box) => !box.classList.contains('done'));
+        if (busy) {
+          turn.thinking.remove();
+          return;
+        }
+        turn.thinking.querySelector('.label').textContent = 'thinking';
+        turn.steps.append(turn.thinking);
+      }
+
+      function stepLabel(name, args) {
+        if (name === 'rag_search') return `searching: ${args.query ?? ''}`;
+        if (name === 'fetch_section') return `reading: ${args.chunk_id ?? ''}`;
+        return `${name}: ${JSON.stringify(args)}`;
+      }
+
+      // A hop that never got its tool_finished is closed by the terminal event, which is the
+      // contract rather than a cleanup event: a fatal error returns the run mid-hop.
+      function closeOpenBoxes(turn) {
+        for (const box of turn.boxes.values()) box.classList.add('done');
+      }
+
+      function render(turn, event) {
+        switch (event.type) {
+          case 'run_started':
+            syncThinking(turn); // 'sending' becomes 'thinking': the server has the question
+            break;
+
+          case 'model_reasoning': {
+            const box = el('details', 'reason');
+            box.append(el('summary', undefined, 'reasoning'));
+            box.append(el('p', undefined, event.text));
+            turn.steps.append(box);
+            syncThinking(turn); // keep the live box below the hop that just landed
+            break;
+          }
+
+          case 'tool_started': {
+            const box = el('details', 'step');
+            const head = el('summary');
+            head.append(el('span', 'dot'));
+            head.append(el('span', 'label', stepLabel(event.name, event.args)));
+            box.append(head);
+            box.append(el('pre', 'args', JSON.stringify(event.args, null, 2)));
+            turn.steps.append(box);
+            turn.boxes.set(event.call_id, box);
+            syncThinking(turn);
+            break;
+          }
+
+          case 'tool_finished': {
+            const box = turn.boxes.get(event.call_id);
+            if (!box) break;
+            box.classList.add('done');
+            if (event.outcome === 'failed') {
+              box.classList.add('failed');
+              box.querySelector('summary').append(el('span', 'note', 'returned nothing'));
+            }
+            syncThinking(turn);
+            break;
+          }
+
+          case 'run_finished':
+            turn.thinking.remove();
+            closeOpenBoxes(turn);
+            turn.turn.append(answerNode(event.text));
+            if (event.stopped_reason !== 'answer') {
+              turn.turn.append(el('div', 'stopped', `stopped: ${event.stopped_reason}`));
+            } else if (event.text) {
+              // A partial or failed run would replay its apology as an assistant turn, and an
+              // empty one trips min_length on the way back in
+              history.push({ question: turn.question, answer: historyAnswer(event.text) });
+              history.splice(0, history.length - MAX_HISTORY_TURNS);
+            }
+            break;
+
+          case 'run_failed':
+            turn.thinking.remove();
+            closeOpenBoxes(turn);
+            turn.turn.append(el('div', 'error', event.message));
+            break;
+        }
+        turn.turn.scrollIntoView({ block: 'end', behavior: 'smooth' });
+      }
+
+      // EventSource only issues GET, and /ask is a POST, so the response body is read directly.
+      // Chunks are not frames: TCP hands over whatever arrived, so the remainder has to survive
+      // to the next read.
+      async function* sseEvents(response) {
+        const reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
+        let buffer = '';
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) return;
+          buffer += value;
+
+          let split;
+          while ((split = buffer.search(/\r?\n\r?\n/)) !== -1) {
+            const frame = buffer.slice(0, split);
+            buffer = buffer.slice(split).replace(/^\r?\n\r?\n/, '');
+            const data = frame
+              .split(/\r?\n/)
+              .filter((line) => line.startsWith('data:'))
+              .map((line) => line.slice(5).trimStart())
+              .join('\n');
+            // sse-starlette's keepalive comments carry no data line and drop out here
+            if (data) yield JSON.parse(data);
+          }
+        }
+      }
+
+      form.addEventListener('submit', async (submit) => {
+        submit.preventDefault();
+        const question = input.value.trim();
+        if (!question) return;
+
+        input.value = '';
+        input.disabled = true;
+        send.disabled = true;
+        const turn = newTurn(question);
+
+        try {
+          const response = await fetch('/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ question, history }),
+          });
+          // FastAPI answers 422 for an empty or over-long question, and that body is not SSE
+          if (!response.ok) throw new Error(`the server answered ${response.status}`);
+          for await (const event of sseEvents(response)) render(turn, event);
+        } catch (error) {
+          // a dead server and a failed run take the same path to the screen
+          render(turn, { type: 'run_failed', message: String(error) });
+        } finally {
+          input.disabled = false;
+          send.disabled = false;
+          input.focus();
+        }
+      });
+    </script>
+  </body>
+</html>

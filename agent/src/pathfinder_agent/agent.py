@@ -5,7 +5,7 @@ import re
 import time
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any, Literal, cast
+from typing import Any, cast
 
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
@@ -13,6 +13,7 @@ from mcp.shared._httpx_utils import create_mcp_http_client
 from mcp.types import TextContent
 from openai import AsyncOpenAI
 from openai.types.chat import (
+    ChatCompletion,
     ChatCompletionFunctionToolParam,
     ChatCompletionMessageCustomToolCallParam,
     ChatCompletionMessageFunctionToolCall,
@@ -20,10 +21,23 @@ from openai.types.chat import (
     ChatCompletionMessageParam,
 )
 from opentelemetry import trace
-from pydantic import BaseModel
 
 from pathfinder_agent.config import Settings
-from pathfinder_agent.llm import LLMUnavailableError, translate_llm_errors
+from pathfinder_agent.llm import LLMTimeoutError, LLMUnavailableError, translate_llm_errors
+from pathfinder_agent.models import (
+    AgentEvent,
+    AgentResult,
+    ClassifiedToolResult,
+    EventCallback,
+    ExecutedToolResult,
+    ModelReasoning,
+    RunFinished,
+    RunStarted,
+    ToolCallRecord,
+    ToolFinished,
+    ToolStarted,
+    Turn,
+)
 from pathfinder_agent.telemetry import configure_telemetry
 
 logger = logging.getLogger(__name__)
@@ -40,24 +54,6 @@ FORCED_ANSWER_INSTRUCTION = (
     'the URL for each claim. If those results do not answer the question, reply exactly:\n'
     f'{NO_COVERAGE_REPLY}'
 )
-
-
-class ToolCallRecord(BaseModel):
-    name: str
-    args: dict[str, Any]
-
-
-class AgentResult(BaseModel):
-    text: str
-    tool_calls: list[ToolCallRecord]
-    stopped_reason: Literal[
-        'answer', 'max_iters', 'wall_clock', 'context_budget', 'fatal_tool_error', 'llm_unavailable'
-    ]
-
-
-class ClassifiedToolResult(BaseModel):
-    text: str
-    error_category: Literal['retryable', 'rephrase', 'fatal'] | None
 
 
 class RetryableToolError(Exception):
@@ -80,6 +76,10 @@ async def call_mcp_tool(session: ClientSession, name: str, args: dict[str, Any])
             error_category = 'rephrase'
         elif '[fatal]' in text:
             error_category = 'fatal'
+        else:
+            # The MCP layer validates arguments above the tool body, so a schema rejection carries
+            # a pydantic message and none of the markers. Those are the model's to correct.
+            error_category = 'rephrase'
     return ClassifiedToolResult(text=text, error_category=error_category)
 
 
@@ -89,7 +89,7 @@ async def execute_tool(
     mcp_session: ClientSession,
     settings: Settings,
     deadline: float,
-) -> str:
+) -> ExecutedToolResult:
     delay = settings.agent_retry_backoff_base
     attempts = settings.agent_max_tool_attempts
     attempt = 0
@@ -112,13 +112,13 @@ async def execute_tool(
                     span.set_attribute('tool.error_category', result.error_category)
 
                 if result.error_category == 'rephrase':
-                    return f'{result.text}\n{REPHRASE_INSTRUCTION}'
+                    return ExecutedToolResult(text=f'{result.text}\n{REPHRASE_INSTRUCTION}', outcome='failed')
                 elif result.error_category == 'retryable':
                     raise RetryableToolError(result.text)
                 elif result.error_category:
                     raise RuntimeError(f'Fatal tool error: {result.text}')
                 else:
-                    return result.text
+                    return ExecutedToolResult(text=result.text, outcome='ok')
             except RuntimeError as e:
                 span.record_exception(e)
                 raise
@@ -134,6 +134,46 @@ async def execute_tool(
                     raise
 
     raise AssertionError('unreachable: loop always returns or raises before exhausting attempt < attempts')
+
+
+async def call_llm(
+    llm_client: AsyncOpenAI,
+    messages: list[ChatCompletionMessageParam],
+    tools: list[ChatCompletionFunctionToolParam],
+    settings: Settings,
+    deadline: float,
+) -> ChatCompletion:
+    """Call the LLM, retrying a hop timeout with backoff.
+
+    Ollama queues a request it has no free slot for and says nothing, so a timeout is the only
+    signal that the model is loaded but busy. Everything else LLMUnavailableError covers is a
+    standing condition (no server, no such model) that a retry cannot change.
+    """
+    delay = settings.agent_retry_backoff_base
+    attempts = settings.agent_max_llm_attempts
+    attempt = 0
+
+    while True:
+        attempt += 1
+        time_left = deadline - time.monotonic()
+        with tracer.start_as_current_span('call_llm') as span:
+            span.set_attribute('llm.attempts', attempt)
+            try:
+                with translate_llm_errors(settings):
+                    return await llm_client.chat.completions.create(
+                        model=settings.llm_model,
+                        messages=messages,
+                        tools=tools,
+                        timeout=min(settings.agent_hop_timeout, max(0.0, time_left)),
+                    )
+            except LLMTimeoutError as e:  # subclass of LLMUnavailableError, so it has to be caught first
+                span.record_exception(e)
+                time_left = deadline - time.monotonic()
+                if attempt >= attempts or time_left <= delay:  # no point burning the backoff to arrive late
+                    raise
+                logger.warning(f'LLM timed out: {e}. Attempt {attempt} of {attempts}.')
+                await asyncio.sleep(delay)
+                delay = delay * 2
 
 
 async def translate_mcp_tools(mcp_session: ClientSession) -> list[ChatCompletionFunctionToolParam]:
@@ -159,13 +199,20 @@ def wrap_tool_result(text: str) -> str:
 
 
 async def run_agent(
-    question: str, mcp_session: ClientSession, llm_client: AsyncOpenAI, settings: Settings, system_prompt: str
+    question: str,
+    mcp_session: ClientSession,
+    llm_client: AsyncOpenAI,
+    settings: Settings,
+    system_prompt: str,
+    history: list[Turn] | None = None,
+    on_event: EventCallback | None = None,
 ) -> AgentResult:
 
-    messages: list[ChatCompletionMessageParam] = [
-        {'role': 'system', 'content': system_prompt},
-        {'role': 'user', 'content': question},
-    ]
+    messages: list[ChatCompletionMessageParam] = [{'role': 'system', 'content': system_prompt}]
+    for turn in history or []:
+        messages.append({'role': 'user', 'content': turn.question})
+        messages.append({'role': 'assistant', 'content': turn.answer})
+    messages.append({'role': 'user', 'content': question})
     deadline = time.monotonic() + settings.agent_wall_clock_timeout
     max_iters = settings.agent_max_iters
     attempt = 0
@@ -174,44 +221,70 @@ async def run_agent(
     budget_exceeded = False
     answer_forced = False
 
+    async def emit(event: AgentEvent) -> None:
+        if on_event:
+            await on_event(event)
+
     with tracer.start_as_current_span('run_agent') as span:
         span.set_attribute('agent.model', settings.llm_model)
         span.set_attribute('agent.max_iters', max_iters)
 
-        def finish(result: AgentResult) -> AgentResult:
+        async def finish(result: AgentResult) -> AgentResult:
             span.set_attribute('agent.stopped_reason', result.stopped_reason)
             span.set_attribute('agent.iterations', attempt)
             span.set_attribute('agent.tool_calls', len(result.tool_calls))
+            await emit(RunFinished(text=result.text, stopped_reason=result.stopped_reason))
             return result
 
-        available_tools = await translate_mcp_tools(mcp_session=mcp_session)
+        def timed_out() -> AgentResult:
+            return AgentResult(
+                text='The run took too long and had to stop before finishing.',
+                tool_calls=tool_calls,
+                stopped_reason='wall_clock',
+            )
+
+        def fatal_tool_failure(e: Exception) -> AgentResult:
+            logger.error(f'Fatal tool error: {e}')
+            span.record_exception(e)
+            return AgentResult(
+                text=f'The search tool failed and the run could not continue: {e}',
+                tool_calls=tool_calls,
+                stopped_reason='fatal_tool_error',
+            )
+
+        await emit(RunStarted(question=question))
+        try:
+            available_tools = await asyncio.wait_for(
+                translate_mcp_tools(mcp_session=mcp_session),
+                timeout=min(settings.agent_hop_timeout, deadline - time.monotonic()),
+            )
+        except TimeoutError:
+            return await finish(timed_out())
+
         while attempt < max_iters:
             attempt += 1
             if time.monotonic() > deadline:
-                return finish(
-                    AgentResult(
-                        text='The run took too long and had to stop before finishing.',
-                        tool_calls=tool_calls,
-                        stopped_reason='wall_clock',
-                    )
-                )
+                return await finish(timed_out())
 
-            budget_exceeded = tool_token_count > settings.agent_context_token_budget
+            budget_exceeded = tool_token_count > settings.agent_tool_result_token_budget
             if not answer_forced and (budget_exceeded or attempt == max_iters):
                 answer_forced = True
                 available_tools = []
                 messages.append({'role': 'system', 'content': FORCED_ANSWER_INSTRUCTION})
 
             try:
-                with translate_llm_errors(settings):
-                    response = await llm_client.chat.completions.create(
-                        model=settings.llm_model, messages=messages, tools=available_tools
-                    )
+                response = await call_llm(
+                    llm_client=llm_client,
+                    messages=messages,
+                    tools=available_tools,
+                    settings=settings,
+                    deadline=deadline,
+                )
 
             except LLMUnavailableError as e:
                 logger.error(f'LLM unavailable: {e}')
                 span.record_exception(e)
-                return finish(
+                return await finish(
                     AgentResult(
                         text=f'The LLM could not be reached: {e}',
                         tool_calls=tool_calls,
@@ -221,11 +294,19 @@ async def run_agent(
 
             msg = response.choices[0].message
 
+            # Reasoning is mot an OpenAI field: Ollama returns the chain of thought alongside the reply so it
+            # is read off the dump rather than an attribute and skipped when the backend has none.
+            reasoning = msg.model_dump(exclude_none=True).get('reasoning')
+            if isinstance(reasoning, str) and reasoning.strip():
+                await emit(ModelReasoning(text=reasoning))
+
             if not msg.tool_calls:
                 messages.append({'role': 'assistant', 'content': msg.content})
                 stopped_reason = 'context_budget' if budget_exceeded else 'max_iters' if answer_forced else 'answer'
 
-                return finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason=stopped_reason))
+                return await finish(
+                    AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason=stopped_reason)
+                )
 
             tool_call_params = cast(
                 list[ChatCompletionMessageFunctionToolCallParam | ChatCompletionMessageCustomToolCallParam],
@@ -237,29 +318,24 @@ async def run_agent(
                 try:
                     if not isinstance(call, ChatCompletionMessageFunctionToolCall):
                         raise RuntimeError(f'Unsupported tool call type: {type(call).__name__}')
+
                     args = json.loads(call.function.arguments)
                     tool_calls.append(ToolCallRecord(name=call.function.name, args=args))
-                    text = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
                 except json.JSONDecodeError as e:
+                    logger.warning(f'Invalid JSON arguments from the model: {e}')
                     text = f'[rephrase] Invalid JSON arguments: {e}'
-                except WallClockExpired:
-                    return finish(
-                        AgentResult(
-                            text='The run took too long and had to stop before finishing.',
-                            tool_calls=tool_calls,
-                            stopped_reason='wall_clock',
-                        )
-                    )
                 except Exception as e:
-                    logger.error(f'Fatal tool error: {e}')
-                    span.record_exception(e)
-                    return finish(
-                        AgentResult(
-                            text=f'The search tool failed and the run could not continue: {e}',
-                            tool_calls=tool_calls,
-                            stopped_reason='fatal_tool_error',
-                        )
-                    )
+                    return await finish(fatal_tool_failure(e))
+                else:
+                    await emit(ToolStarted(call_id=call.id, name=call.function.name, args=args))
+                    try:
+                        executed = await execute_tool(call, args, mcp_session, settings, deadline=deadline)
+                    except WallClockExpired:
+                        return await finish(timed_out())
+                    except Exception as e:
+                        return await finish(fatal_tool_failure(e))
+                    text = executed.text
+                    await emit(ToolFinished(call_id=call.id, name=call.function.name, outcome=executed.outcome))
 
                 tool_token_count += len(text) // 4  # Approximation to avoid loading embedder
                 messages.append(
@@ -270,7 +346,7 @@ async def run_agent(
                     }
                 )
 
-        return finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason='max_iters'))
+        return await finish(AgentResult(text=msg.content or '', tool_calls=tool_calls, stopped_reason='max_iters'))
 
 
 @asynccontextmanager

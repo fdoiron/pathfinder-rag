@@ -7,7 +7,7 @@ import httpx
 import pytest
 from mcp import ClientSession
 from mcp.types import CallToolResult, ListToolsResult, TextContent, Tool
-from openai import APIConnectionError, AsyncOpenAI
+from openai import APIConnectionError, APITimeoutError, AsyncOpenAI
 from openai.types.chat import ChatCompletion, ChatCompletionMessage, ChatCompletionMessageFunctionToolCall
 from openai.types.chat.chat_completion import Choice
 from openai.types.chat.chat_completion_message_function_tool_call import Function
@@ -24,6 +24,7 @@ from pathfinder_agent.agent import (
     wrap_tool_result,
 )
 from pathfinder_agent.config import Settings
+from pathfinder_agent.models import AgentEvent, EventCallback, ModelReasoning, ToolFinished, ToolStarted, Turn
 
 REQUEST = httpx.Request('POST', 'http://llm.test/v1/chat/completions')
 SEARCH_TOOL = Tool(name='rag_search', description='Search the RAG', inputSchema={'type': 'object'})
@@ -40,7 +41,7 @@ def _settings(**overrides: Any) -> Settings:
         'agent_max_iters': 4,
         'agent_hop_timeout': 5.0,
         'agent_wall_clock_timeout': 30.0,
-        'agent_context_token_budget': 4000,
+        'agent_tool_result_token_budget': 4000,
         'agent_max_tool_attempts': 2,
         'agent_retry_backoff_base': 0.001,  # PositiveFloat -> real sleep below test resolution
     }
@@ -56,10 +57,10 @@ def _tool_result(text: str, *, is_error: bool = False, error_category: str | Non
 
 
 def _tool_call(
-    name: str = 'rag_search', arguments: str = '{"query": "grapple"}'
+    name: str = 'rag_search', arguments: str = '{"query": "grapple"}', call_id: str = 'call-1'
 ) -> ChatCompletionMessageFunctionToolCall:
     return ChatCompletionMessageFunctionToolCall(
-        id='call-1', type='function', function=Function(name=name, arguments=arguments)
+        id=call_id, type='function', function=Function(name=name, arguments=arguments)
     )
 
 
@@ -73,13 +74,31 @@ def _completion(message: ChatCompletionMessage, finish_reason: str = 'stop') -> 
     )
 
 
-def _answer(text: str) -> ChatCompletion:
-    return _completion(ChatCompletionMessage(role='assistant', content=text))
+def _answer(text: str, reasoning: str | None = None) -> ChatCompletion:
+    # reasoning is not an OpenAI field. Ollama returns it alongside the reply
+    extra = {'reasoning': reasoning} if reasoning is not None else {}
+    return _completion(ChatCompletionMessage(role='assistant', content=text, **extra))
 
 
-def _tool_hop(name: str = 'rag_search', arguments: str = '{"query": "grapple"}') -> ChatCompletion:
-    message = ChatCompletionMessage(role='assistant', content=None, tool_calls=[_tool_call(name, arguments)])
+def _tool_hop(
+    name: str = 'rag_search', arguments: str = '{"query": "grapple"}', call_id: str = 'call-1'
+) -> ChatCompletion:
+    message = ChatCompletionMessage(role='assistant', content=None, tool_calls=[_tool_call(name, arguments, call_id)])
     return _completion(message, finish_reason='tool_calls')
+
+
+class EventLog:
+    """An on_event sink that keeps what run_agent emitted, in order."""
+
+    def __init__(self) -> None:
+        self.events: list[AgentEvent] = []
+
+    async def __call__(self, event: AgentEvent) -> None:
+        self.events.append(event)
+
+    @property
+    def types(self) -> list[str]:
+        return [event.type for event in self.events]
 
 
 class FakeSession:
@@ -113,13 +132,22 @@ class FakeLLM:
         self._responses = responses
         self.tools_seen: list[list[Any]] = []
         self.messages_seen: list[list[Any]] = []
+        self.timeouts_seen: list[float | None] = []
         self.chat = SimpleNamespace(completions=SimpleNamespace(create=self._create))
 
     @property
     def hops(self) -> int:
         return len(self.tools_seen)
 
-    async def _create(self, *, model: str, messages: list[Any], tools: list[Any]) -> ChatCompletion:  # noqa: ARG002
+    async def _create(
+        self,
+        *,
+        model: str,  # noqa: ARG002
+        messages: list[Any],
+        tools: list[Any],
+        timeout: float | None = None,
+    ) -> ChatCompletion:
+        self.timeouts_seen.append(timeout)
         self.tools_seen.append(list(tools))
         self.messages_seen.append(list(messages))
         item = self._responses[min(self.hops - 1, len(self._responses) - 1)]
@@ -129,7 +157,12 @@ class FakeLLM:
 
 
 async def _run(
-    llm: FakeLLM, session: FakeSession, settings: Settings | None = None, question: str = 'How does grappling work?'
+    llm: FakeLLM,
+    session: FakeSession,
+    settings: Settings | None = None,
+    question: str = 'How does grappling work?',
+    history: list[Turn] | None = None,
+    on_event: EventCallback | None = None,
 ) -> Any:
     return await run_agent(
         question=question,
@@ -137,6 +170,8 @@ async def _run(
         llm_client=cast(AsyncOpenAI, llm),
         settings=settings or _settings(),
         system_prompt='system',
+        history=history,
+        on_event=on_event,
     )
 
 
@@ -211,11 +246,12 @@ async def test_translate_mcp_tools_maps_the_schema_onto_the_openai_shape() -> No
 async def test_execute_tool_appends_the_correction_hint_and_does_not_retry_a_rephrase() -> None:
     session = FakeSession([_tool_result('Unknown chunk_id: bogus#001', error_category='rephrase')])
 
-    text = await execute_tool(
+    executed = await execute_tool(
         _tool_call(), {}, cast(ClientSession, session), _settings(), deadline=time.monotonic() + 30
     )
 
-    assert text == f'Unknown chunk_id: bogus#001\n{REPHRASE_INSTRUCTION}'
+    assert executed.text == f'Unknown chunk_id: bogus#001\n{REPHRASE_INSTRUCTION}'
+    assert executed.outcome == 'failed'
     assert len(session.calls) == 1
 
 
@@ -233,11 +269,12 @@ async def test_execute_tool_does_not_retry_a_fatal_error() -> None:
 async def test_execute_tool_retries_a_retryable_error_and_returns_the_later_success() -> None:
     session = FakeSession([_tool_result('busy', error_category='retryable'), _tool_result('Grappling rules...')])
 
-    text = await execute_tool(
+    executed = await execute_tool(
         _tool_call(), {}, cast(ClientSession, session), _settings(), deadline=time.monotonic() + 30
     )
 
-    assert text == 'Grappling rules...'
+    assert executed.text == 'Grappling rules...'
+    assert executed.outcome == 'ok'
     assert len(session.calls) == 2
 
 
@@ -328,7 +365,7 @@ async def test_run_agent_stops_calling_tools_once_the_token_budget_is_spent() ->
     llm = FakeLLM([_tool_hop(), _answer('You make a CMB check.')])
     session = FakeSession([_tool_result('x' * 400)])  # ~100 estimated tokens
 
-    result = await _run(llm, session, _settings(agent_context_token_budget=10))
+    result = await _run(llm, session, _settings(agent_tool_result_token_budget=10))
 
     assert result.stopped_reason == 'context_budget'
     assert llm.tools_seen[-1] == []
@@ -379,3 +416,214 @@ async def test_run_agent_hands_malformed_tool_arguments_back_to_the_model() -> N
     assert result.tool_calls == []  # nothing was actually called so nothing is reported
     assert session.calls == []
     assert 'Invalid JSON arguments' in llm.messages_seen[-1][-1]['content']
+
+
+# run_agent events
+@pytest.mark.anyio
+async def test_run_agent_brackets_each_hop_and_reports_whether_it_returned_data() -> None:
+    llm = FakeLLM(
+        [
+            _tool_hop(arguments='{"query": "red dragon", "k": 1}', call_id='call-1'),
+            _tool_hop(arguments='{"query": "red dragon", "k": 5}', call_id='call-2'),
+            _answer('A red dragon is a chromatic dragon.'),
+        ]
+    )
+    session = FakeSession(
+        [
+            _tool_result('k must be >= 5', error_category='rephrase'),
+            _tool_result('Red Dragon: CR 10, chromatic.'),
+        ]
+    )
+    log = EventLog()
+
+    result = await _run(llm, session, on_event=log)
+
+    assert log.types == [
+        'run_started',
+        'tool_started',
+        'tool_finished',
+        'tool_started',
+        'tool_finished',
+        'run_finished',
+    ]
+    started = [event for event in log.events if isinstance(event, ToolStarted)]
+    finished = [event for event in log.events if isinstance(event, ToolFinished)]
+    assert [event.call_id for event in started] == [event.call_id for event in finished]
+    assert [event.args['k'] for event in started] == [1, 5]
+    assert [event.outcome for event in finished] == ['failed', 'ok']  # the rejected call is not a completed search
+    assert result.stopped_reason == 'answer'
+
+
+@pytest.mark.anyio
+async def test_run_agent_emits_no_hop_for_tool_arguments_it_could_not_parse() -> None:
+    llm = FakeLLM([_tool_hop(arguments='{"query": '), _answer('You make a CMB check.')])
+    log = EventLog()
+
+    await _run(llm, FakeSession([_tool_result('never reached')]), on_event=log)
+
+    assert log.types == ['run_started', 'run_finished']  # the model never reached the server, so there is no hop
+
+
+@pytest.mark.anyio
+async def test_run_agent_leaves_a_fatal_hop_unclosed_for_the_terminal_event_to_close() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('never reached')])
+    session = FakeSession([_tool_result('index is corrupt', error_category='fatal')])
+    log = EventLog()
+
+    await _run(llm, session, on_event=log)
+
+    assert log.types == ['run_started', 'tool_started', 'run_finished']
+
+
+@pytest.mark.anyio
+async def test_run_agent_emits_the_reasoning_a_hop_came_back_with() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.', reasoning='The user wants the grapple rules.')])
+    log = EventLog()
+
+    await _run(llm, FakeSession([]), on_event=log)
+
+    assert log.types == ['run_started', 'model_reasoning', 'run_finished']
+    reasoning = next(event for event in log.events if isinstance(event, ModelReasoning))
+    assert reasoning.text == 'The user wants the grapple rules.'
+
+
+@pytest.mark.anyio
+@pytest.mark.parametrize('reasoning', [None, '', '   '], ids=['absent', 'empty', 'blank'])
+async def test_run_agent_emits_no_reasoning_when_the_backend_sends_none(reasoning: str | None) -> None:
+    llm = FakeLLM([_answer('You make a CMB check.', reasoning=reasoning)])
+    log = EventLog()
+
+    await _run(llm, FakeSession([]), on_event=log)
+
+    assert log.types == ['run_started', 'run_finished']
+
+
+@pytest.mark.anyio
+async def test_run_agent_sends_only_the_system_prompt_and_question_without_history() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.')])
+
+    await _run(llm, FakeSession([]))
+
+    assert llm.messages_seen[0] == [
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'How does grappling work?'},
+    ]
+
+
+@pytest.mark.anyio
+async def test_run_agent_replays_history_between_the_system_prompt_and_the_question() -> None:
+    llm = FakeLLM([_answer('Its AC is 26.')])
+    history = [
+        Turn(question='What is a red dragon?', answer='A chromatic dragon.'),
+        Turn(question='How big is it?', answer='Huge at adult age.'),
+    ]
+
+    await _run(llm, FakeSession([]), question="What's its AC?", history=history)
+
+    assert llm.messages_seen[0] == [
+        {'role': 'system', 'content': 'system'},
+        {'role': 'user', 'content': 'What is a red dragon?'},
+        {'role': 'assistant', 'content': 'A chromatic dragon.'},
+        {'role': 'user', 'content': 'How big is it?'},
+        {'role': 'assistant', 'content': 'Huge at adult age.'},
+        {'role': 'user', 'content': "What's its AC?"},
+    ]
+
+
+@pytest.mark.anyio
+async def test_run_agent_keeps_history_ahead_of_the_tool_messages_it_appends() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('Its AC is 26.')])
+    session = FakeSession([_tool_result('AC 26')])
+    history = [Turn(question='What is a red dragon?', answer='A chromatic dragon.')]
+
+    await _run(llm, session, question="What's its AC?", history=history)
+
+    roles = [message['role'] for message in llm.messages_seen[-1]]
+    assert roles == ['system', 'user', 'assistant', 'user', 'assistant', 'tool']
+
+
+@pytest.mark.anyio
+async def test_call_mcp_tool_treats_an_unmarked_error_as_the_models_to_correct() -> None:
+    rejection = 'Error executing tool rag_search: 1 validation error for rag_searchArguments\nk'
+    session = FakeSession([_tool_result(rejection, is_error=True)])
+
+    result = await call_mcp_tool(cast(ClientSession, session), 'rag_search', {'k': 1})
+
+    assert result.error_category == 'rephrase'
+
+
+@pytest.mark.anyio
+async def test_run_agent_reports_a_schema_rejected_hop_as_failed() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('I could not search that.')])
+    rejection = "Error executing tool rag_search: 1 validation error\ncategory\n  Input should be 'monster'"
+    session = FakeSession([_tool_result(rejection, is_error=True)])
+    log = EventLog()
+
+    await _run(llm, session, on_event=log)
+
+    finished = next(event for event in log.events if isinstance(event, ToolFinished))
+    assert finished.outcome == 'failed'
+
+
+@pytest.mark.anyio
+async def test_run_agent_tells_the_model_to_correct_arguments_the_schema_rejected() -> None:
+    llm = FakeLLM([_tool_hop(), _answer('I could not search that.')])
+    session = FakeSession([_tool_result('Error executing tool rag_search: 1 validation error', is_error=True)])
+
+    await _run(llm, session)
+
+    tool_message = llm.messages_seen[-1][-1]
+    assert tool_message['role'] == 'tool'
+    assert REPHRASE_INSTRUCTION in tool_message['content']
+
+
+# call_llm
+@pytest.mark.anyio
+async def test_run_agent_retries_a_hop_that_timed_out_waiting_on_a_busy_model() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST), _answer('You make a CMB check.')])
+
+    result = await _run(llm, FakeSession([]))
+
+    assert result.stopped_reason == 'answer'
+    assert llm.hops == 2
+
+
+@pytest.mark.anyio
+async def test_run_agent_gives_up_once_the_llm_attempts_are_spent() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST)])
+
+    result = await _run(llm, FakeSession([]), settings=_settings(agent_max_llm_attempts=3))
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 3
+
+
+@pytest.mark.anyio
+async def test_run_agent_does_not_retry_an_llm_that_is_simply_not_there() -> None:
+    llm = FakeLLM([APIConnectionError(request=REQUEST)])
+
+    result = await _run(llm, FakeSession([]), settings=_settings(agent_max_llm_attempts=3))
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 1
+
+
+@pytest.mark.anyio
+async def test_run_agent_bounds_each_llm_attempt_by_the_wall_clock_left() -> None:
+    llm = FakeLLM([_answer('You make a CMB check.')])
+
+    await _run(llm, FakeSession([]), settings=_settings(agent_hop_timeout=30.0, agent_wall_clock_timeout=5.0))
+
+    assert llm.timeouts_seen[0] is not None
+    assert llm.timeouts_seen[0] <= 5.0
+
+
+@pytest.mark.anyio
+async def test_run_agent_does_not_burn_the_backoff_to_arrive_after_the_deadline() -> None:
+    llm = FakeLLM([APITimeoutError(request=REQUEST)])
+    settings = _settings(agent_max_llm_attempts=3, agent_retry_backoff_base=5.0, agent_wall_clock_timeout=1.0)
+
+    result = await _run(llm, FakeSession([]), settings=settings)
+
+    assert result.stopped_reason == 'llm_unavailable'
+    assert llm.hops == 1

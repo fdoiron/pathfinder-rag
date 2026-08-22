@@ -1,6 +1,6 @@
 [![CI](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/fdoiron/pathfinder-rag/actions/workflows/ci.yml)
 
-A retrieval augmented question/answering pipeline over the Pathfinder 1e tabletop ruleset. It scrapes ~24k rule pages from [d20pfsrd.com](https://www.d20pfsrd.com/), parses them into markdown with a hand written converter, chunks and embeds them locally, and answers rules questions with citations back to the page they originated from. Retrieval is hybrid (vector plus BM25 fused with Reciprocal Rank Fusion, then reranked) and is exposed two ways: a single shot `rag ask` CLI, and an MCP server offering it as tools that a separate agent client calls in a multi hop loop until it can answer. This is a portfolio project covering the whole path from data ingestion through evaluated retrieval to an evaluated agent loop, with the chat surface and container phases designed and staged as what's next.
+A retrieval augmented question/answering pipeline over the Pathfinder 1e tabletop ruleset. It scrapes ~24k rule pages from [d20pfsrd.com](https://www.d20pfsrd.com/), parses them into markdown with a hand written converter, chunks and embeds them locally, and answers rules questions with citations back to the page they originated from. Retrieval is hybrid (vector plus BM25 fused with Reciprocal Rank Fusion, then reranked) and is exposed two ways: a single shot `rag ask` CLI, and an MCP server offering it as tools that a separate agent client calls in a multi hop loop until it can answer. A chat page served by the agent puts that loop in front of a browser, streaming what the agent is doing while it works. This is a portfolio project covering the whole path from data ingestion through evaluated retrieval to an evaluated agent loop and the surface that drives it, with the container phase designed and staged as what's next.
 
 ## Contents
 
@@ -17,6 +17,12 @@ A retrieval augmented question/answering pipeline over the Pathfinder 1e tableto
 - [License and attribution](#license-and-attribution)
 
 ## Demo
+
+The chat page mid answer: a box per tool call, expanded to the arguments that call went out with, the model's reasoning between hops, and every number cited back to the page it came from.
+
+<img src="assets/chat_test_query.jpg" width="700" alt="The chat page answering &quot;What is the HP of a red dragon?&quot;: an expanded rag_search call showing its query, k and category, and an answer giving HP per age category with a source link on each one">
+
+Underneath it is the same retrieval the `rag` CLI exposes directly:
 
 ```
 $ uv run rag search "power attack"
@@ -125,7 +131,7 @@ All four runs above against the real corpus with the current hybrid index, `qwen
 
 Scraping, parsing, chunking, embedding, hybrid search (BM25 + vector, fused with Reciprocal Rank Fusion), reranking and generation all run end to end over the full corpus. `rag build-corpus` does parse, chunk, embed and build the BM25 index in one pass, writing two parquet artifacts, a SQLite FTS5 index, and a manifest; `rag search`, `rag ask`, `rag evaluate` and `rag evaluate-answers` all take `--method {vector,bm25,hybrid}` and `--rerank/--no-rerank` (on by default, a local Qwen3-Reranker re-scores a candidate pool before cutting to `k`; `search`/`ask` also expose `--fetch-k` to size that pool) and load straight from disk to answer or score from the terminal. `rag evaluate-answers` runs the same truth set through `rag ask` itself, scoring whether the generated answer cites the correct source, invents a citation number outside what it was given, or refuses when it doesn't know.
 
-The same retrieval is served over MCP. `rag-mcp` runs a streamable-http server exposing `rag_search` and `fetch_section` as tools with optional static bearer auth, OpenTelemetry traces and metrics and a single GPU worker fronted by a bounded queue that sheds excess load. `pathfinder-agent` is a separate uv project that connects to it and runs a multi hop tool calling loop with per hop and wall time timeouts, a tool result token budget, bounded retries with backoff, and `<tool_result>` delimiting on everything the server returns. `pathfinder-agent ask "question"` is the agent equivalent of `rag ask`, and `agent/scripts/loop_eval.py` measures how that loop behaves across the eval set (see [Agent loop evaluation](#agent-loop-evaluation)). The chat page and the containers are not built yet: the chat page is `E7` in [MVP Expansions](#mvp-expansions), the containers are in [Future expansions](#future-expansions).
+The same retrieval is served over MCP. `rag-mcp` runs a streamable-http server exposing `rag_search` and `fetch_section` as tools with optional static bearer auth, OpenTelemetry traces and metrics and a single GPU worker fronted by a bounded queue that sheds excess load. `pathfinder-agent` is a separate uv project that connects to it and runs a multi hop tool calling loop with per hop and wall time timeouts, a tool result token budget, bounded retries with backoff, and `<tool_result>` delimiting on everything the server returns. `pathfinder-agent ask "question"` is the agent equivalent of `rag ask`, and `agent/scripts/loop_eval.py` measures how that loop behaves across the eval set (see [Agent loop evaluation](#agent-loop-evaluation)). `POST /ask` runs that same loop over SSE and serves a single static so a question typed in a browser shows a progress box per tool call, the arguments each call went out with and the model's reasoning between hops, then the answer in one shot. The frontend is deliberately thin and is not the artifact. The engineering is the loop behind it. The containers are in [Future expansions](#future-expansions).
 
 24,098 HTML files in, 23,890 cleaned articles out, chunked into 129,361 chunks and embedded at 1024 dims. Parsing and chunking run in under a minute single threaded; embedding the full corpus locally takes roughly 15 minutes on an RTX3090. HTML scraping with Scrapy (/scraper) takes roughly 6 hours with a 1s crawl delay per page.
 
@@ -193,14 +199,19 @@ cd ../agent
 uv sync
 uv run pathfinder-agent ask "can I move and attack in the same round?"
 
-# 9. measure how the loop behaves over the truth set (needs the server and Ollama up)
+# 9. or serve the same loop as a chat page, from agent/ so it finds its .env
+# --host 0.0.0.0 makes it reachable from other machines on the LAN, drop it to stay on loopback
+uv run uvicorn pathfinder_agent.server:app --host 0.0.0.0 --port 8099
+# then open http://localhost:8099
+
+# 10. measure how the loop behaves over the truth set (needs the server and Ollama up)
 uv run python scripts/loop_eval.py --questions-file ../rag-mcp/eval/queries.jsonl --repeats 3
 
-# 10. run the test suite in any package (doesn't require the scraped corpus)
+# 11. run the test suite in any package (doesn't require the scraped corpus)
 uv run pytest
 ```
 
-The MCP server reads `.env` from the process working directory, so start it from `rag-mcp/`. Setting `RAG_MCP_AUTH_TOKEN` there turns on static bearer auth and the agent picks the same variable up for the `Authorization` header. Leaving it unset disables auth entirely, which is fine on loopback and logged as a warning at startup.
+Both processes read `.env` from the process working directory, so start the server from `rag-mcp/` and the agent or the chat app from `agent/`. Setting `RAG_MCP_AUTH_TOKEN` in `rag-mcp/.env` turns on static bearer auth and the agent picks the same variable up from `agent/.env` for the `Authorization` header, which is why starting either one from the repo root silently gets it wrong: the server finds no token and disables auth, or the app dials with no header. Leaving it unset disables auth entirely, which is fine on loopback and logged as a warning at startup.
 
 ## Repo layout
 
@@ -260,7 +271,7 @@ scraper (Scrapy)  ──▶  scraper/data/html/ (24,098 files)
 └─────────────┘
 ```
 
-Two deployables, `rag-mcp` and `agent`; the third uv project, `scraper`, is a batch step rather than a service. The chat page is the only piece above that does not exist yet.
+Two deployables, `rag-mcp` and `agent`; the third uv project, `scraper`, is a batch step rather than a service. Everything above exists and runs; what remains is packaging it, which is [Future expansions](#future-expansions).
 
 ## Evaluation
 
@@ -365,7 +376,7 @@ Refusal is at zero. The single-shot path refuses on 10% of queries. The agent re
 
 `fetch_section` has never completed successfully. It was called twice across 381 runs and both calls were rejected before reaching the retriever, on `max_chars=500` against a `ge=1000` bound. The model was asking for a small excerpt and the schema demanded a large one, which is the same shape as `rag_search`'s `k` floor rejecting 109 of 473 searches (23.0%) in this run. Both are argument bounds written for a human caller that the model reads and ignores and both cost a hop each time.
 
-Loop behaviour over the same runs: 2.16 hops per run, 17.2s average with p95 at 27.0s and a 39.3s maximum against a 120s walltime. Two runs tripped `agent_context_token_budget` at 5613 and 4157 estimated tool-result tokens against a 4000 budget, the first time that limit has bound anything, and that was at `k=5`. One run lost its LLM to the 30s hop timeout and stopped there because `execute_tool`'s retry policy covers tool calls while an LLM timeout ends the run outright.
+Loop behaviour over the same runs: 2.16 hops per run, 17.2s average with p95 at 27.0s and a 39.3s maximum against a 120s walltime. Two runs tripped `agent_tool_result_token_budget` at 5613 and 4157 estimated tool-result tokens against a 4000 budget, the first time that limit has bound anything, and that was at `k=5`. One run lost its LLM to the 30s hop timeout and stopped there because `execute_tool`'s retry policy covers tool calls while an LLM timeout ends the run outright.
 
 Full per-run results: [loop eval baseline, 127 queries x 3](agent/eval/canonical/n127_loop_eval_baseline.jsonl). One JSON object per run, carrying the answer, the model's reasoning at every hop and the whole transcript including what each tool returned, so every number above can be recomputed from it. This run predates any prompt work and is the baseline `E8` gets measured against. It does not record which `agent_system.txt` and `mcp_tools.txt` produced it, so hashing both prompt files into each run record, the way `ChunksManifest` hashes the corpus parquet, is scoped with `E8`.
 
@@ -393,7 +404,7 @@ MVP milestones, all completed:
 | E4: MCP server | **Done** | `rag_search` and `fetch_section` exposed over streamable http, replacing the planned FastAPI. Optional static bearer auth, OpenTelemetry tracing and metrics, a single GPU worker behind a bounded queue that sheds load and a bounded drain on shutdown. Tool errors carry a `retryable`/`rephrase`/`fatal` category so a client can branch on the class of failure. |
 | E5: agentic ask | **Done** | `pathfinder-agent`, an MCP client running a multi-hop tool calling loop against the server: per hop and wall time timeouts, a tool result token budget, bounded retries with backoff, and `<tool_result>` delimiting as a mitigation for prompt injection. `AgentResult` holds the answer, the tool call trace and a `stopped_reason`. |
 | E6: agent loop eval | **Done** | `rag evaluate-answers` scores single-shot `ask` and provides no information about tool use so nothing measures the agent loop. `agent/scripts/loop_eval.py` runs the eval over the same 127 query set and reports per query type: hops, wall time with percentiles, per tool call and failure counts, tool result tokens vs context budget, whether the answer cited a known correct page and how many cited URLs no tool ever returned (invented by the LLM). |
-| E7: chat surface | — | One `POST /ask` endpoint over the agent loop and a thin page showing what it is doing while it works (progress boxes per tool call).|
+| E7: chat surface | **Done** | One `POST /ask` endpoint running the agent loop and streaming its progress over SSE, and one static page serving it. A box per tool call, expandable to the arguments that call went out with, struck through when the call returned nothing; the model's reasoning per hop as a collapsed block; the answer in one shot rather than token by token. Conversation history is held by the client and replayed as question/answer pairs, bounded on the request model. |
 | E8: tool use and prompts | — | The LLM answers without calling tools on many questions, invents d20pfsrd URLs and has never once chained `rag_search` → `fetch_section`. Implement prompt side fixes across `agent_system.txt` and `mcp_tools.txt` and measure against E6's baseline. |
 | E9: parameter sweeps | — | Proper sweep over `max_tokens`, `overlap`, `title_weight`, RRF weights and Ks with train/test split as previous values were overfit while still in development. |
 
@@ -435,6 +446,9 @@ MVP milestones, all completed:
 - **The agent owns the retry policy and the SDK is configured not to.** `make_llm_client` sets `max_retries=0` because the OpenAI SDK's default of 2 would spend three hops before the loop ever saw a failure, and `timeout` is `agent_hop_timeout` so the per hop bound is the SDK's own mechanism instead of a second one wrapped around it. Timeouts layer the same way: each tool call gets `min(agent_hop_timeout, time left on the walltime)`, so an almost exhausted run cannot start a 30 second call it has no time to finish.
 - **The context budget is estimated as `len(text) // 4` rather than tokenized.** Counting exactly would mean importing `transformers` into the agent purely to count, which is a heavy dependency for a number that only decides when to stop calling tools. When the estimate trips, or iterations run out, the loop drops the tools and instructs the model to answer from what it already has or reply with `NO_COVERAGE_REPLY` verbatim, so an exhausted run refuses instead of answering from nothing. `AgentResult.stopped_reason` records which of those happened, which is what makes an interrupted run distinguishable from an answer in both the CLI's exit code and the eval.
 - **Everything the tools return is treated as untrusted and delimited.** Tool results are page text from a public wiki, so the loop wraps them in `<tool_result>` tags and neutralizes any closing tag inside the text before it goes into the prompt and the system prompt states that only text inside those tags is retrieved data and it is never an instruction. The model has forged those tags in its own output during testing, which is the case the escaping exists for.
+- **Progress boxes with no token streaming.** A hop is only the last one if the model emits no tool calls which is not known until the response is complete. Adding streaming would mean streaming every hop and accumulating `delta.tool_calls` fragments to detect the switch. That would triple the loop's complexity for little gain: the 5-12 seconds of dead air during tool calls was the initial problem. The answer arriving in one shot is fine.
+- **`ToolFinished` holds a state instead of an error category.** `outcome` is `ok` or `failed` and not the server's `retryable`/`rephrase`/`fatal`. A `rephrase` is aimed at the model and the model does not always act on it so an event describing a call that already happened cannot claim a retry is coming. It is also the only category that reaches the event since `retryable` is retried inside `execute_tool` and `fatal` ends the agent loop first.
+- **For simplicity the client holds the conversation history as question and answer pairs.** Replaying an assistant message carrying `tool_calls` without its matching `tool` results is rejected by the API. The bounds are in `AskRequest` because a client held history is untrusted input.
 
 ## Testing
 
@@ -451,7 +465,7 @@ uv run poe check   #in order:  ruff check ., ruff format --check ., mypy, pytest
 
 ## Post mortem
 
-The bugs, dead ends and measurement mistakes are written up separately in [POSTMORTEM.md](POSTMORTEM.md): why the n=34 eval table was not sufficient, the seq-cls to causal-LM checkpoint switch and what it ruled out, the reranker instruction rewrite, and four bugs (chunking, parser, a load test where three client failures all reported success, and a pydantic tool schema `qwen3:14b` filled in wrong two times out of three). Before/after eval evidence for the ones that moved the numbers is in there with the run files linked.
+The bugs, dead ends and measurement mistakes are written up separately in [POSTMORTEM.md](POSTMORTEM.md): why the n=34 eval table was not sufficient, the seq-cls to causal-LM checkpoint switch and what it ruled out, the reranker instruction rewrite, and bugs including chunking, parser, a load test where three client failures all reported success, and a pydantic tool schema `qwen3:14b` filled in wrong two times out of three. Before/after eval evidence for the ones that moved the numbers is in there with the run files linked.
 
 ## License and attribution
 

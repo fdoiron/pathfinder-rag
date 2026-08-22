@@ -17,10 +17,14 @@ class Settings(BaseSettings):
     agent_max_iters: PositiveInt = 8  # tool calling hops before giving up regardless of wall clock
     agent_hop_timeout: PositiveFloat = 30.0  # seconds allowed for one LLM call or one tool call, also the SDK timeout
     agent_wall_clock_timeout: PositiveFloat = 120.0  # seconds for the whole loop. Overrides max_iters
-    agent_context_token_budget: PositiveInt = 4000  # estimated tool-result tokens before the loop stops calling tools
+    agent_tool_result_token_budget: PositiveInt = (
+        4000  # estimated tool-result tokens before the loop stops calling tools
+    )
     agent_max_tool_attempts: PositiveInt = 2  # tool attempts (1 initial + retries) for retryable error/hop timeout
+    agent_max_llm_attempts: PositiveInt = 2  # LLM attempts (1 initial + retries) for a hop timeout
     agent_retry_backoff_base: PositiveFloat = 1.0  # seconds, doubles by retry
     agent_system_prompt_path: Path | None = None  # override for the packaged prompts/agent_system.txt for tests
+    interaction_log_path: Path | None = None  # JSONL of every event the page draws. None disables logging
 
     # None -> OTLPSpanExporter falls back to its own env lookup, defaulting to http://localhost:4317
     otel_exporter_otlp_endpoint: Annotated[str | None, Field(validation_alias='OTEL_EXPORTER_OTLP_ENDPOINT')] = None
