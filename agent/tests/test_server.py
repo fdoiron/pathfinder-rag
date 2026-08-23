@@ -50,8 +50,9 @@ def _stub_run_question(
         settings: Settings,  # noqa: ARG001
         history: list[Turn] | None = None,
         on_event: EventCallback | None = None,
+        thinking: bool | None = None,
     ) -> AgentResult:
-        calls.append({'question': question, 'history': history})
+        calls.append({'question': question, 'history': history, 'thinking': thinking})
         for event in events if events is not None else HOP:
             if on_event:
                 await on_event(event)
@@ -142,7 +143,7 @@ async def test_ask_passes_the_history_through_to_the_run(monkeypatch: pytest.Mon
 
     await _drain(AskRequest(question="What's its AC?", history=history))
 
-    assert calls[0] == {'question': "What's its AC?", 'history': history}
+    assert calls[0] == {'question': "What's its AC?", 'history': history, 'thinking': False}
 
 
 @pytest.mark.anyio
@@ -254,3 +255,21 @@ async def test_no_log_is_written_when_no_path_is_configured(monkeypatch: pytest.
     await _drain(AskRequest(question=QUESTION), Settings())
 
     assert list(tmp_path.iterdir()) == []
+
+
+@pytest.mark.anyio
+async def test_ask_leaves_thinking_off_unless_the_page_asks_for_it(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = _stub_run_question(monkeypatch)
+
+    await _drain(AskRequest(question=QUESTION))
+
+    assert calls[0]['thinking'] is False
+
+
+@pytest.mark.anyio
+async def test_ask_passes_thinking_through_when_the_page_asks_for_it(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = _stub_run_question(monkeypatch)
+
+    await _drain(AskRequest(question=QUESTION, thinking=True))
+
+    assert calls[0]['thinking'] is True

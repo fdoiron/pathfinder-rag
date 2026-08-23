@@ -32,7 +32,12 @@ async def run_question(
     settings: Settings,
     history: list[Turn] | None = None,
     on_event: EventCallback | None = None,
+    thinking: bool | None = None,
 ) -> AgentResult:
+    """Run one question. `thinking` overrides llm_reasoning_effort for this call only.
+    None keeps the configured value."""
+    if thinking is not None:
+        settings = settings.model_copy(update={'llm_reasoning_effort': None if thinking else 'none'})
     llm_client = make_llm_client(settings=settings)
     system_prompt = load_system_prompt(settings)
 

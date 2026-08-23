@@ -1,6 +1,6 @@
 from functools import lru_cache
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import Field, PositiveFloat, PositiveInt, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     mcp_auth_token: Annotated[SecretStr, Field(min_length=1)] | None = None  # None means the server has auth disabled
     llm_base_url: str = 'http://localhost:11434/v1'  # OpenAI-compatible endpoint for Ollama
     llm_model: str = 'qwen3:14b'
+    # 'none' -> qwen3 thinking off. Ollama maps high/medium/low onto thinking ON with no
+    # measurable difference between them. Only 'none' does anything. None sends nothing.
+    llm_reasoning_effort: Literal['high', 'medium', 'low', 'none'] | None = None
 
     agent_max_iters: PositiveInt = 8  # tool calling hops before giving up regardless of wall clock
     agent_hop_timeout: PositiveFloat = 30.0  # seconds allowed for one LLM call or one tool call, also the SDK timeout
