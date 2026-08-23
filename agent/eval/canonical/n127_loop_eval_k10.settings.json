@@ -1,0 +1,14 @@
+{
+  "run": "n127_loop_eval_k10.jsonl",
+  "runs": 381,
+  "questions": 127,
+  "prompts": {
+    "agent_system": "2b09f18e438d369d",
+    "mcp_tools": "41b842d5d1cf32eb"
+  },
+  "mcp_search_k": 10,
+  "llm_reasoning_effort": null,
+  "agent_tool_result_token_budget": 8000,
+  "note": "k removed from the rag_search signature, k=10 server side. Prompt pass 1: both tools named, a chaining rule, hardened URL grounding, follow-ups must search, trust boundary extended to prior turns.",
+  "method": "settings recorded here because loop_eval hashes prompts but not settings"
+}

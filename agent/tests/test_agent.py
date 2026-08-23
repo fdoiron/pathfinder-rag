@@ -146,6 +146,7 @@ class FakeLLM:
         messages: list[Any],
         tools: list[Any],
         timeout: float | None = None,
+        reasoning_effort: Any = None,  # noqa: ARG002
     ) -> ChatCompletion:
         self.timeouts_seen.append(timeout)
         self.tools_seen.append(list(tools))

@@ -1,9 +1,11 @@
 import asyncio
 from collections import Counter
+from typing import Any
 
 from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 from mcp.shared._httpx_utils import create_mcp_http_client
+from mcp.types import TextContent
 
 from rag.config import get_settings
 
@@ -49,12 +51,13 @@ QUERIES = [
 ]
 
 
-async def fire_one(session: ClientSession, args: dict) -> str:
+async def fire_one(session: ClientSession, args: dict[str, Any]) -> str:
     """Outcome of one call: 'ok', the SearchResults.error_category the server sent back, or 'unclassified'
     for a genuine protocol-level failure (bad arguments) that never reached rag_search's body."""
     result = await session.call_tool('rag_search', arguments={'search_query': args})
     if result.is_error:
-        text = result.content[0].text if result.content else ''
+        content = result.content[0] if result.content else None
+        text = content.text if isinstance(content, TextContent) else ''
         print(f'unclassified  {args["query"]!r}: {text}')
         return 'unclassified'
 
@@ -63,7 +66,7 @@ async def fire_one(session: ClientSession, args: dict) -> str:
         return 'ok'
     message = (result.structured_content or {}).get('message')
     print(f'{category:<13} {args["query"]!r}: {message}')
-    return category
+    return str(category)
 
 
 async def main() -> None:

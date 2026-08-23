@@ -11,7 +11,7 @@ from mcp import ClientSession
 from mcp.client.streamable_http import streamable_http_client
 from mcp.shared._httpx_utils import create_mcp_http_client
 from mcp.types import TextContent
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, omit
 from openai.types.chat import (
     ChatCompletion,
     ChatCompletionFunctionToolParam,
@@ -165,6 +165,7 @@ async def call_llm(
                         messages=messages,
                         tools=tools,
                         timeout=min(settings.agent_hop_timeout, max(0.0, time_left)),
+                        reasoning_effort=settings.llm_reasoning_effort or omit,
                     )
             except LLMTimeoutError as e:  # subclass of LLMUnavailableError, so it has to be caught first
                 span.record_exception(e)

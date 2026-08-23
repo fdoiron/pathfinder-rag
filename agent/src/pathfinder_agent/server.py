@@ -46,6 +46,7 @@ async def log_event(settings: Settings, run_id: str, event: QueueItem) -> None:
 class AskRequest(BaseModel):
     question: Annotated[str, Field(min_length=1, max_length=1000)]
     history: Annotated[list[Turn], Field(max_length=MAX_HISTORY_TURNS)] = []
+    thinking: bool = False  # the page defaults is off
 
 
 @app.post('/ask')
@@ -64,6 +65,7 @@ async def ask(ask_request: AskRequest, settings: Annotated[Settings, Depends(get
                 settings=settings,
                 history=ask_request.history,
                 on_event=on_event,
+                thinking=ask_request.thinking,
             )
         except Exception:
             logger.exception('run failed for /ask')

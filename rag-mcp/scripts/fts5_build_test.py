@@ -38,6 +38,7 @@ def main() -> None:
             k=5,
             title_weight=settings.fts5_title_weight,
             text_weight=settings.fts5_text_weight,
+            fts5_tokenchar=settings.fts5_tokenchar,
         )
         for chunk_id, score in rows:
             print(f'  {score:7.3f}  {chunk_id}')

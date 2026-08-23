@@ -1,0 +1,14 @@
+{
+  "run": "n127_loop_eval_k5_nothink.jsonl",
+  "runs": 381,
+  "questions": 127,
+  "prompts": {
+    "agent_system": "8ba1244731af5792",
+    "mcp_tools": "41b842d5d1cf32eb"
+  },
+  "mcp_search_k": 5,
+  "llm_reasoning_effort": "none",
+  "agent_tool_result_token_budget": 4000,
+  "note": "Thinking off via reasoning_effort='none', plus prompt pass 2 (procedure as steps, no pretrained fill-in, reformulate before refusing) and the follow-up rule widened to corrections. Two variables against the k5 run.",
+  "method": "settings recorded here because loop_eval hashes prompts but not settings"
+}

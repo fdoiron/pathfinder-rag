@@ -1,0 +1,15 @@
+{
+  "run": "n127_loop_eval_baseline.jsonl",
+  "prompts": {
+    "agent_system": "0ee2b18bfd85608e",
+    "mcp_tools": "f9b8059eaee14256"
+  },
+  "method": "recovered. Not recorded by the run",
+  "recovered_from_commit": "19d5de5",
+  "files": [
+    "agent/src/pathfinder_agent/prompts/agent_system.txt",
+    "rag-mcp/src/rag/prompts/mcp_tools.txt"
+  ],
+  "note": "This baseline predates prompt provenance in loop_eval.py so the digests is reconstructed from the two prompt files as of the commit that added the run rather than re-running it. Both files are byte identical at that commit and at the time this sidecar was written so the reconstruction is exact. Digests are sha256, first 16 hex characters, matching the 'prompts' key loop_eval.py now writes into every record.",
+  "caveat": "Prompt provenance is not the only thing that separates this baseline from a later run. It was recorded before the fix that classifies an unmarked MCP error as 'rephrase', so the model did not receive REPHRASE_INSTRUCTION on a schema-rejected call and did not retry one. Hops, wall time, tool tokens and the stopped_reason distribution all move on that change with no prompt having changed. The no-tool-call rate does not."
+}
