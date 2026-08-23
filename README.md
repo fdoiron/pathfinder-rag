@@ -354,14 +354,33 @@ Full per-query results: [answer eval, hybrid k=5, weighted RRF](rag-mcp/eval/can
 
 `rag evaluate-answers` scores single-shot `ask` so it says nothing about whether the agent actually uses its tools or not. `agent/scripts/loop_eval.py` runs `run_agent` over the same 127 query truth set three times per question against a live MCP server and `qwen3:14b` on Ollama. Each run is scored for whether it searched at all, whether the answer cited a page the eval set marks correct, whether it refused, and how many of its cited URLs no tool ever returned. 381 runs:
 
-| Type | n | Searched | Cited | Refused | Fabricated |
+| Type | n | Searched | Cited | Fabricated | Ungrounded URLs |
 |---|---|---|---|---|---|
-| **Overall** | 381 | 0.89 | 0.77 | 0.00 | 0.15 |
-| `exact_name` | 165 | 0.92 | 0.85 | 0.00 | 0.12 |
-| `paraphrase` | 114 | 0.94 | 0.75 | 0.00 | 0.07 |
-| `rules_reasoning` | 102 | 0.80 | 0.67 | 0.00 | 0.30 |
+| **Overall** | 381 | 0.89 | 0.77 | 0.15 | 78/637 |
+| `exact_name` | 165 | 0.92 | 0.85 | 0.12 | 20/301 |
+| `paraphrase` | 114 | 0.94 | 0.75 | 0.07 | 8/177 |
+| `rules_reasoning` | 102 | 0.80 | 0.67 | 0.30 | 50/159 |
 
-`Cited` asks the same question the [Answer-level evaluation](#answer-level-evaluation) table asks, measured on the agent path instead of the single-shot one so the two roughly line up: overall 0.71 → 0.77, `paraphrase` 0.53 → 0.75, `rules_reasoning` 0.74 → 0.67. Some of that gap belongs to `E3` rather than to the loop, because the answer-level run predates the reranker. `paraphrase` is where multi-hop retrieval shows improvement and `rules_reasoning` is the one type the loop makes worse. It is also the type least likely to search (0.80) and by a wide margin the most likely to fabricate (0.30, roughly 2.5x the other two).
+`Cited` asks the same question the [Answer-level evaluation](#answer-level-evaluation) table asks (measured on the agent path instead of the single-shot one so the two roughly line up): overall 0.71 → 0.77, `paraphrase` 0.53 → 0.75, `rules_reasoning` 0.74 → 0.67. Some of that gap is explained be `E3` rather than the loop because the answer level run predates the reranker. `paraphrase` is where multi-hop retrieval shows improvement and `rules_reasoning` is the one type the loop makes worse. It is also the type least likely to search (0.80) and by a wide margin the most likely to fabricate a citation (0.30, roughly 2.5x the other two). That baseline is [`n127_loop_eval_baseline.jsonl`](agent/eval/canonical/n127_loop_eval_baseline.jsonl).
+
+#### E8: taking `k` off the model, and turning thinking off
+
+Three things changed from the baseline above. The model chose `rag_search`'s `k` and sent a value below the schema's `ge=5` floor on 36.5% of calls; `agent_system.txt` named neither tool at the time and thinking was on by default because nothing had ever set it otherwise. Each change was measured over the same 381 runs.
+
+**`k` is no longer controlled by the model.** It was removed from the tool signature entirely and moved to `mcp_search_k` in the server's settings so there is no argument for the model to get wrong. Search failures went from 109 to 4. Run at `k=10` first ([`n127_loop_eval_k10.jsonl`](agent/eval/canonical/n127_loop_eval_k10.jsonl)) and then `k=5` ([`n127_loop_eval_k5.jsonl`](agent/eval/canonical/n127_loop_eval_k5.jsonl)): halving `k` halved the ungrounded citation rate, 11.2% → 6.7% at half the retrieved context. More candidate URLs in front of the model meant more chances to attach the wrong one which is the opposite of the intuition that more retrieval is better.
+
+**Thinking off.** qwen3:14b thinks by default and it is where the fabrications were built (see [POSTMORTEM.md](POSTMORTEM.md#bugs)). Ollama's OpenAI-compatible endpoint ignores `think: false`; `reasoning_effort: "none"` works however. Over the same set ([`n127_loop_eval_k5_nothink.jsonl`](agent/eval/canonical/n127_loop_eval_k5_nothink.jsonl)):
+
+| Type | n | Searched | Cited | Fabricated | Ungrounded URLs |
+|---|---|---|---|---|---|
+| **Overall** | 381 | **1.00** | 0.72 | **0.00** | **0/400** |
+| `exact_name` | 165 | 1.00 | 0.84 | 0.00 | 0/181 |
+| `paraphrase` | 114 | 1.00 | 0.66 | 0.00 | 0/125 |
+| `rules_reasoning` | 102 | 1.00 | 0.61 | 0.00 | 0/94 |
+
+Every run called a tool and not one of 400 citations pointed at a page no tool had returned. Runs took 5.7s against 16.8s. The cost of turning thinking off is in `rules_reasoning`, `Cited` 0.70 → 0.61, which is the type that actually needs to chain a rule to a condition defined somewhere else. Thinking gives more deliberation on multi-hop questions and costs tool discipline everywhere else which is why the chat page makes it a toggle per request that defaults off rather than a setting.
+
+Both `k` runs share prompts with the baseline; the no-think run also carries a second prompt pass, so its effects are confounded with it. Each run records the sha256 of every prompt file that produced it, and the settings that distinguish them are in the `.settings.json` beside each one.
 
 Splitting the 381 runs by whether any tool was called at all explains the whole fabrication column:
 
@@ -405,7 +424,7 @@ MVP milestones, all completed:
 | E5: agentic ask | **Done** | `pathfinder-agent`, an MCP client running a multi-hop tool calling loop against the server: per hop and wall time timeouts, a tool result token budget, bounded retries with backoff, and `<tool_result>` delimiting as a mitigation for prompt injection. `AgentResult` holds the answer, the tool call trace and a `stopped_reason`. |
 | E6: agent loop eval | **Done** | `rag evaluate-answers` scores single-shot `ask` and provides no information about tool use so nothing measures the agent loop. `agent/scripts/loop_eval.py` runs the eval over the same 127 query set and reports per query type: hops, wall time with percentiles, per tool call and failure counts, tool result tokens vs context budget, whether the answer cited a known correct page and how many cited URLs no tool ever returned (invented by the LLM). |
 | E7: chat surface | **Done** | One `POST /ask` endpoint running the agent loop and streaming its progress over SSE, and one static page serving it. A box per tool call, expandable to the arguments that call went out with, struck through when the call returned nothing; the model's reasoning per hop as a collapsed block; the answer in one shot rather than token by token. Conversation history is held by the client and replayed as question/answer pairs, bounded on the request model. |
-| E8: tool use and prompts | — | The LLM answers without calling tools on many questions, invents d20pfsrd URLs and has never once chained `rag_search` → `fetch_section`. Implement prompt side fixes across `agent_system.txt` and `mcp_tools.txt` and measure against E6's baseline. |
+| E8: tool use and prompts | **Done** | `k` off the tool signature and into `mcp_search_k`; `agent_system.txt` names both tools, forbids answering from pretrained knowledge, and requires a search for every question including follow-ups and corrections; `mcp_tools.txt` states when `fetch_section` is useful and that a `chunk_id` is copied and should never be composed. Thinking off by default with a per-request toggle. Over 381 runs: no-tool-call 10.8% → 0.0%, ungrounded citations 78/637 → 0/400, 16.8s → 5.7s per run, at the cost of `rules_reasoning` citation accuracy dropping 9 points. See [Agent loop evaluation](#agent-loop-evaluation). |
 | E9: parameter sweeps | — | Proper sweep over `max_tokens`, `overlap`, `title_weight`, RRF weights and Ks with train/test split as previous values were overfit while still in development. |
 
 ### Future expansions
@@ -449,6 +468,8 @@ MVP milestones, all completed:
 - **Progress boxes with no token streaming.** A hop is only the last one if the model emits no tool calls which is not known until the response is complete. Adding streaming would mean streaming every hop and accumulating `delta.tool_calls` fragments to detect the switch. That would triple the loop's complexity for little gain: the 5-12 seconds of dead air during tool calls was the initial problem. The answer arriving in one shot is fine.
 - **`ToolFinished` holds a state instead of an error category.** `outcome` is `ok` or `failed` and not the server's `retryable`/`rephrase`/`fatal`. A `rephrase` is aimed at the model and the model does not always act on it so an event describing a call that already happened cannot claim a retry is coming. It is also the only category that reaches the event since `retryable` is retried inside `execute_tool` and `fatal` ends the agent loop first.
 - **For simplicity the client holds the conversation history as question and answer pairs.** Replaying an assistant message carrying `tool_calls` without its matching `tool` results is rejected by the API. The bounds are in `AskRequest` because a client held history is untrusted input.
+- **Thinking is off by default and is a toggle per request instead of a setting.** qwen3:14b thinks unless told otherwise and Ollama's OpenAI-compatible endpoint ignores `think: false` and `/no_think`; `reasoning_effort` is what works, where `high`/`medium`/`low` are indistinguishable and only `"none"` disables it. Measured over 381 runs: off means every run searches and nothing is cited that a tool did not return and is three times faster. On means `rules_reasoning` answers cite the right page 9 points more often (see [Agent loop evaluation](#agent-loop-evaluation)). The split is between lookups and multi hop rules questions so `AskRequest` has `thinking` per request and the page defaults it off. The CLI and `loop_eval` read `llm_reasoning_effort` from settings instead so evaluation is never silently on a different footing than the chat.
+- **`k` is not controlled by the model's.** `rag_search` takes no `k`: the value comes from `mcp_search_k` in the server's settings. The model sent a value under the schema's `ge=5` floor on 36.5% of calls and an argument the caller cannot supply is an argument it cannot get wrong. `k=5` instead of `k=10` because it halved ungrounded citations at half the retrieved context.
 
 ## Testing
 
