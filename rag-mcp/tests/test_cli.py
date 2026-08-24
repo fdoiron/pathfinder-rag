@@ -404,10 +404,11 @@ def test_evaluate_writes_run_and_prints_summary(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
-        return [_fireball_hit()] if query == 'fireball' else []
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+        hits = [_fireball_hit()] if query == 'fireball' else []
+        return hits, hits
 
-    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', _fake_search_docs_and_chunks)
     queries_file = _write_queries_file(tmp_path)
     run_dir = tmp_path / 'runs'
 
@@ -433,11 +434,11 @@ def test_evaluate_method_flag_reaches_search_top_k_docs(monkeypatch, tmp_path, m
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[str] = []
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
         calls.append(method)
-        return []
+        return [], []
 
-    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', _fake_search_docs_and_chunks)
     queries_file = _write_queries_file(tmp_path)
 
     result = runner.invoke(app, ['evaluate', queries_file, '--run-dir', str(tmp_path / 'runs'), '--method', method])
@@ -450,7 +451,7 @@ def test_evaluate_default_method_is_hybrid_and_recorded_in_run(monkeypatch, tmp_
     monkeypatch.setattr('rag.embedding.LocalEmbedder', FakeEmbedder)
     monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
-    monkeypatch.setattr(cli, 'search_top_k_docs', lambda *a, **k: [])  # noqa: ARG005
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', lambda *a, **k: ([], []))  # noqa: ARG005
     queries_file = _write_queries_file(tmp_path)
     run_dir = tmp_path / 'runs'
 
@@ -466,11 +467,11 @@ def test_evaluate_default_rerank_is_true_and_recorded_in_run(monkeypatch, tmp_pa
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[bool] = []
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
         calls.append(rerank)
-        return []
+        return [], []
 
-    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', _fake_search_docs_and_chunks)
     queries_file = _write_queries_file(tmp_path)
     run_dir = tmp_path / 'runs'
 
@@ -489,11 +490,11 @@ def test_evaluate_no_rerank_flag_reaches_search_top_k_docs_and_skips_reranker_lo
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[bool] = []
 
-    def _fake_search_top_k_docs(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
         calls.append(rerank)
-        return []
+        return [], []
 
-    monkeypatch.setattr(cli, 'search_top_k_docs', _fake_search_top_k_docs)
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', _fake_search_docs_and_chunks)
     queries_file = _write_queries_file(tmp_path)
     run_dir = tmp_path / 'runs'
 
@@ -517,7 +518,7 @@ def test_evaluate_weight_flags_reach_load_retriever_settings(monkeypatch, tmp_pa
         return FakeRetriever([])
 
     monkeypatch.setattr(cli, 'load_retriever', _capture)
-    monkeypatch.setattr(cli, 'search_top_k_docs', lambda *a, **k: [])  # noqa: ARG005
+    monkeypatch.setattr(cli, 'search_docs_and_chunks', lambda *a, **k: ([], []))  # noqa: ARG005
     queries_file = _write_queries_file(tmp_path)
 
     result = runner.invoke(

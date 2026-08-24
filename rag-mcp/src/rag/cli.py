@@ -9,10 +9,13 @@ import typer
 from rag.answer import LLMUnavailableError, answer_question, make_llm_client
 from rag.config import Settings, get_settings
 from rag.evaluation import (
+    RECALL_KS,
     evaluate_answers,
     evaluate_query,
     load_queries,
-    search_top_k_docs,
+    normalize_url,
+    search_docs_and_chunks,
+    validate_spans,
     write_answer_run,
     write_run,
 )
@@ -20,6 +23,7 @@ from rag.lexical import build_fts5_index
 from rag.models import ChunksManifest
 from rag.parsing import parse_corpus_dir
 from rag.retrieval import ManifestMismatchError, OrphanChunksError, SearchMethod, StaleIndexError, load_retriever
+from rag.spans import DEFAULT_COVERAGE_THRESHOLD, DEFAULT_MIN_RUN
 
 if TYPE_CHECKING:
     from rag.embedding import LocalEmbedder
@@ -264,6 +268,18 @@ def evaluate(
             help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
         ),
     ] = None,
+    span_threshold: Annotated[
+        float,
+        typer.Option(
+            min=0.0,
+            max=1.0,
+            help='fraction of an expected_span that must be covered by the retrieved chunks to count as a hit',
+        ),
+    ] = DEFAULT_COVERAGE_THRESHOLD,
+    span_min_run: Annotated[
+        int,
+        typer.Option(min=1, help='shortest run of matching tokens that counts toward span coverage'),
+    ] = DEFAULT_MIN_RUN,
 ) -> None:
     """
     Evaluate the retrieval performance of the corpus.
@@ -291,19 +307,44 @@ def evaluate(
         typer.echo(f'Error: {e}', err=True)
         raise typer.Exit(code=1) from e
 
-    results = [
-        evaluate_query(query, search_top_k_docs(retriever, query.query, k, method=method, rerank=rerank))
-        for query in queries
-    ]
+    ks = tuple(recall_k for recall_k in RECALL_KS if recall_k <= k)
+    results = []
+    for query in queries:
+        docs, chunks = search_docs_and_chunks(retriever, query.query, k, method=method, rerank=rerank)
+        results.append(
+            evaluate_query(
+                query,
+                docs,
+                chunk_ranking=chunks,
+                ks=ks,
+                span_threshold=span_threshold,
+                span_min_run=span_min_run,
+            )
+        )
 
     reranker_model = settings.reranker_model if rerank else None
     reranker_dtype = reranker.torch_dtype if reranker is not None else None
-    run_path, run = write_run(run_dir, retriever.manifest, method, reranker_model, reranker_dtype, k, results, settings)
+    run_path, run = write_run(
+        run_dir,
+        retriever.manifest,
+        method,
+        reranker_model,
+        reranker_dtype,
+        k,
+        results,
+        settings,
+        span_threshold=span_threshold,
+        span_min_run=span_min_run,
+    )
     typer.echo(run.summary.format_line())
+    if run.summary.n_with_spans:
+        typer.echo(f'spans: {run.summary.format_span_line()}')
 
     typer.echo('\nby type:')
     for name, group_summary in run.by_type.items():
         typer.echo(f'  {name}: {group_summary.format_line()}')
+        if group_summary.n_with_spans:
+            typer.echo(f'    spans: {group_summary.format_span_line()}')
 
     typer.echo('\nby category:')
     for name, group_summary in run.by_category.items():
@@ -319,6 +360,59 @@ def evaluate(
             typer.echo(f'  got: {got}')
 
     typer.echo(f'\nWrote evaluation run results to {run_path}')
+
+
+@app.command(name='validate-spans')
+def validate_spans_cmd(
+    queries_file: Annotated[
+        Path,
+        typer.Argument(help='Path to the queries JSONL file to check', exists=True, readable=True),
+    ],
+    corpus_file: Annotated[
+        Path | None,
+        typer.Option(help='Path to the corpus parquet (defaults to settings.corpus_path)', exists=True, readable=True),
+    ] = None,
+    min_coverage: Annotated[
+        float,
+        typer.Option(min=0.0, max=1.0, help='coverage an expected_span must reach in its own article to pass'),
+    ] = DEFAULT_COVERAGE_THRESHOLD,
+    span_min_run: Annotated[
+        int,
+        typer.Option(min=1, help='shortest run of matching tokens that counts toward span coverage'),
+    ] = DEFAULT_MIN_RUN,
+) -> None:
+    """
+    Check every expected_span actually occurs in its query's expected article.
+    """
+    try:
+        queries = load_queries(queries_file)
+    except ValueError as e:
+        typer.echo(f'Error loading queries: {e}', err=True)
+        raise typer.Exit(1) from e
+
+    settings = get_settings()
+    corpus = pd.read_parquet(corpus_file or settings.corpus_path, columns=['url', 'body_md'])
+    bodies = {normalize_url(url): body for url, body in zip(corpus['url'], corpus['body_md'], strict=True)}
+
+    validations = validate_spans(queries, bodies, min_coverage=min_coverage, min_run=span_min_run)
+    if not validations:
+        typer.echo('no expected_spans found in this file')
+        return
+
+    failures = [v for v in validations if not v.ok]
+    with_spans = len({v.query for v in validations})
+    typer.echo(f'{len(validations)} spans across {with_spans}/{len(queries)} queries, min_coverage={min_coverage}')
+
+    if failures:
+        typer.echo(f'\n{len(failures)} spans did not match their article:')
+        for v in failures:
+            typer.echo(f'  query: {v.query}')
+            typer.echo(f'  span[{v.span_index}] coverage={v.coverage:.2f} best_url={v.best_url}')
+            typer.echo(f'    {v.span[:160]}')
+        raise typer.Exit(1)
+
+    worst = min(validations, key=lambda v: v.coverage)
+    typer.echo(f'all spans matched. weakest: coverage={worst.coverage:.2f} on {worst.query!r}')
 
 
 @app.command()
