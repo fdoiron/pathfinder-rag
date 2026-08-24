@@ -6,12 +6,19 @@ from pathlib import Path
 from typing import Literal
 from urllib.parse import urlparse
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from rag.answer import NO_COVERAGE_REPLY, Answer
 from rag.config import Settings
 from rag.models import ChunkHit, ChunksManifest
 from rag.retrieval import Retriever, SearchMethod
+from rag.spans import (
+    DEFAULT_COVERAGE_THRESHOLD,
+    DEFAULT_MIN_RUN,
+    SpanMatcher,
+    SpanScore,
+    score_ranking,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +46,15 @@ class EvalQuery(BaseModel):
     query: str
     type: QueryType
     expected_urls: list[str] = Field(min_length=1)
+    expected_spans: list[str] = Field(default_factory=list)
+
+    @field_validator('expected_spans')
+    @classmethod
+    def _spans_are_substantial(cls, spans: list[str]) -> list[str]:
+        for span in spans:
+            if len(span.split()) < DEFAULT_MIN_RUN:
+                raise ValueError(f'span too short to align on: {span!r}')
+        return spans
 
     @field_validator('expected_urls')
     @classmethod
@@ -67,6 +83,7 @@ class QueryResult(BaseModel):
     retrieved_items: list[RetrievedItem]
     rank: int | None  # 1-based rank of 1st expected URL, None = miss
     reciprocal_rank: float
+    span: SpanScore | None = None  # None = query carries no expected_spans
 
     @property
     def is_miss(self) -> bool:
@@ -97,10 +114,25 @@ class EvalSummary(BaseModel):
     n_queries: int
     recall_at: dict[int, float]  # k -> mean hit rate
     mrr: float
+    n_with_spans: int = 0
+    span_recall_at: dict[int, float] = Field(default_factory=dict)  # k -> mean span hit rate
+    span_mrr: float = 0.0
+    mean_coverage_at: dict[int, float] = Field(default_factory=dict)  # k -> mean union coverage
+    mean_best_chunk_coverage: float = 0.0  # how much of the span is held by single best chunk
+    mean_chunks_to_cover: float = 0.0  # >1 -> spans are straddling chunk boundaries
 
     def format_line(self) -> str:
         recalls = '  '.join(f'recall@{k}={v:.2f}' for k, v in sorted(self.recall_at.items()))
         return f'n={self.n_queries}  {recalls}  MRR={self.mrr:.2f}'
+
+    def format_span_line(self) -> str:
+        if not self.n_with_spans:
+            return 'no spans'
+        recalls = '  '.join(f'span_recall@{k}={v:.2f}' for k, v in sorted(self.span_recall_at.items()))
+        return (
+            f'n={self.n_with_spans}  {recalls}  span_MRR={self.span_mrr:.2f}  '
+            f'best_chunk_cov={self.mean_best_chunk_coverage:.2f}  chunks_to_cover={self.mean_chunks_to_cover:.2f}'
+        )
 
 
 class EvalRun(BaseModel):
@@ -117,6 +149,8 @@ class EvalRun(BaseModel):
     rrf_bm25_weight: float
     fts5_title_weight: float
     fts5_text_weight: float
+    span_threshold: float = DEFAULT_COVERAGE_THRESHOLD
+    span_min_run: int = DEFAULT_MIN_RUN
     summary: EvalSummary
     by_type: dict[str, EvalSummary]
     by_category: dict[str, EvalSummary]
@@ -189,11 +223,60 @@ def normalize_url(url: str) -> str:
     return f'{parsed.scheme.lower()}://{parsed.netloc.lower()}{path}'
 
 
+class SpanValidation(BaseModel):
+    """One span checked against the article body it claims to come from"""
+
+    model_config = ConfigDict(extra='forbid')
+
+    query: str
+    span_index: int
+    span: str
+    coverage: float  # best coverage over the query's expected_urls
+    best_url: str | None  # which expected_url's body accounted for it. None when no body was found
+    ok: bool
+
+
+def validate_spans(
+    queries: list[EvalQuery],
+    bodies_by_url: dict[str, str],
+    min_coverage: float = DEFAULT_COVERAGE_THRESHOLD,
+    min_run: int = DEFAULT_MIN_RUN,
+) -> list[SpanValidation]:
+    """Check every span actually occurs in one of its query's expected articles."""
+    validations: list[SpanValidation] = []
+    for query in queries:
+        for index, span in enumerate(query.expected_spans):
+            matcher = SpanMatcher([span], min_run=min_run)
+            best_coverage, best_url = 0.0, None
+            for url in query.expected_urls:
+                body = bodies_by_url.get(normalize_url(url))
+                if body is None:
+                    continue
+                coverage = matcher.coverage(body)
+                if coverage > best_coverage:
+                    best_coverage, best_url = coverage, url
+            validations.append(
+                SpanValidation(
+                    query=query.query,
+                    span_index=index,
+                    span=span,
+                    coverage=best_coverage,
+                    best_url=best_url,
+                    ok=best_coverage >= min_coverage,
+                )
+            )
+    return validations
+
+
 def evaluate_query(
     query: EvalQuery,
     results: list[ChunkHit],
+    chunk_ranking: list[ChunkHit] | None = None,
+    ks: tuple[int, ...] = RECALL_KS,
+    span_threshold: float = DEFAULT_COVERAGE_THRESHOLD,
+    span_min_run: int = DEFAULT_MIN_RUN,
 ) -> QueryResult:
-    """Score one query's retrieval results against expected URLs"""
+    """Score one query's retrieval results against expected URLs, and its spans against chunk text."""
     expected = {normalize_url(u) for u in query.expected_urls}
 
     rank: int | None = None
@@ -201,6 +284,15 @@ def evaluate_query(
         if normalize_url(str(result.url)) in expected:
             rank = position
             break  # first hit -> all MRR and recall cares about
+
+    span: SpanScore | None = None
+    if query.expected_spans and chunk_ranking is not None:
+        span = score_ranking(
+            SpanMatcher(query.expected_spans, min_run=span_min_run),
+            [(hit.chunk_id, hit.text) for hit in chunk_ranking],
+            ks=ks,
+            threshold=span_threshold,
+        )
 
     return QueryResult(
         query=query.query,
@@ -212,6 +304,7 @@ def evaluate_query(
         ],
         rank=rank,
         reciprocal_rank=0.0 if rank is None else 1.0 / rank,
+        span=span,
     )
 
 
@@ -239,11 +332,26 @@ def summarize_results(results: list[QueryResult], ks: tuple[int, ...] = RECALL_K
         raise ValueError('cannot summarize an empty result list')
 
     n = len(results)
+    scored = [r.span for r in results if r.span is not None]
+    n_spans = len(scored)
+
     return EvalSummary(
         n_queries=n,
         recall_at={k: sum(r.hit_at(k) for r in results) / n for k in ks},
         mrr=sum(r.reciprocal_rank for r in results) / n,
+        n_with_spans=n_spans,
+        span_recall_at={k: sum(s.hit_at(k) for s in scored) / n_spans for k in ks} if n_spans else {},
+        span_mrr=sum(s.reciprocal_rank for s in scored) / n_spans if n_spans else 0.0,
+        mean_coverage_at=({k: sum(s.coverage_at.get(k, 0.0) for s in scored) / n_spans for k in ks} if n_spans else {}),
+        mean_best_chunk_coverage=sum(s.best_chunk_coverage for s in scored) / n_spans if n_spans else 0.0,
+        # averaged over covered spans only: an uncovered span has no chunk count to contribute
+        mean_chunks_to_cover=_mean_chunks_to_cover(scored),
     )
+
+
+def _mean_chunks_to_cover(scored: list[SpanScore]) -> float:
+    counts = [s.n_chunks_to_cover for s in scored if s.n_chunks_to_cover is not None]
+    return sum(counts) / len(counts) if counts else 0.0
 
 
 def summarize_answers(results: list[AnswerResult]) -> AnswerSummary:
@@ -273,6 +381,8 @@ def write_run(
     k: int,
     results: list[QueryResult],
     settings: Settings,
+    span_threshold: float = DEFAULT_COVERAGE_THRESHOLD,
+    span_min_run: int = DEFAULT_MIN_RUN,
 ) -> tuple[Path, EvalRun]:
     """Builds the EvalRun (summary + per-type/per-category breakdowns) and writes a timestamped run file"""
     ks = tuple(recall_k for recall_k in RECALL_KS if recall_k <= k)  # deeper ks were never searched, not measurable
@@ -292,6 +402,8 @@ def write_run(
         rrf_bm25_weight=settings.rrf_bm25_weight,
         fts5_title_weight=settings.fts5_title_weight,
         fts5_text_weight=settings.fts5_text_weight,
+        span_threshold=span_threshold,
+        span_min_run=span_min_run,
         summary=summary,
         by_type=by_type,
         by_category=by_category,
@@ -360,15 +472,18 @@ def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
     return collapsed[:k]
 
 
-def search_top_k_docs(
+def search_docs_and_chunks(
     retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid', rerank: bool = False
-) -> list[ChunkHit]:
-    """Search and combine to k unique pages. If it falls short of k it widens the chunk fetch.
+) -> tuple[list[ChunkHit], list[ChunkHit]]:
+    """Search once, return (k unique pages, the uncollapsed chunk ranking behind them).
 
-    One doc can occupy several of the top chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR
-    can still collapse to less than k unique docs. To ensure k results it doubles the fetch until either
-    k docs are found, every chunk in the corpus has been retrieved, or the search returned fewer hits than
-    asked for.
+    If the page list falls short of k it widens the chunk fetch. One doc can occupy several of the top
+    chunks in the retrieved list, so k * EVAL_OVERFETCH_FACTOR can still collapse to less than k unique
+    docs. To ensure k results it doubles the fetch until either k docs are found, every chunk in the
+    corpus has been retrieved, or the search returned fewer hits than asked for.
+
+    The raw hits are returned alongside because the span metrics score chunk granularity which is detroyed by collapsing
+    Both metrics come from the same search so they always describe one ranking
     """
     total_chunks = len(retriever)
     fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
@@ -376,8 +491,15 @@ def search_top_k_docs(
         hits = retriever.search(query, k=fetch_k, method=method, rerank=rerank)
         collapsed = collapse_to_urls(hits, k)
         if len(collapsed) >= k or fetch_k >= total_chunks or len(hits) < fetch_k:
-            return collapsed
+            return collapsed, hits
         fetch_k = min(fetch_k * 2, total_chunks)
+
+
+def search_top_k_docs(
+    retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid', rerank: bool = False
+) -> list[ChunkHit]:
+    """Search and combine to k unique pages and drop the chunk ranking"""
+    return search_docs_and_chunks(retriever, query, k, method=method, rerank=rerank)[0]
 
 
 def summarize_by(
