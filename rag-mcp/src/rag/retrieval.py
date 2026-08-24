@@ -17,8 +17,6 @@ logger = logging.getLogger(__name__)
 
 SearchMethod = Literal['vector', 'bm25', 'hybrid']
 
-_HYBRID_CANDIDATE_POOL = 50
-
 
 def reciprocal_rank_fusion(
     rankings: dict[str, list[str]], rrf_k: int, weights: dict[str, float] | None = None
@@ -59,6 +57,7 @@ class Retriever:
         fts5_text_weight: float = 1.0,
         rrf_vector_weight: float = 1.0,
         rrf_bm25_weight: float = 1.0,
+        hybrid_candidate_pool: int = 50,
     ) -> None:
         self._df = df.reset_index(drop=True)
         self._docs = docs
@@ -80,6 +79,7 @@ class Retriever:
         self._fts5_text_weight = fts5_text_weight
         self._rrf_vector_weight = rrf_vector_weight
         self._rrf_bm25_weight = rrf_bm25_weight
+        self._hybrid_candidate_pool = hybrid_candidate_pool
         self._chunk_id_to_pos: dict[str, int] = dict(zip(self._df['chunk_id'], range(len(self._df)), strict=True))
 
     def search(
@@ -103,7 +103,7 @@ class Retriever:
         elif method == 'bm25':
             ranked = self._search_bm25_ranked(query, search_k, category)
         else:
-            pool = max(search_k, _HYBRID_CANDIDATE_POOL)
+            pool = self._hybrid_candidate_pool
             vector_ids = [chunk_id for chunk_id, _ in self._search_vector_ranked(query, pool, category)]
             bm25_ids = [chunk_id for chunk_id, _ in self._search_bm25_ranked(query, pool, category)]
             fused = reciprocal_rank_fusion(
@@ -293,4 +293,5 @@ def load_retriever(
         fts5_text_weight=settings.fts5_text_weight,
         rrf_vector_weight=settings.rrf_vector_weight,
         rrf_bm25_weight=settings.rrf_bm25_weight,
+        hybrid_candidate_pool=settings.hybrid_candidate_pool,
     )

@@ -19,6 +19,7 @@ from rag.evaluation import (
     evaluate_query,
     load_queries,
     normalize_url,
+    search_docs_and_chunks,
     search_top_k_docs,
     summarize_answers,
     summarize_answers_by,
@@ -366,6 +367,7 @@ def _make_retriever(n: int) -> Retriever:
             'text': [f'body text {i}' for i in range(n)],
             'category': ['bestiary'] * n,
             'n_tokens': [5] * n,
+            'full_article_length': [100] * n,
             'embedding': [np.array([1.0, 0.0], dtype=np.float32) for _ in range(n)],
         }
     )
@@ -381,9 +383,16 @@ def test_search_top_k_docs_stops_widening_when_bm25_exhausted(monkeypatch: pytes
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
+    def counting_search(
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: str = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
+    ):
         calls.append(k)
-        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -421,9 +430,16 @@ def test_search_top_k_docs_stops_widening_when_exhausted_after_a_widen(monkeypat
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
+    def counting_search(
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: str = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
+    ):
         calls.append(k)
-        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -459,9 +475,16 @@ def test_search_top_k_docs_widens_on_duplicate_doc_collapse(monkeypatch: pytest.
     calls: list[int] = []
     original_search = retriever.search
 
-    def counting_search(query: str, k: int, category: str | None = None, method: str = 'hybrid', rerank: bool = False):
+    def counting_search(
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: str = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
+    ):
         calls.append(k)
-        return original_search(query, k, category=category, method=method, rerank=rerank)  # type: ignore[arg-type]
+        return original_search(query, k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)  # type: ignore[arg-type]
 
     monkeypatch.setattr(retriever, 'search', counting_search)
 
@@ -673,3 +696,43 @@ def test_write_answer_run_creates_readable_file(tmp_path: Path):
     assert loaded.summary.n_queries == run.summary.n_queries
     assert loaded.manifest.n_articles == 10
     assert len(loaded.results) == 2
+
+
+def test_hybrid_pool_does_not_widen_with_k(monkeypatch: pytest.MonkeyPatch) -> None:
+    retriever = _make_retriever(n=100)
+    arm_ks: list[int] = []
+    original = retriever._search_vector_ranked
+
+    def spy(query: str, k: int, category: str | None):
+        arm_ks.append(k)
+        return original(query, k, category)
+
+    monkeypatch.setattr(retriever, '_search_vector_ranked', spy)
+
+    retriever.search('body', k=5, method='hybrid')
+    retriever.search('body', k=80, method='hybrid')
+
+    assert arm_ks == [50, 50]  # both arms capped at hybrid_candidate_pool regardless of k
+
+
+def test_search_docs_and_chunks_forwards_fetch_k(monkeypatch: pytest.MonkeyPatch) -> None:
+    retriever = _make_retriever(n=100)
+    seen: list[int | None] = []
+    original_search = retriever.search
+
+    def recording_search(
+        query: str,
+        k: int,
+        category: str | None = None,
+        method: str = 'hybrid',
+        rerank: bool = False,
+        fetch_k: int | None = None,
+    ):
+        seen.append(fetch_k)
+        return original_search(query, k, category=category, method=method, rerank=rerank, fetch_k=fetch_k)  # type: ignore[arg-type]
+
+    monkeypatch.setattr(retriever, 'search', recording_search)
+
+    search_docs_and_chunks(retriever, 'body', k=5, method='bm25', fetch_k=37)
+
+    assert seen == [37]

@@ -149,6 +149,8 @@ class EvalRun(BaseModel):
     rrf_bm25_weight: float
     fts5_title_weight: float
     fts5_text_weight: float
+    hybrid_candidate_pool: int = 0  # 0 = run predates the field
+    rerank_fetch_k: int | None = None
     span_threshold: float = DEFAULT_COVERAGE_THRESHOLD
     span_min_run: int = DEFAULT_MIN_RUN
     summary: EvalSummary
@@ -381,6 +383,7 @@ def write_run(
     k: int,
     results: list[QueryResult],
     settings: Settings,
+    fetch_k: int | None = None,
     span_threshold: float = DEFAULT_COVERAGE_THRESHOLD,
     span_min_run: int = DEFAULT_MIN_RUN,
 ) -> tuple[Path, EvalRun]:
@@ -402,6 +405,8 @@ def write_run(
         rrf_bm25_weight=settings.rrf_bm25_weight,
         fts5_title_weight=settings.fts5_title_weight,
         fts5_text_weight=settings.fts5_text_weight,
+        hybrid_candidate_pool=settings.hybrid_candidate_pool,
+        rerank_fetch_k=fetch_k,
         span_threshold=span_threshold,
         span_min_run=span_min_run,
         summary=summary,
@@ -473,7 +478,12 @@ def collapse_to_urls(hits: list[ChunkHit], k: int) -> list[ChunkHit]:
 
 
 def search_docs_and_chunks(
-    retriever: Retriever, query: str, k: int, method: SearchMethod = 'hybrid', rerank: bool = False
+    retriever: Retriever,
+    query: str,
+    k: int,
+    method: SearchMethod = 'hybrid',
+    rerank: bool = False,
+    fetch_k: int | None = None,
 ) -> tuple[list[ChunkHit], list[ChunkHit]]:
     """Search once, return (k unique pages, the uncollapsed chunk ranking behind them).
 
@@ -486,13 +496,13 @@ def search_docs_and_chunks(
     Both metrics come from the same search so they always describe one ranking
     """
     total_chunks = len(retriever)
-    fetch_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
+    search_k = min(k * EVAL_OVERFETCH_FACTOR, total_chunks)
     while True:
-        hits = retriever.search(query, k=fetch_k, method=method, rerank=rerank)
+        hits = retriever.search(query, k=search_k, method=method, rerank=rerank, fetch_k=fetch_k)
         collapsed = collapse_to_urls(hits, k)
-        if len(collapsed) >= k or fetch_k >= total_chunks or len(hits) < fetch_k:
+        if len(collapsed) >= k or search_k >= total_chunks or len(hits) < search_k:
             return collapsed, hits
-        fetch_k = min(fetch_k * 2, total_chunks)
+        search_k = min(search_k * 2, total_chunks)
 
 
 def search_top_k_docs(

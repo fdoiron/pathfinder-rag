@@ -404,7 +404,7 @@ def test_evaluate_writes_run_and_prints_summary(monkeypatch, tmp_path):
     monkeypatch.setattr('rag.reranking.LocalReranker', FakeReranker)
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
 
-    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         hits = [_fireball_hit()] if query == 'fireball' else []
         return hits, hits
 
@@ -434,7 +434,7 @@ def test_evaluate_method_flag_reaches_search_top_k_docs(monkeypatch, tmp_path, m
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[str] = []
 
-    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(method)
         return [], []
 
@@ -467,7 +467,7 @@ def test_evaluate_default_rerank_is_true_and_recorded_in_run(monkeypatch, tmp_pa
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[bool] = []
 
-    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(rerank)
         return [], []
 
@@ -490,7 +490,7 @@ def test_evaluate_no_rerank_flag_reaches_search_top_k_docs_and_skips_reranker_lo
     monkeypatch.setattr(cli, 'load_retriever', lambda **kwargs: FakeRetriever([]))  # noqa: ARG005
     calls: list[bool] = []
 
-    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False):  # noqa: ARG001
+    def _fake_search_docs_and_chunks(retriever, query, k, method='hybrid', rerank=False, fetch_k=None):  # noqa: ARG001
         calls.append(rerank)
         return [], []
 

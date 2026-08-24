@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     ask_k: PositiveInt = 5  # excerpts per prompt
     mcp_search_k: PositiveInt = 5  # chunks rag_search returns.
     rerank_fetch_k: PositiveInt = 50  # candidates fused/retrieved and reranked before cutting down to k
+    hybrid_candidate_pool: PositiveInt = 50  # candidates each arm contributes to the RRF fusion
     rrf_k: PositiveInt = 60  # Reciprocal Rank Fusion k denominator
     rrf_vector_weight: PositiveFloat = 15.0  # per-list weight on the vector ranking's RRF contribution
     rrf_bm25_weight: PositiveFloat = 1.0  # per-list weight on the BM25 ranking's RRF contribution

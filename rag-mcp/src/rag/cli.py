@@ -268,6 +268,20 @@ def evaluate(
             help='bm25() weight for chunk body text (defaults to settings.fts5_text_weight)',
         ),
     ] = None,
+    fetch_k: Annotated[
+        int | None,
+        typer.Option(
+            help='rerank candidate window, mirroring what the server passes (defaults to settings.rerank_fetch_k)',
+            min=1,
+        ),
+    ] = None,
+    hybrid_candidate_pool: Annotated[
+        int | None,
+        typer.Option(
+            help='candidates each arm contributes to RRF fusion (defaults to settings.hybrid_candidate_pool)',
+            min=1,
+        ),
+    ] = None,
     span_threshold: Annotated[
         float,
         typer.Option(
@@ -292,6 +306,9 @@ def evaluate(
 
     settings = get_settings()
     settings = _apply_fts5_weight_overrides(settings, fts5_title_weight, fts5_text_weight)
+    if hybrid_candidate_pool is not None:
+        settings = settings.model_copy(update={'hybrid_candidate_pool': hybrid_candidate_pool})
+    fetch_k = fetch_k if fetch_k is not None else settings.rerank_fetch_k
     embedding_file_path = embedding_file_path if embedding_file_path else settings.chunks_path
     embedder = _load_embedder(settings)
     reranker = _load_reranker(settings) if rerank else None
@@ -310,7 +327,7 @@ def evaluate(
     ks = tuple(recall_k for recall_k in RECALL_KS if recall_k <= k)
     results = []
     for query in queries:
-        docs, chunks = search_docs_and_chunks(retriever, query.query, k, method=method, rerank=rerank)
+        docs, chunks = search_docs_and_chunks(retriever, query.query, k, method=method, rerank=rerank, fetch_k=fetch_k)
         results.append(
             evaluate_query(
                 query,
@@ -333,6 +350,7 @@ def evaluate(
         k,
         results,
         settings,
+        fetch_k=fetch_k,
         span_threshold=span_threshold,
         span_min_run=span_min_run,
     )
