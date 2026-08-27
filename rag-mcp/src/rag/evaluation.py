@@ -151,6 +151,7 @@ class EvalRun(BaseModel):
     fts5_text_weight: float
     hybrid_candidate_pool: int = 0  # 0 = run predates the field
     rerank_fetch_k: int | None = None
+    rerank_prompt_path: str | None = None  # None = reranking.DEFAULT_INSTRUCTION
     span_threshold: float = DEFAULT_COVERAGE_THRESHOLD
     span_min_run: int = DEFAULT_MIN_RUN
     summary: EvalSummary
@@ -407,6 +408,7 @@ def write_run(
         fts5_text_weight=settings.fts5_text_weight,
         hybrid_candidate_pool=settings.hybrid_candidate_pool,
         rerank_fetch_k=fetch_k,
+        rerank_prompt_path=str(settings.rerank_prompt_path) if settings.rerank_prompt_path else None,
         span_threshold=span_threshold,
         span_min_run=span_min_run,
         summary=summary,

@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 DEFAULT_INSTRUCTION = (
     'Given a Pathfinder 1e rules query, identify the single canonical rules page whose main subject is the '
     'specific spell, feat, condition, or creature type being asked about, even if that page is itself a type, '
-    "subtype, or list page (a creature type's description, a class's bloodline or domain list). Not a broader "
-    'class, domain, or category page that only references the subject in passing.'
+    "subtype, or list page (a creature type's description). Not a broader class, domain, or category page "
+    'that only references the subject in passing.'
 )
 
 # Qwen3-Reranker "Original Usage" scheme (requires transformers>=4.51.0): the checkpoint is a causal LM, not a
@@ -46,6 +46,11 @@ class LocalReranker:
         self._dtype = str(dtype)
         self._device = device
         self._batch_size = settings.reranker_batch_size
+        self._instruction = (
+            settings.rerank_prompt_path.read_text(encoding='utf-8').strip()
+            if settings.rerank_prompt_path is not None
+            else DEFAULT_INSTRUCTION
+        )
 
         self._tokenizer = AutoTokenizer.from_pretrained(settings.reranker_model, padding_side='left')
         model: torch.nn.Module = AutoModelForCausalLM.from_pretrained(settings.reranker_model, dtype=dtype)
@@ -63,7 +68,7 @@ class LocalReranker:
         if not texts:
             return np.empty((0), dtype=np.float32)
 
-        instruction = DEFAULT_INSTRUCTION if instruction is None else instruction
+        instruction = self._instruction if instruction is None else instruction
         pairs = [f'<Instruct>: {instruction}\n<Query>: {query}\n<Document>: {text}' for text in texts]
 
         n_batches = -(-len(pairs) // self._batch_size)  # ceil div
